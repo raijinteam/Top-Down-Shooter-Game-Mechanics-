@@ -36,8 +36,6 @@ public class OrcEnemyMovement : MonoBehaviour {
     private float currentAffectedGravityForce = 1;
     private float gravityForce = -0.75f;
 
-   
-
     private bool isGrounded;
     private float flt_ScaleAnimationTime = 0.2f;
     private float flt_Reducescale = 0.3f;
@@ -120,6 +118,20 @@ public class OrcEnemyMovement : MonoBehaviour {
 
         }
     }
+
+
+    public void orbitKnockBack( float flt_Force, Vector3 direction) {
+       
+       
+        if (coro_tagetmove != null) {
+            isSetTarget = false;
+            StopCoroutine(coro_tagetmove);
+
+        }
+    
+        OrcKnockBack(direction, flt_Force);
+    }
+
     public void HitByBlackHole(Transform _Target) {
         enemyState = EnemyState.BlackHole;
         lineRenderer.gameObject.SetActive(false);

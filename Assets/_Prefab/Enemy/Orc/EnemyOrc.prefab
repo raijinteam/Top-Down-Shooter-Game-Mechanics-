@@ -30174,7 +30174,7 @@ GameObject:
   - component: {fileID: 3813126521924199549}
   - component: {fileID: 8004042113499730570}
   - component: {fileID: 2598947734604524682}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BodyCollider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -30232,6 +30232,9 @@ MonoBehaviour:
   obj_TerroVFx: {fileID: 3469298864424427595}
   flt_Damage: 0
   flt_Force: 0
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &6802931560755302600
 GameObject:
   m_ObjectHideFlags: 0
@@ -35209,6 +35212,7 @@ GameObject:
   - component: {fileID: 7629728983517209700}
   - component: {fileID: 6905835555504145801}
   - component: {fileID: -8750009987973134941}
+  - component: {fileID: 1662624949389051974}
   m_Layer: 13
   m_Name: EnemyOrc
   m_TagString: Enemy
@@ -35346,12 +35350,39 @@ MonoBehaviour:
   flt_KnockBackForce: 0
   flt_RangeOfSpheareCast: 5
   obj_Explotion: {fileID: 5297991674837013039, guid: 83ccab1d65e270e408b58f2687eb0ace, type: 3}
-  flt_knockBackForce: 0
-  damage: 0
   enemyHealth: {fileID: 6905835555504145802}
   orcEnemyMovement: {fileID: 6905835555504145801}
   navMeshAgent: {fileID: 7629728983517209700}
+  body: {fileID: 8004042113499730570}
   obj_ChainVfx: {fileID: 6479162599204157012}
+  orcEnemy: {fileID: -8750009987973134941}
+  flt_Boundry: 0
+  flt_BoundryX: 0
+  flt_BoundryZ: 0
+  obstckle_Layer:
+    serializedVersion: 2
+    m_Bits: 4096
+  obj_Indiacter: {fileID: 921632971365793255, guid: 8a4e68baafd395b4c87fd5509f7dfd78, type: 3}
+--- !u!114 &1662624949389051974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6968121270556115896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 986e852d418ea794d88d493b00ea451c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseValue: 0
+  HealthIncreasingPersantage: 15
+  damageIncreasingPersantage: 15
+  knockBackPersanatge: 15
+  enemyPoint: 10
+  flt_Damage: 5
+  flt_KnockBack: 20
+  flt_MaxHealth: 100
 --- !u!1 &7153294335633163769
 GameObject:
   m_ObjectHideFlags: 0
@@ -37942,7 +37973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collider_Hamer: {fileID: 7944186900489235334}
   collider_Stick: {fileID: 7944186900489235335}
-  collisionHandlerForEnemy: {fileID: -8750009987973134941}
+  collisionHandlerForEnemy: {fileID: 1662624949389051974}
   parent: {fileID: 6968121270556115897}
   flt_Force: 0
   flt_Damage: 0

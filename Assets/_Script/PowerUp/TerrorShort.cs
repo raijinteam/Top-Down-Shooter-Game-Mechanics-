@@ -8,7 +8,7 @@ public class TerrorShort : MonoBehaviour
 {
     [SerializeField] private float flt_Currenttime;
     [SerializeField] private float flt_MaxPowerUpTime;
-    [SerializeField] private bool isPowerUpStart;
+    
 
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_force;
@@ -18,20 +18,20 @@ public class TerrorShort : MonoBehaviour
     [SerializeField] private Transform spawnPostion;
     [SerializeField] private float flt_CurrentTimeSpawnBullet;
     [SerializeField] private float flt_FireRate;
-     
 
+
+    private void OnEnable() {
+        SetTerrorShot();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxPowerUpTime);
+    }
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetTerrorShot();
-        }
+      
         PowerUpHandler();
         BulletHandler();
     }
 
     private void BulletHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+      
         flt_CurrentTimeSpawnBullet += Time.deltaTime;
         if (flt_CurrentTimeSpawnBullet > flt_FireRate) {
             SpawnBullet();
@@ -54,18 +54,16 @@ public class TerrorShort : MonoBehaviour
     }
 
     private void PowerUpHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+       
 
         flt_Currenttime += Time.deltaTime;
         if (flt_Currenttime > flt_MaxPowerUpTime) {
-            isPowerUpStart = false;
+            this.gameObject.SetActive(false);
         }
     }
 
     private void SetTerrorShot() {
-        isPowerUpStart = true;
+       
         flt_Currenttime = 0;
         flt_CurrentTimeSpawnBullet = 0;
     }

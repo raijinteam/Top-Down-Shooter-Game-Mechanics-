@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public UiVictory uiVictory;
     public UiWavePanel uiWavePanel;
     public UiLevelPanel uiLevelPanel;
+    public UIGamePlayScreen uIGamePlayScreen;
 
     private void Awake() {
         instance = this;

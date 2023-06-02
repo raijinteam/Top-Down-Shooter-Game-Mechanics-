@@ -22,37 +22,36 @@ public class WaveShootPowerUp : MonoBehaviour
     [SerializeField]private bool IsStartShootBullet;
 
     [Header("PowerUp")]
-    [SerializeField]private bool isPowerupStart;
+   
     [SerializeField]private float flt_CurrentTimeForThisPoawerUp;
     [SerializeField]private float flt_maxTimePowerUp;
-  
 
+    private void OnEnable() {
+        SetPowerUpData();
+       UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_maxTimePowerUp);
+    }
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetPowerUpData();
-        }
+       
 
         PowerUpHandler();
-        if (isPowerupStart) {
-            FireBullet();
-        }
+        FireBullet();
+        
        
     }
 
     private void PowerUpHandler() {
-        if (!isPowerupStart) {
-            return;
-        }
+      
         flt_CurrentTimeForThisPoawerUp += Time.deltaTime;
         if (flt_CurrentTimeForThisPoawerUp > flt_maxTimePowerUp) {
-            isPowerupStart = false;
+            this.gameObject.SetActive(false);
         }
     }
 
     public void SetPowerUpData() {
 
-        isPowerupStart = true;
+        IsStartShootBullet = false;
         flt_CurrentTimeForThisPoawerUp = 0;
+        flt_CurrentTimeForFireRate = 0;
     }
 
     private void FireBullet() {

@@ -77,6 +77,7 @@ public class SlimeMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision) {
         isGrounded = true;
+        enemyState = EnemyState.Run;
     }
 
     private void OnCollisionExit(Collision collision) {

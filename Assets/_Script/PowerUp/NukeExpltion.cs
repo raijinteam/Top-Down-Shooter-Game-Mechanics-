@@ -9,6 +9,7 @@ public class NukeExpltion : MonoBehaviour
     private float flt_MaxKnockBackForce;
     private float flt_KnockBackForce;
     private float flt_Damage;
+    [SerializeField] private LayerMask layerMask;
 
     public void SetSpehreCastData(float flt_Range, float force, float flt_Damage) {
 
@@ -19,7 +20,8 @@ public class NukeExpltion : MonoBehaviour
         ExpandSpherCast();
     }
     private void ExpandSpherCast() {
-        Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_RangeOfSpheareCast);
+        Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_RangeOfSpheareCast
+                ,layerMask);
 
         for (int i = 0; i < all_Collider.Length; i++) {
 
@@ -37,11 +39,11 @@ public class NukeExpltion : MonoBehaviour
             }
 
 
-            if (all_Collider[i].TryGetComponent<EnemyTrigger>(out EnemyTrigger enemyTrigger)) {
 
-                
-                enemyTrigger.SethitByBullet(flt_Damage, flt_KnockBackForce, knockBackDirection);
-            }
+
+                all_Collider[i].GetComponent<EnemyTrigger>()
+                    .SethitByBullet(flt_Damage, flt_KnockBackForce, knockBackDirection);
+            
         }
     }
 }

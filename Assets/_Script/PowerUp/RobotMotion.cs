@@ -14,19 +14,18 @@ public class RobotMotion : MonoBehaviour
     [SerializeField] private PlayerBulletMotion playerBulletMotion;
     [SerializeField] private Transform spawnpostion;
 
-    [SerializeField] float x;
-    [SerializeField] float y;
+    [SerializeField] private Vector3 offset;
     [SerializeField] private Transform player;
-    [SerializeField] private float flt_min;
-    [SerializeField] private float flt_Max;
-    [SerializeField] private float flt_RotationSpeed;
+    
+   
     [SerializeField] private float flt_ShipRoataion;
-    [SerializeField] private float flt_Radius;
-    [SerializeField] private float flt_Time = 0;
+   
+  
 
     private void Start() {
         player = PlayerManager.instance.Player.transform;
-
+        offset = new Vector3(player.position.x - transform.position.x, player.position.y -
+                transform.position.y, player.position.z - transform.position.z);
     }
     private void Update() {
         if (!GameManager.instance.isPlayerLive) {
@@ -37,31 +36,16 @@ public class RobotMotion : MonoBehaviour
         RobotMovement();
     }
 
-    internal void SetRobotData(float flt_Damage, float flt_Force, float flt_Range,float flt_Destroy) {
+    internal void SetRobotData(float flt_Damage, float flt_Force, float flt_Destroy) {
         this.flt_Damage = flt_Damage;
-        this.flt_Radius = flt_Range;
         this.flt_Force = flt_Force;
-        flt_Time = Random.Range(0, 2f * Mathf.PI);
-        flt_RotationSpeed = Random.Range(flt_min, flt_Max);
+      
         Destroy(this.gameObject, flt_Destroy);
     }
 
     private void RobotMovement() {
-        float x = Mathf.Cos(flt_Time) * flt_Radius;
-        float y = Mathf.Sin(flt_Time) * flt_Radius;
-        Vector3 newPosition = player.position + new Vector3(x, 0, y);
 
-        transform.position = newPosition;
-
-       
-        flt_Time += flt_RotationSpeed * Time.deltaTime;
-
-        
-        if (flt_Time >= 2f * Mathf.PI) {
-            flt_Time -= 2f * Mathf.PI;
-        }
-
-
+        transform.position = player.position + offset;
 
         
     }

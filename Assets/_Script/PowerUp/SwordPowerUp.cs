@@ -8,8 +8,7 @@ public class SwordPowerUp : MonoBehaviour
     [Header("PowerUp - Cantroller")]
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private float flt_MaxTimeToThisPowerUp;
-    [SerializeField] private bool isPowerUpStart;
-
+   
     [Header("Sword - Data")]
     [SerializeField] private SwordMovement swordMovement;
     [SerializeField] private float flt_Damage;
@@ -19,19 +18,18 @@ public class SwordPowerUp : MonoBehaviour
     [SerializeField] private float flt_SwordFireRate;
     [SerializeField] private float flt_CurrentSpawnSwordTime;
 
+    private void OnEnable() {
+        SetSwordPowerUp();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimeToThisPowerUp);
+    }
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-
-            SetSwordPowerUp();
-        }
+        
         PowerUpHandler();
         SpawnHandler();
     }
 
     private void SpawnHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+      
 
         flt_CurrentSpawnSwordTime += Time.deltaTime;
         if (flt_CurrentSpawnSwordTime > flt_SwordFireRate) {
@@ -46,19 +44,17 @@ public class SwordPowerUp : MonoBehaviour
     }
 
     private void PowerUpHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+       
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_MaxTimeToThisPowerUp) {
-            isPowerUpStart = false;
+            this.gameObject.SetActive(false);
             flt_CurrentTime = 0;
             flt_CurrentSpawnSwordTime = 0;
         }
     }
 
     private void SetSwordPowerUp() {
-        isPowerUpStart = true;
+       
         flt_CurrentSpawnSwordTime = 0;
         flt_CurrentTime = 0;
     }

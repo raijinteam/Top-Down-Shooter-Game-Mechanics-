@@ -17253,6 +17253,7 @@ GameObject:
   - component: {fileID: 8915937716463210830}
   - component: {fileID: 4171796928253081659}
   - component: {fileID: -2974914823590081356}
+  - component: {fileID: 6115015481976022417}
   m_Layer: 0
   m_Name: EvileMage
   m_TagString: Enemy
@@ -17333,12 +17334,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d7b56272d3dbc4180d5b68b9bdd49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyData: {fileID: 0}
   animator: {fileID: 5228673834624773926}
   evileMageMovement: {fileID: 4171796928253081659}
-  bullet: {fileID: 8703123838184489044, guid: cb674fc0b90bf0641b1c23cf84a8bfbb, type: 3}
+  bullet: {fileID: 1347205485537186400, guid: cb674fc0b90bf0641b1c23cf84a8bfbb, type: 3}
   bullet_Muzzle: {fileID: 257547119973405470, guid: d42ff1bcce50f3a4aacbdc3d943241ab, type: 3}
   transform_BulletPostion: {fileID: 5317165287163631150}
   damage: 5
+  force: 0
   flt_BulletFireRate: 2
   flt_CurrentTime: 0
   isvisible: 1
@@ -17364,7 +17367,16 @@ MonoBehaviour:
   evileMageTrigger: {fileID: 8949956903744187803}
   navMeshAgent: {fileID: -2974914823590081356}
   evileMageMovement: {fileID: 4171796928253081659}
+  body: {fileID: 4385498177751736798}
   obj_ChainVfx: {fileID: 8421458139488147197}
+  evileMage: {fileID: 8915937716463210830}
+  flt_Boundry: 0
+  flt_BoundryX: 0
+  flt_BoundryZ: 0
+  obstckle_Layer:
+    serializedVersion: 2
+    m_Bits: 4096
+  obj_Indiacter: {fileID: 921632971365793255, guid: 8a4e68baafd395b4c87fd5509f7dfd78, type: 3}
 --- !u!114 &4171796928253081659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17412,6 +17424,26 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6115015481976022417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6809846556895815479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 986e852d418ea794d88d493b00ea451c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseValue: 0
+  HealthIncreasingPersantage: 15
+  damageIncreasingPersantage: 15
+  knockBackPersanatge: 15
+  enemyPoint: 10
+  flt_Damage: 5
+  flt_KnockBack: 20
+  flt_MaxHealth: 100
 --- !u!1 &6809846557040475031
 GameObject:
   m_ObjectHideFlags: 0
@@ -33022,7 +33054,7 @@ GameObject:
   - component: {fileID: 4387911078535407570}
   - component: {fileID: 4385498177751736798}
   - component: {fileID: 8949956903744187803}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BodyCollider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -33053,7 +33085,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 8424183424066577839}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 1.5
   m_Direction: 1
@@ -33081,6 +33113,9 @@ MonoBehaviour:
   obj_TerroVFx: {fileID: 2475811407391231093}
   flt_Damage: 0
   flt_Force: 0
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &9186698391455765314
 GameObject:
   m_ObjectHideFlags: 0

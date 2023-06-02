@@ -7,18 +7,16 @@ using System;
 
 public class EnemyHealth : MonoBehaviour
 {
+    private EnemyData enemyData;
     [SerializeField] private float flt_MaxHealth;
     [SerializeField] private float flt_CurrrentHealth;
     [SerializeField] private TextMeshProUGUI txt_Health;
-
 
     [SerializeField] private GameObject enemy_UI;
 
     [Header("Health Slider")]
     [SerializeField] private Slider slider_Health; // normal slider
     [SerializeField] private Slider slider_Animation; // another slider to give damage effect
-
-  
     private float flt_CurrentSliderHealth;
 
     
@@ -49,6 +47,8 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnEnable() {
 
+        enemyData = GetComponent<EnemyData>();
+        flt_MaxHealth = enemyData.GetmaxHealth();
         flt_CurrrentHealth = flt_MaxHealth;
         slider_Health.maxValue = flt_MaxHealth;
         slider_Animation.maxValue = flt_MaxHealth;
@@ -153,6 +153,9 @@ public class EnemyHealth : MonoBehaviour
             txt_Health.text = flt_CurrrentHealth.ToString();
         }
         else {
+
+            PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>()
+                .IncreasingPlayerPoint(enemyData.GetEnemyPoint());
             LevelManager.instance.RemoveListOfEnemy(gameObject);
 
 

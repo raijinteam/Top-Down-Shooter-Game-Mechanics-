@@ -9849,6 +9849,7 @@ GameObject:
   - component: {fileID: 5151726824658531679}
   - component: {fileID: 5151726824658531620}
   - component: {fileID: 5151726824658531619}
+  - component: {fileID: 7638482357025752142}
   m_Layer: 0
   m_Name: Dragon
   m_TagString: Untagged
@@ -9933,11 +9934,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5953f7ec051ac0740b7466109bca9510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyData: {fileID: 7638482357025752142}
   batMovement: {fileID: 5151726824658531679}
   transform_SpawnPostion: {fileID: 5151726824978836142}
   flt_FireRate: 3
   flt_CurrentTime: 0
-  bullet: {fileID: 1908313738967664768, guid: 073d146a718e4154c9826bdeb7c2b01c, type: 3}
+  flt_Damage: 0
+  flt_Force: 0
+  bullet: {fileID: 8527042369422369924, guid: 073d146a718e4154c9826bdeb7c2b01c, type: 3}
 --- !u!114 &5151726824658531619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9950,12 +9954,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6743ba3df68cc4b893d36d60a9193d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragen: {fileID: 5151726824658531618}
   enemyHealth: {fileID: 5151726824658531678}
   batMovement: {fileID: 5151726824658531679}
   draganShooting: {fileID: 5151726824658531620}
   obj_ChainVfx: {fileID: 2317312455283904649}
   damage: 0
   flt_knockBackForce: 0
+--- !u!114 &7638482357025752142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5151726824658531618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 986e852d418ea794d88d493b00ea451c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseValue: 0
+  HealthIncreasingPersantage: 15
+  damageIncreasingPersantage: 15
+  knockBackPersanatge: 15
+  enemyPoint: 10
+  flt_Damage: 5
+  flt_KnockBack: 20
+  flt_MaxHealth: 100
 --- !u!1 &5151726824758789727
 GameObject:
   m_ObjectHideFlags: 0
@@ -10310,7 +10335,7 @@ GameObject:
   - component: {fileID: 5151726825303022885}
   - component: {fileID: 5151726825303022884}
   - component: {fileID: 3122300414413307051}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BodyCollider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -10366,6 +10391,9 @@ MonoBehaviour:
   obj_TerroVFx: {fileID: 8290569999456405885}
   flt_Damage: 0
   flt_Force: 0
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &5151726825429093264
 GameObject:
   m_ObjectHideFlags: 0

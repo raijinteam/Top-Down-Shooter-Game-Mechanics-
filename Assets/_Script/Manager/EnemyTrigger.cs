@@ -22,4 +22,5 @@ public abstract class EnemyTrigger : MonoBehaviour
     public abstract void StopMolotovePowerUp();
     public abstract void SetDamageBlast();
     public abstract void SetHitByTerrorShot(float flt_Damage, float flt_Force);
+    public abstract void SetHitOrbitBullet(float flt_Damage, float flt_Force, Vector3 direction);
 }

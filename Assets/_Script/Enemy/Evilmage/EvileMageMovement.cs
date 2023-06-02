@@ -13,6 +13,7 @@ public class EvileMageMovement : MonoBehaviour
     [SerializeField] private EivileMageShooting eivileMageShooting;
     public EnemyState enemyState;
     [SerializeField] private EvileMageTrigger evileMageTrigger;
+    
 
     [Header("MovementData")]
     [SerializeField] private float flt_MoveTime;

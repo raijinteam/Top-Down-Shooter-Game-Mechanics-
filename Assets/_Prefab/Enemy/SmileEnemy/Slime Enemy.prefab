@@ -10376,6 +10376,7 @@ GameObject:
   - component: {fileID: 8951095209520252347}
   - component: {fileID: 8951095209520252346}
   - component: {fileID: 8810466365759824049}
+  - component: {fileID: 4481563691275177638}
   m_Layer: 0
   m_Name: Slime Enemy
   m_TagString: Enemy
@@ -10526,9 +10527,36 @@ MonoBehaviour:
   slimeMovement: {fileID: 8951095209520252347}
   slimeAttacking: {fileID: 8951095209520252346}
   navMeshAgent: {fileID: 4507405766774495717}
-  damage: 0
-  flt_knockBackForce: 0
+  body: {fileID: 5798991519202165829}
   obj_ChainVfx: {fileID: 5151975740483125948}
+  slimeData: {fileID: 8810466365759824049}
+  flt_Boundry: 0
+  flt_BoundryX: 0
+  flt_BoundryZ: 0
+  obstckle_Layer:
+    serializedVersion: 2
+    m_Bits: 4096
+  obj_Indiacter: {fileID: 921632971365793255, guid: 8a4e68baafd395b4c87fd5509f7dfd78, type: 3}
+--- !u!114 &4481563691275177638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4025099724955123257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 986e852d418ea794d88d493b00ea451c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseValue: 0
+  HealthIncreasingPersantage: 15
+  damageIncreasingPersantage: 15
+  knockBackPersanatge: 15
+  enemyPoint: 10
+  flt_Damage: 5
+  flt_KnockBack: 20
+  flt_MaxHealth: 100
 --- !u!1 &4111365129907893976
 GameObject:
   m_ObjectHideFlags: 0
@@ -20539,7 +20567,7 @@ GameObject:
   - component: {fileID: 9111461459626699781}
   - component: {fileID: 5798991519202165829}
   - component: {fileID: 7599366432627317761}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Body Collider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -20570,7 +20598,7 @@ SphereCollider:
   m_GameObject: {fileID: 5143868835388840937}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.45
   m_Center: {x: 0, y: 0, z: 0}
@@ -20596,6 +20624,9 @@ MonoBehaviour:
   obj_TerroVFx: {fileID: 4326839430441228934}
   flt_Damage: 0
   flt_Force: 0
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &5151975740483125948
 GameObject:
   m_ObjectHideFlags: 0

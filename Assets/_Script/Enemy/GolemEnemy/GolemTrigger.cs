@@ -20,7 +20,12 @@ public class GolemTrigger : EnemyTrigger
     [SerializeField] private GameObject obj_TerroVFx;
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_Force;
+    [SerializeField] private LayerMask LayerMask;
 
+    public override void SetHitOrbitBullet(float flt_Damage, float flt_Force, Vector3 direction) {
+        enemyHealth.TakeDamage(flt_Damage);
+        golemMovement.OrbitKnockBack(flt_Force, direction);
+    }
     public override void SetHitByTerrorShot(float flt_Damage,float flt_Force) {
 
         obj_TerroVFx.gameObject.SetActive(true);
@@ -32,15 +37,15 @@ public class GolemTrigger : EnemyTrigger
     private IEnumerator DelayOfTerrorShot() {
         yield return new WaitForSeconds(flt_DelayOfTerrorShot);
 
-        Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_Range);
+        Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_Range, LayerMask);
 
         for (int i = 0; i < all_Collider.Length; i++) {
-            if (all_Collider[i].TryGetComponent<EnemyTrigger>(out EnemyTrigger enemyTrigger)) {
 
-                Vector3 direction = (all_Collider[i].transform.position - transform.position).normalized;
-                enemyTrigger.SethitByBullet(flt_Damage, flt_Force,
-                                        new Vector3(direction.x,0,direction.z).normalized);
-            }
+
+            Vector3 direction = (all_Collider[i].transform.position - transform.position).normalized;
+            all_Collider[i].GetComponent<EnemyTrigger>().SethitByBullet(flt_Damage, flt_Force,
+                                        new Vector3(direction.x, 0, direction.z).normalized);
+
         }
         obj_TerroVFx.gameObject.SetActive(false);
     }

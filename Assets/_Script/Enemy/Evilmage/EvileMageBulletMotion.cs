@@ -12,7 +12,7 @@ public class EvileMageBulletMotion : MonoBehaviour
     [SerializeField] private float amplitude = 1f;    // amplitude of the snake movement
     [SerializeField] private float frequency = 1f;    // frequency of the snake movement
     [SerializeField] private float speed = 1f;        // speed of the bullet movement
-    [SerializeField] private float force;
+     private float force;
     private float time = 0f;        // current time
     private float damage;
     private float flt_DelayOfDestroy = 3;
@@ -42,10 +42,10 @@ public class EvileMageBulletMotion : MonoBehaviour
         isMove = true;
         Destroy(gameObject, 15);
     }
-    public void SetBulletData(Vector3 direction, float damage) {
+    public void SetBulletData(Vector3 direction, float damage , float flt_Force) {
         this.damage = damage;
         this.dirction = direction;
-
+        this.force = flt_Force;
         perpendiqulerDirection = Vector3.Cross(direction, Vector3.up);
 
     }

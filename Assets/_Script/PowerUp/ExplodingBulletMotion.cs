@@ -11,6 +11,7 @@ public class ExplodingBulletMotion : MonoBehaviour
     [SerializeField] private float flt_BulletSpeed;
     [SerializeField] private float flt_Area_Damage;
     [SerializeField] private float flt_Range;
+    [SerializeField] private LayerMask layermask;
 
     [Header("Camponanat")]
     [SerializeField] private GameObject body;
@@ -101,7 +102,7 @@ public class ExplodingBulletMotion : MonoBehaviour
 
     private void SetSphercast(Collider other) {
 
-        Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_Range);
+        Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_Range, layermask);
 
         Debug.Log("Loop Start   ");
 
@@ -111,14 +112,14 @@ public class ExplodingBulletMotion : MonoBehaviour
                 continue;
             }
 
-            if (all_Collider[i].TryGetComponent<EnemyTrigger>(out EnemyTrigger enemyTrigger)) {
+           
 
                 Vector3 direction = (all_Collider[i].transform.position - transform.
                                                     position).normalized;
-                enemyTrigger.SethitByBullet(flt_Area_Damage, flt_Force,
+                all_Collider[i].GetComponent<EnemyTrigger>().SethitByBullet(flt_Area_Damage, flt_Force,
                     new Vector3(direction.x, 0, direction.z).normalized);
 
-            }
+            
         }
         Debug.Log("diable");
         BulletDetrsoySetup();

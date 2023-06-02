@@ -7,7 +7,7 @@ public class OrcWepon : MonoBehaviour {
     [Header("Camponanat")]
     [SerializeField] private Collider collider_Hamer;
     [SerializeField] private Collider collider_Stick;
-    [SerializeField] private orcEnemyData collisionHandlerForEnemy;
+    [SerializeField] private EnemyData collisionHandlerForEnemy;
     public Transform parent;
 
     [Header("WeponData")]
@@ -15,8 +15,8 @@ public class OrcWepon : MonoBehaviour {
     public float flt_Damage;
 
     private void Start() {
-        flt_Force = collisionHandlerForEnemy.flt_knockBackForce;
-        flt_Damage = collisionHandlerForEnemy.damage;
+        flt_Force = collisionHandlerForEnemy.GetKnockBackForce();
+        flt_Damage = collisionHandlerForEnemy.GetDamage();
     }
     public void SetAllColider(bool value) {
         collider_Hamer.enabled = value;

@@ -29,10 +29,10 @@ public class BatBulletMotion : MonoBehaviour
 
 
 
-    public void SetBulletData(Vector3 direction, float damage) {
+    public void SetBulletData(Vector3 direction, float damage ,float flt_Force) {
         this.flt_Damage = damage;
         this.bulletMotionDirection = direction;
-
+        this.flt_Force = flt_Force;
 
     }
     private void Start() {

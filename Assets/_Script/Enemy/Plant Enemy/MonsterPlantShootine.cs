@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class MonsterPlantShootine : MonoBehaviour
 {
     [Header("Component")]
+    [SerializeField] private EnemyData enemyData;
     [SerializeField] private Animator enemy_Animator;
     [SerializeField]private EnemyState enemyState;
     [SerializeField] private PlantTrigger plantTrigger;
@@ -51,7 +52,10 @@ public class MonsterPlantShootine : MonoBehaviour
     private float gravityForce = -0.75f;
 
 
-   
+    private void OnEnable() {
+        flt_BulletDamage = enemyData.GetDamage();
+        flt_KnockbackForce = enemyData.GetKnockBackForce();
+    }
 
     private void OnCollisionEnter(Collision collision) {
         isGrounded = true;

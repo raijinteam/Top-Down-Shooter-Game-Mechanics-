@@ -16,22 +16,19 @@ public class BlnqPowerUp : MonoBehaviour
     private Vector3 targetPosition;  // Position clicked by the player
     [SerializeField]private float flt_Force = 50;
 
+
+    private void OnEnable() {
+        SetBlinqPowerUp();
+    }
     private void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            
-            SetBlinqPowerUp();
-        }
-
         PowerUpHandler();
-       
-
-      
+     
     }
 
     private void PowerUpHandler() {
 
-        if (Input.GetMouseButtonDown(0) && isPowerUpStart) {
+        if (Input.GetMouseButtonDown(0)) {
             // Create a ray from the camera to the mouse position
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -49,7 +46,7 @@ public class BlnqPowerUp : MonoBehaviour
 
                 Counter++;
                 if (Counter >= maxCounter) {
-                    isPowerUpStart = false;
+                    this.gameObject.SetActive(false);
                     Counter = 0;
                 }
 

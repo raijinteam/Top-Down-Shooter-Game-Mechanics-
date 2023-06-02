@@ -6,17 +6,19 @@ using UnityEngine;
 public class EivileMageShooting : MonoBehaviour {
 
     [Header("Camponant")]
+    [SerializeField] private EnemyData enemyData;
     [SerializeField] private Animator animator;
     [SerializeField]private EvileMageMovement evileMageMovement;
 
     [Header("Bullet Instantiate")]
-    [SerializeField] private GameObject bullet;
+    [SerializeField] private EvileMageBulletMotion bullet;
     [SerializeField] private GameObject bullet_Muzzle;
     [SerializeField] private Transform transform_BulletPostion;
   
 
     [Header("Shooting Data")]
-    [SerializeField] private int damage;
+    [SerializeField] private float damage;
+    [SerializeField] private float force;
     [SerializeField] private float flt_BulletFireRate;
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private bool isvisible;
@@ -26,7 +28,11 @@ public class EivileMageShooting : MonoBehaviour {
     private const string Id_Attack = "Attack";
     private const string Id_Run = "Run";
 
-    
+
+    private void OnEnable() {
+        damage = enemyData.GetDamage();
+        force = enemyData.GetKnockBackForce();
+    }
     private void Update() {
         
         if (!GameManager.instance.isPlayerLive) {
@@ -84,10 +90,10 @@ public class EivileMageShooting : MonoBehaviour {
     }
     public void SpwnBullet() {
 
-        GameObject gameObject = Instantiate(bullet, transform_BulletPostion.position, transform.rotation);
+        EvileMageBulletMotion gameObject = Instantiate(bullet, transform_BulletPostion.position, transform.rotation);
         if (PlayerManager.instance.Player != null) {
             Vector3 direction = (-transform.position + PlayerManager.instance.Player.transform.position).normalized;
-            gameObject.GetComponent<EvileMageBulletMotion>().SetBulletData(direction, damage);
+            gameObject.SetBulletData(direction, damage,force);
 
             Instantiate(bullet_Muzzle, transform_BulletPostion.position, bullet_Muzzle.transform.rotation);
         }

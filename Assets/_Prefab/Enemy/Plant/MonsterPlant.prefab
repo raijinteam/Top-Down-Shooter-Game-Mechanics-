@@ -6920,7 +6920,7 @@ GameObject:
   - component: {fileID: 6712905455033540211}
   - component: {fileID: 7792749333430356777}
   - component: {fileID: 4478596143268106702}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: BodyCollider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -6978,6 +6978,9 @@ MonoBehaviour:
   obj_TerroVFx: {fileID: 3591449888488431845}
   flt_Damage: 0
   flt_Force: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &3251183388802967689
 GameObject:
   m_ObjectHideFlags: 0
@@ -17153,6 +17156,7 @@ GameObject:
   - component: {fileID: 2539119776901442731}
   - component: {fileID: 1219490195622342018}
   - component: {fileID: 5005226120413005486}
+  - component: {fileID: 7188664928372088806}
   m_Layer: 13
   m_Name: MonsterPlant
   m_TagString: Enemy
@@ -17217,6 +17221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ddbbe1ceb21814eb606f2a3c474935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyData: {fileID: 7188664928372088806}
   enemy_Animator: {fileID: 362604354120283229}
   enemyState: 0
   plantTrigger: {fileID: 4478596143268106702}
@@ -17249,6 +17254,16 @@ MonoBehaviour:
   enemyHealth: {fileID: 639582671033614554}
   monsterPlantShootine: {fileID: 2539119776901442731}
   obj_ChainVfx: {fileID: 1134483514984779460}
+  obj_Plant: {fileID: 1219490195622342018}
+  flt_Scale: 1.5
+  flt_MaxScale: 1.8
+  flt_Boundry: 0
+  flt_BoundryX: 0
+  flt_BoundryZ: 0
+  obstckle_Layer:
+    serializedVersion: 2
+    m_Bits: 4096
+  obj_Indiacter: {fileID: 921632971365793255, guid: 8a4e68baafd395b4c87fd5509f7dfd78, type: 3}
 --- !u!54 &5005226120413005486
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17265,6 +17280,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7188664928372088806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000754158569604840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 986e852d418ea794d88d493b00ea451c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseValue: 0
+  HealthIncreasingPersantage: 15
+  damageIncreasingPersantage: 15
+  knockBackPersanatge: 15
+  enemyPoint: 10
+  flt_Damage: 5
+  flt_KnockBack: 20
+  flt_MaxHealth: 100
 --- !u!1 &4000754158697454152
 GameObject:
   m_ObjectHideFlags: 0

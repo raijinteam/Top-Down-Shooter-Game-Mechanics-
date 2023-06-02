@@ -6,7 +6,7 @@ public class Wepon : MonoBehaviour
 {
     public Collider Sword;
     public Transform parent;
-    public int damage;
+    public float damage;
     public float flt_KnockBack;
     [SerializeField] private GameObject PlaySwordTuchVfx;
     [SerializeField] private bool isSpider;
@@ -14,19 +14,9 @@ public class Wepon : MonoBehaviour
 
     private void Start() {
 
-        if (isSlime) {
-            damage = parent.GetComponent<SlimeData>().damage;
-            flt_KnockBack = parent.GetComponent<SlimeData>().flt_knockBackForce;
-        }
-        else if (isSpider) {
-            damage = parent.GetComponent<SpiderData>().damage;
-            flt_KnockBack = parent.GetComponent<SpiderData>().flt_knockBackForce;
-        }
-        else {
-            damage = parent.GetComponent<SkeletonData>().damage;
-            flt_KnockBack = parent.GetComponent<SkeletonData>().flt_knockBackForce;
-        }
-      
+        damage = parent.GetComponent<EnemyData>().GetDamage();
+        flt_KnockBack = parent.GetComponent<EnemyData>().GetKnockBackForce();
+       
         Sword.enabled = true;
     }
     public  void PLaySworVFx() {

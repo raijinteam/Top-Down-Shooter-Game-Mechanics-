@@ -5,16 +5,23 @@ using UnityEngine;
 
 public class DraganShooting : MonoBehaviour
 {
+    [SerializeField] private EnemyData enemyData;
     [SerializeField] private BatMovement batMovement;
     [SerializeField] private Transform transform_SpawnPostion;
     [SerializeField] private float flt_FireRate;
     [SerializeField] private float flt_CurrentTime;
-    [SerializeField] private GameObject bullet;
+    [SerializeField] private float flt_Damage;
+    [SerializeField] private float flt_Force;
+    [SerializeField] private BatBulletMotion bullet;
 
     private bool isVisible;
 
     private void OnEnable() {
         isVisible = true;
+
+        flt_Damage = enemyData.GetDamage();
+        flt_Force = enemyData.GetKnockBackForce();
+        
     }
     private void Update() {
         if (!GameManager.instance.isPlayerLive) {
@@ -60,9 +67,9 @@ public class DraganShooting : MonoBehaviour
     private IEnumerator Delay_SpwnBullet() {
 
         yield return new WaitForSeconds(1f);
-        GameObject current = Instantiate(bullet, transform_SpawnPostion.position,
+        BatBulletMotion current = Instantiate(bullet, transform_SpawnPostion.position,
            transform_SpawnPostion.rotation);
-        current.GetComponent<BatBulletMotion>().SetBulletData(transform_SpawnPostion.forward, 0);
+        current.SetBulletData(transform_SpawnPostion.forward, flt_Damage , flt_Force);
         batMovement.DefaultAnimator();
     }
 

@@ -10,7 +10,7 @@ using UnityEngine.AI;
 public class LevelManager : MonoBehaviour {
     public static LevelManager instance;
 
-    [SerializeField] private EnemySpawner enemySpawner;
+    
     [SerializeField] private NavMeshSurface navMeshSurface;
     [SerializeField] private GameObject obj_Obstckle;
     [SerializeField] private LayerMask obstckleLayer;
@@ -98,33 +98,9 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void SpawnEnemy() {
-        if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<SkeletonData>(out SkeletonData skeletonData)) {
-            enemySpawner.SpawnSkeleton();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<EvileMageData>(out EvileMageData evileMageData)) {
-            enemySpawner.SpawnEnemyMage();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<orcEnemyData>(out orcEnemyData orcEnemyData)) {
-            enemySpawner.SpawnOrcEnemy();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<MonsterPlantData>(out MonsterPlantData plantData)) {
-            enemySpawner.SpawnMonsterPlant();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<GolemData>(out GolemData GolemData)) {
-            enemySpawner.SpawnGolemEnemy();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<SlimeData>(out SlimeData slimeData)) {
-            enemySpawner.SpawnSlimeEnemy();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<SpiderData>(out SpiderData spiderData)) {
-            enemySpawner.SpawnSpiderEnemy();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<BatData>(out BatData batData)) {
-            enemySpawner.SpawnBatEnemy();
-        }
-        else if (currentWave.all_Enemy[currentEnemyIndex].TryGetComponent<DragonData>(out DragonData dragonData)) {
-            enemySpawner.SpawnDragon();
-        }
+
+        currentWave.all_Enemy[currentEnemyIndex].GetComponent<EnemyHandler>().SpawnEnemy();
+       
     }
 
     public void ADDListOfEnemy(GameObject current) {

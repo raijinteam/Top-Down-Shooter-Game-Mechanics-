@@ -19,6 +19,9 @@ public class BatTrigger : EnemyTrigger
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_Force;
 
+    public override void SetHitOrbitBullet(float flt_Damage, float flt_Force, Vector3 direction) {
+        enemyHealth.TakeDamage(flt_Damage);
+    }
     public override void SetHitByTerrorShot(float flt_Damage, float flt_Force) {
 
         obj_TerroVFx.gameObject.SetActive(true);

@@ -34486,6 +34486,9 @@ MonoBehaviour:
   flt_BulletSpeed: 15
   flt_Area_Damage: 0
   flt_Range: 0
+  layermask:
+    serializedVersion: 2
+    m_Bits: 4096
   body: {fileID: 8782656869483146712}
   explotion: {fileID: 7310045133735922616}
 --- !u!1 &8782656869483146712

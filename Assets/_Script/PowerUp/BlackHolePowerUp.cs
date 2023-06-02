@@ -22,11 +22,15 @@ public class BlackHolePowerUp : MonoBehaviour
     [SerializeField] private GameObject Obj_Muzzle;
     [SerializeField] private BlackHoleBulletMotion Obj_Bullet;
 
+    private void OnEnable() {
+        SetBulletBlackHole();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_FireRate * maxBullet);
+    }
     public void SetBulletBlackHole() {
         bulletCounter = 0;
         flt_CurrentTime = 0;
         bulletCounter = 0;
-        this.gameObject.SetActive(true);  
+        
     }
 
    
@@ -60,8 +64,8 @@ public class BlackHolePowerUp : MonoBehaviour
 
         bulletCounter++;
         if (bulletCounter >= maxBullet) {
-           
-            
+
+            this.gameObject.SetActive(false);
         }
     }
 

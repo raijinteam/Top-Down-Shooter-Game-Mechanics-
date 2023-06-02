@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class DragonData : EnemyHandler
 {
     [Header("All Script Campaotant")]
+    [SerializeField] private GameObject dragen;
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private BatMovement batMovement;
     [SerializeField] private DraganShooting draganShooting;
@@ -15,6 +17,22 @@ public class DragonData : EnemyHandler
     public int damage;
     public float flt_knockBackForce;
 
+    public override void SpawnEnemy() {
+        SpawnAndTargetPostion spawnAndTarget = GetFlyIngEnemyPostion();
+
+
+        Vector3 SpawnPostion = spawnAndTarget.startPostion;
+        Vector3 targetPostion = spawnAndTarget.EndPostion;
+        GameObject currentBat = Instantiate(dragen, SpawnPostion, Quaternion.identity);
+
+        currentBat.transform.LookAt(PlayerManager.instance.Player.transform);
+
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Append(currentBat.transform.DOMove(targetPostion, 1).SetEase(Ease.Linear)).
+            AppendCallback(currentBat.GetComponent<DragonData>().SetAllScriptData);
+        ;
+    }
 
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
         enemyHealth.SetLaserAffacted(damage);

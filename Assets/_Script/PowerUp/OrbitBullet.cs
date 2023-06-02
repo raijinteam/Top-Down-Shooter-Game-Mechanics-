@@ -32,7 +32,7 @@ public class OrbitBullet : MonoBehaviour
             if (all_Collider[i].TryGetComponent<EnemyTrigger>(out EnemyTrigger enemyTrigger)) {
                 Vector3 direction = (all_Collider[i].transform.position - transform.position).normalized;
                 direction = new Vector3(direction.x, 0, direction.z).normalized;
-                enemyTrigger.SethitByBullet(flt_Damage, flt_Force, direction);
+                enemyTrigger.SetHitOrbitBullet(flt_Damage, flt_Force, direction);
             }
         }
 

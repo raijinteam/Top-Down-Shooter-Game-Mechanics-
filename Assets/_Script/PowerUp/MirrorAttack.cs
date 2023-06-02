@@ -12,31 +12,31 @@ public class MirrorAttack : MonoBehaviour
     [SerializeField] private CloneMirrorAttackPlayer2 obj_MirrorAttackPlayer2;
     [SerializeField] private Transform[] all_MirrorPostion;
     [SerializeField] private int IndexOfMirrorAttack; // cloneCount
-    [SerializeField] private bool isPowerUpStart;
+    
     [SerializeField] private float flt_CurrentPowerTime;
     [SerializeField] private float flt_MaxPowerUpTime;
-    
+
+    private void OnEnable() {
+        SetMirrorAttackPowerUp();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxPowerUpTime);
+    }
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetMirrorAttackPowerUp();
-        }
+       
 
         MirrorAttackPowerUpHandler();
     }
 
     private void MirrorAttackPowerUpHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+       
         flt_CurrentPowerTime += Time.deltaTime;
 
         if (flt_CurrentPowerTime > flt_MaxPowerUpTime) {
-            isPowerUpStart = false;
+            this.gameObject.SetActive(false);
         }
     }
 
     public void SetMirrorAttackPowerUp() {
-        isPowerUpStart = true;
+        
         flt_CurrentPowerTime = 0;
        // SpawnMirrorAttackPlayer();
         SpawnMirrorAttackPlayer2();

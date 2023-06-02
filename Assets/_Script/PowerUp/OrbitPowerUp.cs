@@ -6,7 +6,6 @@ public class OrbitPowerUp : MonoBehaviour
 {
     [Header("Bullet Data")]
 
-    private bool isPowerUpStart;
     [SerializeField] private float flt_range;
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_force;
@@ -24,43 +23,35 @@ public class OrbitPowerUp : MonoBehaviour
 
     [Header("vfx")]
     [SerializeField] private OrbitBullet orbitBullet;
-    
 
-    public void SetNukePowerUp() {
-        isPowerUpStart = true;
+
+    private void OnEnable() {
+
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_FireRate*max_Bullet);
         flt_CurrentTime = 0;
         bulletCounter = 0;
-    }
-
-    private void Start() {
         flt_Boundry = LevelManager.instance.flt_Boundry;
         flt_Boundry_X = LevelManager.instance.flt_BoundryX;
         flt_Boundry_Z = LevelManager.instance.flt_BoundryZ;
     }
+    
 
+   
     private void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetNukePowerUp();
-        }
+      
 
         PowerUpHandler();
     }
 
     private void PowerUpHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+       
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_FireRate) {
             flt_CurrentTime = 0;
             bulletCounter++;
-            if (bulletCounter > max_Bullet) {
-                isPowerUpStart = false;
-            }
-            else {
-                SpawnBullet();
-            }
+            SpawnBullet();
+          
 
         }
     }
@@ -71,6 +62,11 @@ public class OrbitPowerUp : MonoBehaviour
                                             Random.Range(flt_Boundry, flt_Boundry_Z));
         OrbitBullet current = Instantiate(orbitBullet, spawnPostion, transform.rotation);
         current.SetBulletData(flt_range, flt_force, flt_Damage);
+
+        bulletCounter++;
+        if (bulletCounter >=  max_Bullet) {
+            this.gameObject.SetActive(false);
+        }
                            
        
     }

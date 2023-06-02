@@ -23,12 +23,14 @@ public class InvisblePowerup : MonoBehaviour
   
     
     [SerializeField] private GameObject obj_PowerUp;
-   
+
+    private void OnEnable() {
+        SetInvisiblePowerup();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimeInVisible);
+    }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetInvisiblePowerup();
-        }
+        
 
         InvisblePowerUpHandler();
     }
@@ -38,9 +40,10 @@ public class InvisblePowerup : MonoBehaviour
         MakeAllEnemyInVisible();
         flt_CurrentTimeInvisible += Time.deltaTime;
         if (flt_CurrentTimeInvisible > flt_MaxTimeInVisible) {
-   
+    
             obj_PowerUp.SetActive(false);
             All_EnemyVisible();
+            this.gameObject.SetActive(false);
         }
     }
 

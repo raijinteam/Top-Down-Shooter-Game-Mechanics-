@@ -26,6 +26,10 @@ public class LaserPowerUp : MonoBehaviour
 
     private void OnEnable() {
         all_Targets = new Transform[laserCount];
+        SetLaserPowerup();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_PowerUpTime);
+        //StartCoroutine(UIManager.instance.uIGamePlayScreen.SetImgPowerUp(flt_PowerUpTime));
+
     }
     
 
@@ -36,7 +40,7 @@ public class LaserPowerUp : MonoBehaviour
 
     }
 
-    public void SetLaserPowerup() {
+    private void SetLaserPowerup() {
         flt_CurrentTime = 0;
         SetInitialTargets();
     }

@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class GolemMovement : MonoBehaviour
 {
     [Header("Componant")]
+    [SerializeField] private EnemyData enemyData;
     [SerializeField] private Animator enemy_Animator;
     [SerializeField] private EnemyState enemyState;
     [SerializeField] private GolemTrigger golemTrigger;
@@ -23,19 +24,14 @@ public class GolemMovement : MonoBehaviour
     [SerializeField]private float flt_JumpAccerletion; // jump acceleration
     [SerializeField] private bool isGetDirection = false; // hasFoundTarget
     [SerializeField]private float flt_KnockBackForce;
-
-    
-
     [SerializeField]private float flt_MinKnockBackForce;
-
-  
-
     [SerializeField]private float flt_MaxKnockBackForce;
 
    
 
     [SerializeField]private float flt_RangeOfSpheareCast;
     [SerializeField] private float flt_Damage;
+    [SerializeField] private float flt_Force;
     private float currentAffectedGravityForce = 1;
     private float gravityForce = -0.75f;
     public bool isGrounded = true;
@@ -68,7 +64,12 @@ public class GolemMovement : MonoBehaviour
     private const string Id_Jump = "Jump";
 
 
-   
+    private void Start() {
+        flt_Damage = enemyData.GetDamage();
+        flt_MaxKnockBackForce = enemyData.GetKnockBackForce();
+        flt_MinKnockBackForce = 0;
+        
+    }
 
     private void Update() {
         if (!GameManager.instance.isPlayerLive) {
@@ -179,6 +180,20 @@ public class GolemMovement : MonoBehaviour
         }
 
     }
+    public void OrbitKnockBack(float flt_Force, Vector3 direction) {
+       
+       
+        if (Obj_current_Target != null) {
+            Destroy(Obj_current_Target);
+        }
+        if (Cour_Jump != null) {
+            isGetDirection = false;
+            StopCoroutine(Cour_Jump);
+            enemy_Animator.SetTrigger(Id_Idle);
+        }
+        GolemKnockBack(direction, flt_Force);
+    }
+
     public void HitByBlackHole(Transform _Target) {
 
         enemyState = EnemyState.BlackHole;

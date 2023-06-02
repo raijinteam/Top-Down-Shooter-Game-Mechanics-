@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,22 +11,62 @@ public class SkeletonData : EnemyHandler {
     [SerializeField] private float flt_RangeOfSpheareCast;
     [SerializeField] private GameObject obj_Explotion;
     private GameObject spawn_Indicator;
-   
+
     [Header("All Script Campaotant")]
+    [SerializeField] private SkeletonData skeletonData;
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private EnemyMovement enemyMovement;
     [SerializeField] private EnemyAttacking enemyAttacking;
     [SerializeField] private AttckHandler attckHandler;
     [SerializeField] private SkeletonCollisionHandler skeletonCollisionHandler;
     [SerializeField] private NavMeshAgent navMeshAgent;
+    [SerializeField] private Collider body;
 
-    public int damage = 5;
-    public int flt_knockBackForce = 30;
+   
 
     [Header("Chain Vfx")]
     [SerializeField] private GameObject obj_ChainVfx;
 
+    [Header("Spawner")]
+    [SerializeField] private float flt_Boundry;
+    [SerializeField] private float flt_BoundryX;
+    [SerializeField] private float flt_BoundryZ;
+    [SerializeField] private LayerMask obstckle_Layer;
+    [SerializeField]private GameObject obj_Indiacter;
 
+   
+
+    public override void SpawnEnemy() {
+        float flt_YTopPostion = 100;
+        float flt_YDownPostion = 2;
+        bool isSpawn = false;
+        while (!isSpawn) {
+            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
+                LevelManager.instance.flt_BoundryX), flt_YTopPostion,
+                Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
+
+            if (!Physics.Raycast(postion, Vector3.down, 1000, obstckle_Layer)) {
+                GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
+                                                 obj_Indiacter.transform.rotation);
+
+                SkeletonData current = Instantiate(skeletonData, postion, transform.rotation);
+
+                current.SetSpawnIndicator(indicator);
+                float flt_CurrentScale = current.transform.localScale.y;
+                float flt_AnimatScale = flt_CurrentScale - 0.3f;
+
+
+                Sequence seq = DOTween.Sequence();
+                seq.AppendInterval(0.5F).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5F)).
+                    AppendCallback(current.DestroyIndicator).
+                    Append(current.transform.DOScaleY(flt_AnimatScale, 0.5F)).
+                    Append(current.transform.DOScaleY(flt_CurrentScale, 0.5F))
+                        .AppendCallback(current.SetAllScriptData);
+                current.transform.rotation = Quaternion.identity;
+                isSpawn = true;
+            }
+        }
+    }
     public override void SetHitByLaser(Vector3 _Dircetion ,float _force, float _damage) {
         enemyMovement.KnockBack(_Dircetion, _force);
         enemyHealth.SetLaserAffacted(_damage);
@@ -92,6 +133,7 @@ public class SkeletonData : EnemyHandler {
         enemyAttacking.enabled = true;
         attckHandler.enabled = true;
         skeletonCollisionHandler.enabled = true;
+        body.enabled = true;
         //navMeshAgent.enabled = true;
 
     }

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9097469305159854224}
   - component: {fileID: 3353428215902133792}
-  - component: {fileID: 7534882566475831482}
   m_Layer: 0
   m_Name: Nuke Expltion
   m_TagString: Untagged
@@ -46,19 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74fec85cafa1b4d4d8b99d807fa9542e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7534882566475831482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439348356690332563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da567ddac4f2fda479e1cd79bc6df2a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flt_Dealy: 3
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &2513869389788870944
 GameObject:
   m_ObjectHideFlags: 0

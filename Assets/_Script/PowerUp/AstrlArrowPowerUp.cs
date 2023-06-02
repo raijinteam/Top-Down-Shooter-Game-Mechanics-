@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class AstrlArrowPowerUp : MonoBehaviour {
-    [SerializeField] private float flt_CurrentTime;
+   
 
     private float flt_Boundry;
     private float flt_BoundrX;
@@ -14,17 +14,42 @@ public class AstrlArrowPowerUp : MonoBehaviour {
 
     [SerializeField] private int No_OfArrow_Spawn;
     [SerializeField] private float flt_Damage;
+    [SerializeField] private float flt_FireRate;
+
+    [SerializeField] private float flt_CurrentTimeForFireRate;
+    [SerializeField] private float flt_CurrentTime;
+    [SerializeField] private float flt_Maxtime;
    
     [SerializeField] private Arrow arrow;
 
-    private void Start() {
+
+    private void OnEnable() {
+        SpawnArrow();
         flt_Boundry = LevelManager.instance.flt_Boundry;
         flt_BoundrX = LevelManager.instance.flt_BoundryX;
         flt_BoundryZ = LevelManager.instance.flt_BoundryZ;
+        flt_CurrentTime = 0;
+        flt_CurrentTimeForFireRate = 0;
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_Maxtime);
     }
+
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        BulletHandler();
+        PowerUpHandler();
+    }
+
+    private void PowerUpHandler() {
+        flt_CurrentTime += Time.deltaTime;
+        if (flt_CurrentTime > flt_Maxtime) {
+            this.gameObject.SetActive(false);
+        }
+    }
+
+    private void BulletHandler() {
+        flt_CurrentTimeForFireRate += Time.deltaTime;
+        if (flt_CurrentTimeForFireRate > flt_FireRate) {
             SpawnArrow();
+            flt_CurrentTimeForFireRate = 0;
         }
     }
 

@@ -9,7 +9,7 @@ public class ClusterPowerUp : MonoBehaviour
     [Header("PowerUp Data")]
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private float flt_MaxTimeForPowerUp;
-    [SerializeField] private bool isPowerUpStart;
+   
 
     [Header("ClusterBombData")]
     [SerializeField] private Transform spawnPostion;
@@ -23,19 +23,18 @@ public class ClusterPowerUp : MonoBehaviour
     [SerializeField] private float flt_CurrentTimeForSpwnBomb;
     [SerializeField] private float flt_BombFireRate;
 
-
+    private void OnEnable() {
+        SetPowerUp();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimeForPowerUp);
+    }
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetPowerUp();
-        }
+        
         PowerUpHandler();
         ClusterBomeHandler();
     }
 
     private void ClusterBomeHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+       
         flt_CurrentTimeForSpwnBomb += Time.deltaTime;
 
         if (flt_CurrentTimeForSpwnBomb > flt_BombFireRate) {
@@ -53,18 +52,16 @@ public class ClusterPowerUp : MonoBehaviour
     }
 
     private void PowerUpHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
+       
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_MaxTimeForPowerUp) {
-            isPowerUpStart = false;
+            this.gameObject.SetActive(false);
             flt_CurrentTime = 0;
         }
     }
 
     private void SetPowerUp() {
-        isPowerUpStart = true;
+     
         flt_CurrentTime = 0;
         flt_CurrentTimeForSpwnBomb = 0;
     }

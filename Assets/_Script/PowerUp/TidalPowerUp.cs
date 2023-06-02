@@ -8,7 +8,7 @@ public class TidalPowerUp : MonoBehaviour
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private float flt_CurrentTimeForFireRate;
     [SerializeField] private float flt_MaxTimePowerUp;
-    [SerializeField] private bool isPowerTime;
+    
 
     [SerializeField] private float flt_DelayBetweenTwoWave;
     [SerializeField] private Transform spawnPostion;
@@ -17,16 +17,18 @@ public class TidalPowerUp : MonoBehaviour
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_DestryTime;
 
+    private void OnEnable() {
+        SetTidalPowerUp();
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimePowerUp);
+    }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetTidalPowerUp();
-        }
+       
 
         TidalPowerUpHandler();
-        if (isPowerTime) {
-            SpawnTidal();
-        }
+       
+         SpawnTidal();
+
     }
 
     private void SpawnTidal() {
@@ -47,19 +49,17 @@ public class TidalPowerUp : MonoBehaviour
     }
 
     private void TidalPowerUpHandler() {
-        if (!isPowerTime) {
-            return;
-        }
+        
         flt_CurrentTime += Time.deltaTime;
 
         if (flt_CurrentTime > flt_MaxTimePowerUp) {
-            isPowerTime = false;
+            this.gameObject.SetActive(false);
             
         }
     }
 
     private void SetTidalPowerUp() {
-        isPowerTime = true;
+       
         flt_CurrentTime = 0;
     }
 }

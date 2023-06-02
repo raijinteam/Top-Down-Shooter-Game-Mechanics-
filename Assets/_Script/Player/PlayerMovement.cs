@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Components")]
     private PlayerShooting playerShooting;
     public Animator player_Animator;
+    [SerializeField] private VariableJoystick joystick;
     
 
     [Header("Player properties")]
@@ -80,6 +81,9 @@ public class PlayerMovement : MonoBehaviour
 
         flt_HorizontalInput = Input.GetAxis("Horizontal");
         flt_VerticalInput = Input.GetAxis("Vertical");
+
+        //flt_HorizontalInput = joystick.Horizontal;
+        //flt_VerticalInput = joystick.Vertical;
 
         //if (Input.GetMouseButtonDown(0)) {
         //    isJump = true;

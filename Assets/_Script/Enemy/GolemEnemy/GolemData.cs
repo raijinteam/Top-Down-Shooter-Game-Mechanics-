@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,10 +16,52 @@ public class GolemData : EnemyHandler
     [SerializeField] private GolemMovement golemMovement;
     [SerializeField] private GolemTrigger golemTrigger;
     private GameObject obj_Indicator;
+    [SerializeField] private Collider body;
 
     [Header("Chain Vfx")]
     [SerializeField] private GameObject obj_ChainVfx;
 
+    [Header("Spawner")]
+    [SerializeField] private GolemData golem;
+    [SerializeField] private float flt_Boundry;
+    [SerializeField] private float flt_BoundryX;
+    [SerializeField] private float flt_BoundryZ;
+    [SerializeField] private LayerMask obstckle_Layer;
+    [SerializeField] private GameObject obj_Indiacter;
+
+
+
+    public override void SpawnEnemy() {
+        float flt_YTopPostion = 100;
+        float flt_YDownPostion = 2;
+        bool isSpawn = false;
+        while (!isSpawn) {
+            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
+                LevelManager.instance.flt_BoundryX), flt_YTopPostion,
+                Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
+
+            if (!Physics.Raycast(postion, Vector3.down, 1000, obstckle_Layer)) {
+                GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
+                                                 obj_Indiacter.transform.rotation);
+
+                GolemData current = Instantiate(golem, postion, transform.rotation);
+
+                current.SetSpawnIndicator(indicator);
+                float flt_CurrentScale = current.transform.localScale.y;
+                float flt_AnimatScale = flt_CurrentScale - 0.3f;
+
+
+                Sequence seq = DOTween.Sequence();
+                seq.AppendInterval(0.5F).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5F)).
+                    AppendCallback(current.DestroyIndicator).
+                    Append(current.transform.DOScaleY(flt_AnimatScale, 0.5F)).
+                    Append(current.transform.DOScaleY(flt_CurrentScale, 0.5F))
+                        .AppendCallback(current.SetAllScriptData);
+                current.transform.rotation = Quaternion.identity;
+                isSpawn = true;
+            }
+        }
+    }
 
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
 
@@ -71,7 +114,7 @@ public class GolemData : EnemyHandler
         enemyHealth.enabled = true;
         golemMovement.enabled = true;
         golemTrigger.enabled = true;
-        
+        body.enabled = true;
 
     }
 
