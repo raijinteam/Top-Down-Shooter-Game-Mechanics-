@@ -42,12 +42,12 @@ public class TerrorShort : MonoBehaviour
 
     private void SpawnBullet() {
 
-        if (LevelManager.instance.list_AllEnemyInActiveInLevel.Count == 0) {
+        if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
 
-        int index = Random.Range(0, LevelManager.instance.list_AllEnemyInActiveInLevel.Count);
-        spawnPostion.LookAt(LevelManager.instance.list_AllEnemyInActiveInLevel[index].transform);
+        int index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
+        spawnPostion.LookAt(GameManager.instance.list_ActiveEnemies[index]);
         TerrorShotBullet currentBullet = Instantiate(terroShotBullet,
                                      spawnPostion.position, spawnPostion.rotation);
         currentBullet.SetBulletData(spawnPostion.forward,flt_Damage, flt_force);

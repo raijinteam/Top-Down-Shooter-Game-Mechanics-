@@ -55,7 +55,7 @@ public class WaveShootPowerUp : MonoBehaviour
     }
 
     private void FireBullet() {
-        if (LevelManager.instance.list_AllEnemyInActiveInLevel.Count == 0) {
+        if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
         if (IsStartShootBullet) {
@@ -72,9 +72,9 @@ public class WaveShootPowerUp : MonoBehaviour
 
     private void FindTarget() {
 
-        int Index = Random.Range(0, LevelManager.instance.list_AllEnemyInActiveInLevel.Count);
+        int Index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
 
-        spawnPosition_Bullet.LookAt(LevelManager.instance.list_AllEnemyInActiveInLevel[Index].transform);
+        spawnPosition_Bullet.LookAt(GameManager.instance.list_ActiveEnemies[Index]);
 
     }
 

@@ -175,7 +175,7 @@ public class SlimeMovement : MonoBehaviour
 
         float flt_Distance = MathF.Abs(Vector3.Distance(transform.position, PlayerManager.instance.Player.transform.position));
 
-        Debug.Log(flt_Distance);
+        
         if (flt_Distance < flt_Range) {
 
 

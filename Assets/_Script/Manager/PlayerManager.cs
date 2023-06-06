@@ -33,9 +33,9 @@ public class PlayerManager : MonoBehaviour
         GameObject player = Instantiate(obj_Player, spawnPostion.position, spawnPostion.rotation, gameStartBoat);
         this.Player = player;
         Player.GetComponent<Rigidbody>().useGravity = false;
-        LevelManager.instance.StartLevel();
+       
         UIManager.instance.uiLevelPanel.gameObject.SetActive(true);
-        UIManager.instance.uiLevelPanel.PlayUiLevelAnimation(1);
+      
        
         StartAnimation();
        

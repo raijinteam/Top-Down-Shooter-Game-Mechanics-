@@ -156,7 +156,7 @@ public class EnemyHealth : MonoBehaviour
 
             PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>()
                 .IncreasingPlayerPoint(enemyData.GetEnemyPoint());
-            LevelManager.instance.RemoveListOfEnemy(gameObject);
+            GameManager.instance.EnemyKilled(transform);
 
 
         }

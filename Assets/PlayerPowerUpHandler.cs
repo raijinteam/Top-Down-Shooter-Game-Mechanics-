@@ -66,7 +66,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
         if (!isPowerUpStart) {
             currenPointToForUltimate += point;
             float fillAmmmount = (currenPointToForUltimate / requiredPointToUnlockUltimate);
-            Debug.Log(fillAmmmount + "Fill");
+           
             UIManager.instance.uIGamePlayScreen.SetUltimateScore(fillAmmmount);
         }
 

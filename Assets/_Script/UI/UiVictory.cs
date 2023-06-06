@@ -40,6 +40,7 @@ public class UiVictory : MonoBehaviour
     }
 
     private void StopAnimation() {
+        GameManager.instance.SpwnEnemyNewWave();
         isStartAnimation = false;
         txt_Victory.transform.localScale = new Vector3(8, 8, 8);
         txt_Victory.transform.DOLocalRotate(Vector3.zero, 0.01f);

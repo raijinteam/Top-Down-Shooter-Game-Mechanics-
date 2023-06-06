@@ -17334,7 +17334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d7b56272d3dbc4180d5b68b9bdd49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 0}
+  enemyData: {fileID: 6115015481976022417}
   animator: {fileID: 5228673834624773926}
   evileMageMovement: {fileID: 4171796928253081659}
   bullet: {fileID: 1347205485537186400, guid: cb674fc0b90bf0641b1c23cf84a8bfbb, type: 3}

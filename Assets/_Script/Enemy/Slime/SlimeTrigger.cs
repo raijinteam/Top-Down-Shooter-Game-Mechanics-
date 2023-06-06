@@ -102,7 +102,7 @@ public class SlimeTrigger : EnemyTrigger
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag(tag_Water)) {
             Instantiate(obj_WaterParticle, transform.position, transform.rotation);
-            LevelManager.instance.RemoveListOfEnemy(transform.parent.parent.gameObject);
+            GameManager.instance.EnemyKilled(enemyHealth.transform);
         }
        
     }

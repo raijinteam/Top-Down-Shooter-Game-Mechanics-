@@ -100,7 +100,7 @@ public class PlantTrigger : EnemyTrigger
         if (other.gameObject.CompareTag(tag_Water)) {
 
             Instantiate(obj_WaterParicle, transform.position, transform.rotation);
-            LevelManager.instance.RemoveListOfEnemy(transform.parent.parent.gameObject);
+            GameManager.instance.EnemyKilled(enemyHealth.transform);
         }
         
     }

@@ -138,25 +138,25 @@ public class PlayerBulletMotion : MonoBehaviour
         }
      
 
-        for (int i = 0; i < LevelManager.instance.list_AllEnemyInActiveInLevel.Count; i++) {
+        for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
 
-            if (LevelManager.instance.list_AllEnemyInActiveInLevel == null) {
+            if (GameManager.instance.list_ActiveEnemies == null) {
                 continue;
             }
-            if (list_Enemy.Contains(LevelManager.instance.list_AllEnemyInActiveInLevel[i])) {
+            if (list_Enemy.Contains(GameManager.instance.list_ActiveEnemies[i].gameObject)) {
                 continue;
             }
 
 
             float distance = MathF.Abs(Vector3.Distance(transform.position,
-                LevelManager.instance.list_AllEnemyInActiveInLevel[i].transform.position));
+                GameManager.instance.list_ActiveEnemies[i].transform.position));
             if (target == null) {
-                target = LevelManager.instance.list_AllEnemyInActiveInLevel[i].transform;
+                target = GameManager.instance.list_ActiveEnemies[i];
                 MinDistnce = distance;
             }
             else {
                 if (distance < MinDistnce) {
-                    target = LevelManager.instance.list_AllEnemyInActiveInLevel[i].transform;
+                    target = GameManager.instance.list_ActiveEnemies[i].transform;
                     MinDistnce = distance;
                 }
             }

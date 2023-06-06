@@ -67,14 +67,14 @@ public class RobotMotion : MonoBehaviour
     }
 
     private void FindTarget() {
-        if (LevelManager.instance.list_AllEnemyInActiveInLevel.Count == 0) {
+        if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
         Transform target = null;
         float flt_MinDistance = 0;
-        for (int i = 0; i < LevelManager.instance.list_AllEnemyInActiveInLevel.Count; i++) {
+        for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
 
-            Transform cururrenTransform = LevelManager.instance.list_AllEnemyInActiveInLevel[i].
+            Transform cururrenTransform = GameManager.instance.list_ActiveEnemies[i].
                 transform;
             float flt_Distance = MathF.Abs(Vector3.Distance(transform.position,
                                                 cururrenTransform.position));

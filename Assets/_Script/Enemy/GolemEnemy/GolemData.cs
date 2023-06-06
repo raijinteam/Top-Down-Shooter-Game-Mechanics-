@@ -87,7 +87,7 @@ public class GolemData : EnemyHandler
     public void SetAllScriptData() {
 
         SetData();
-        LevelManager.instance.ADDListOfEnemy(this.gameObject);
+        GameManager.instance.ADDListOfEnemy(transform);
         ExpandSpherCast();
         Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
     }

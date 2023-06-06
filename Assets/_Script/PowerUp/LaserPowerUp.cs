@@ -119,9 +119,9 @@ public class LaserPowerUp : MonoBehaviour
 
         List<GameObject> list_NewEnemyListDuplicate = new List<GameObject>();
 
-        for (int i = 0; i < LevelManager.instance.list_AllEnemyInActiveInLevel.Count; i++) {
+        for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
 
-            list_NewEnemyListDuplicate.Add(LevelManager.instance.list_AllEnemyInActiveInLevel[i]);
+            list_NewEnemyListDuplicate.Add(GameManager.instance.list_ActiveEnemies[i].gameObject);
         }
 
         int enemyCount = list_NewEnemyListDuplicate.Count;
@@ -169,13 +169,13 @@ public class LaserPowerUp : MonoBehaviour
 
 
 
-        for (int i = 0; i < LevelManager.instance.list_AllEnemyInActiveInLevel.Count; i++) {
+        for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
 
-            if (list_EnemyListDuplicate.Contains(LevelManager.instance.list_AllEnemyInActiveInLevel[i])) {
+            if (list_EnemyListDuplicate.Contains(GameManager.instance.list_ActiveEnemies[i].gameObject)) {
                 continue;
             }
 
-            list_NewEnemyListDuplicate.Add(LevelManager.instance.list_AllEnemyInActiveInLevel[i]);
+            list_NewEnemyListDuplicate.Add(GameManager.instance.list_ActiveEnemies[i].gameObject);
            
 
         }

@@ -55,14 +55,14 @@ public class SkullPowerUp : MonoBehaviour
     private void SpawnBullet() {
 
         
-        if (LevelManager.instance.list_AllEnemyInActiveInLevel.Count==0) {
+        if (GameManager.instance.list_ActiveEnemies.Count==0) {
             return;
         }
 
         SkullMissileMotion current = Instantiate(Obj_Skull, spawnPostion.position, spawnPostion.rotation);
 
-        int Index = Random.Range(0, LevelManager.instance.list_AllEnemyInActiveInLevel.Count);
-        Transform Target = LevelManager.instance.list_AllEnemyInActiveInLevel[Index].transform;
+        int Index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
+        Transform Target = GameManager.instance.list_ActiveEnemies[Index];
         spawnPostion.LookAt(Target);
         current.SetBulletData(spawnPostion.forward, flt_Damage);
     }

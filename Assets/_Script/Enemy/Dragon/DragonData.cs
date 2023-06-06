@@ -59,7 +59,7 @@ public class DragonData : EnemyHandler
     public void SetAllScriptData() {
 
         SetData();
-        LevelManager.instance.ADDListOfEnemy(this.gameObject);
+        GameManager.instance.ADDListOfEnemy(transform);
 
     }
 

@@ -44,7 +44,8 @@ public class UiPenalScreen : MonoBehaviour
     }
 
     private void StopAnimation() {
-        LevelManager.instance.NextWaveSetup();
+
+        GameManager.instance.SpwnEnemyNewWave();
         isStartAnimation = false;
         img_BG.rectTransform.localPosition = new Vector3(-2500, img_BG.rectTransform.localPosition.y,
                    img_BG.rectTransform.localPosition.z);
@@ -52,10 +53,7 @@ public class UiPenalScreen : MonoBehaviour
                     img_BG.rectTransform.localPosition.z);
         img_BG.rectTransform.DOScaleY(1, 0.1f);
         rectTransform_Txt.DOFade(1, 0.01f);transform.DOScale(1, 0.01f);
-        if (LevelManager.instance.isStartWave) {
-            UIManager.instance.uiWavePanel.gameObject.SetActive(true);
-            UIManager.instance.uiWavePanel.PlayUiWaveAnimation(LevelManager.instance.currentWaveIndex + 1);
-        }
+        
        
     }
 

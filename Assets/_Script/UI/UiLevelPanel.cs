@@ -11,9 +11,9 @@ public class UiLevelPanel : MonoBehaviour
     [SerializeField] private TextAnimatorPlayer textAnimatorPlayer;
     [SerializeField] private float flt_DelayOfComplteAnimkation;
 
-    public void PlayUiLevelAnimation(int _currentLevel) {
+    public void PlayUiLevelAnimation() {
 
-        textAnimatorPlayer.ShowText(GetText(_currentLevel));
+        textAnimatorPlayer.ShowText(GetText());
         StartCoroutine(EndOfLevelAnimation());
     }
 
@@ -22,11 +22,12 @@ public class UiLevelPanel : MonoBehaviour
         UIManager.instance.uiWavePanel.gameObject.SetActive(true);
         UIManager.instance.uiWavePanel.PlayUiWaveAnimation(1);
         this.gameObject.SetActive(false);
+        GameManager.instance.SpawnBoss();
     }
-    private string GetText(int _currentLevel) {
+    private string GetText() {
         string Text;
         if (isApperance) {
-            Text = "{" + id_Animation + "}Level: " + _currentLevel + "{/" + id_Animation + "}";
+            Text = "{" + id_Animation + "}" + "Boss Is Coming" + "{/" + id_Animation + "}";
         }
         else {
             Text = null;

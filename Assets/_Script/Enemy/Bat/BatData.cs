@@ -64,7 +64,7 @@ public class BatData : EnemyHandler
     public void SetAllScriptData() {
 
         SetData();
-        LevelManager.instance.ADDListOfEnemy(this.gameObject);
+        GameManager.instance.ADDListOfEnemy(transform);
       
     }
 

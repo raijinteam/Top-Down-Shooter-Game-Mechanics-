@@ -35,7 +35,7 @@ public class ChainPowerUp : MonoBehaviour
     }
 
     private void ChainEnemy() {
-        int total_Enemy = LevelManager.instance.list_AllEnemyInActiveInLevel.Count;
+        int total_Enemy = GameManager.instance.list_ActiveEnemies.Count;
         if (total_Enemy == 0) {
             isSetTarget = false;
             return;
@@ -56,7 +56,7 @@ public class ChainPowerUp : MonoBehaviour
                 while (!isSetTarget) {
                     int index = Random.Range(0, total_Enemy);
 
-                    GameObject current = LevelManager.instance.list_AllEnemyInActiveInLevel[index];
+                    GameObject current = GameManager.instance.list_ActiveEnemies[index].gameObject;
                     if (!list_ChainAffected.Contains(current)) {
                         list_ChainAffected.Add(current);
                         if (current.TryGetComponent<EnemyHandler>(out EnemyHandler enemyHandler)) {
@@ -75,7 +75,7 @@ public class ChainPowerUp : MonoBehaviour
                 while (!isSetTarget) {
                     int index = Random.Range(0, total_Enemy);
 
-                    GameObject current = LevelManager.instance.list_AllEnemyInActiveInLevel[index];
+                    GameObject current = GameManager.instance.list_ActiveEnemies[index].gameObject;
                     if (!list_ChainAffected.Contains(current)) {
                         list_ChainAffected.Add(current);
                         isSetTarget = true;

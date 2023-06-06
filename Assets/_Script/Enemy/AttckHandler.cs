@@ -20,7 +20,7 @@ public class AttckHandler : MonoBehaviour
         if (other.gameObject.tag.Equals(tag_Player)) {
            
                 enemyAttacking.isAttckinInRange = false;
-            Debug.Log("Player OutOf Range");
+           
 
 
         }

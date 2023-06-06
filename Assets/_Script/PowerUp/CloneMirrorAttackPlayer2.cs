@@ -121,7 +121,7 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
     }
 
     private void FireBullet() {
-        if (LevelManager.instance.list_AllEnemyInActiveInLevel.Count == 0) {
+        if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             isEnemyAcive = false;
             return;
         }
@@ -142,20 +142,20 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
       
 
 
-        for (int i = 0; i < LevelManager.instance.list_AllEnemyInActiveInLevel.Count; i++) {
+        for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
 
-            if (LevelManager.instance.list_AllEnemyInActiveInLevel[i] == null) {
+            if (GameManager.instance.list_ActiveEnemies[i] == null) {
                 continue;
             }
             float distance = MathF.Abs(Vector3.Distance(transform.position,
-                LevelManager.instance.list_AllEnemyInActiveInLevel[i].transform.position));
+               GameManager.instance.list_ActiveEnemies[i].transform.position));
             if (target == null) {
-                target = LevelManager.instance.list_AllEnemyInActiveInLevel[i];
+                target = GameManager.instance.list_ActiveEnemies[i].gameObject;
                 MinDistnce = distance;
             }
             else {
                 if (distance < MinDistnce) {
-                    target = LevelManager.instance.list_AllEnemyInActiveInLevel[i];
+                    target = GameManager.instance.list_ActiveEnemies[i].gameObject;
                     MinDistnce = distance;
                 }
             }

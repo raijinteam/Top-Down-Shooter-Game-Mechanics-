@@ -33,7 +33,7 @@ public class explodingShot : MonoBehaviour
     }
 
     private void BulletHandler() {
-        if (!isPowerUpStart && LevelManager.instance.list_AllEnemyInActiveInLevel.Count == 0) {
+        if (!isPowerUpStart && GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
         flt_CurrentTimeForSpawnBullet += Time.deltaTime;
@@ -45,13 +45,13 @@ public class explodingShot : MonoBehaviour
 
     private void SpawnBullet() {
 
-        if (LevelManager.instance.list_AllEnemyInActiveInLevel.Count == 0) {
+        if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
 
-        int Index = Random.Range(0, LevelManager.instance.list_AllEnemyInActiveInLevel.Count);
+        int Index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
         
-        Transform target = LevelManager.instance.list_AllEnemyInActiveInLevel[Index].transform;
+        Transform target = GameManager.instance.list_ActiveEnemies[Index].transform;
         bulletSpawnpostion.LookAt(target);
 
         ExplodingBulletMotion current = Instantiate(obj_Bullet, bulletSpawnpostion.position,

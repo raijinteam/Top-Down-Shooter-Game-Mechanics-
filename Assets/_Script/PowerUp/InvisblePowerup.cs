@@ -48,8 +48,8 @@ public class InvisblePowerup : MonoBehaviour
     }
 
     private void MakeAllEnemyInVisible() {
-        for (int i = 0; i < LevelManager.instance.list_AllEnemyInActiveInLevel.Count; i++) {
-            if (LevelManager.instance.list_AllEnemyInActiveInLevel[i].
+        for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
+            if (GameManager.instance.list_ActiveEnemies[i].
                 TryGetComponent<EnemyHandler>(out EnemyHandler enemyHandler)) {
                 enemyHandler.SetInVisible();
             }
@@ -57,8 +57,8 @@ public class InvisblePowerup : MonoBehaviour
     }
 
     private void All_EnemyVisible() {
-        for (int i = 0; i < LevelManager.instance.list_AllEnemyInActiveInLevel.Count; i++) {
-            if (LevelManager.instance.list_AllEnemyInActiveInLevel[i].
+        for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
+            if (GameManager.instance.list_ActiveEnemies[i].
                 TryGetComponent<EnemyHandler>(out EnemyHandler enemyHandler)) {
                 enemyHandler.SetVisible();
                 body_Collider.enabled = true;
