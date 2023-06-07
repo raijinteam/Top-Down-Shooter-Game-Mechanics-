@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public UiWavePanel uiWavePanel;
     public UiLevelPanel uiLevelPanel;
     public UIGamePlayScreen uIGamePlayScreen;
+    public UiPowerUpScreen powerUpScreen;
 
     private void Awake() {
         instance = this;

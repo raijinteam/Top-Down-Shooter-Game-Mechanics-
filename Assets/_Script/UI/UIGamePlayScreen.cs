@@ -3,12 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIGamePlayScreen : MonoBehaviour
 {
+    public TextMeshProUGUI txt_PowerUpName;
     [SerializeField] private Image img_PowerUp;
     [SerializeField] private Image img_Ultimate;
     [SerializeField] private Button btn_PowerUp;
+
+    public PowerUpDataUI[] all_PowerUpData;
+    [SerializeField] private GameObject obj_Panel;
 
 
     
@@ -28,6 +33,10 @@ public class UIGamePlayScreen : MonoBehaviour
     public void Onclick_PowerUpSelected(int Index) {
         PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>().
                     setPowerUpIndex(Index);
+    }
+
+    internal void PowerUpScreen(bool v) {
+        obj_Panel.SetActive(v);
     }
 
     public void OnClick_PowerUpBtnClick() {

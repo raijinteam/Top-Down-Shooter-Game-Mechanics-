@@ -44,7 +44,7 @@ public class NukeBarragePowerUp : MonoBehaviour
         flt_Boundry = LevelManager.instance.flt_Boundry;
         flt_Boundry_X = LevelManager.instance.flt_BoundryX;
         flt_Boundry_Z = LevelManager.instance.flt_BoundryZ;
-        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_FireRate*max_Bullet);
+        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_FireRate*max_Bullet*flt_DelayBullwetSpawn);
     }
 
     

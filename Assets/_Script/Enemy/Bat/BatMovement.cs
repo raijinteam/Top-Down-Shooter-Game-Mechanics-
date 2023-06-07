@@ -10,14 +10,12 @@ public class BatMovement : MonoBehaviour
     [SerializeField] private Animator animator;
 
     public EnemyState enemyState;
+    
 
     [Header("Bat - data")]
-    
-   [SerializeField]private bool isEnemyCharged = true;
-   [SerializeField]private float flt_MaxChargeTime = 3;
-   [SerializeField]private float flt_CurrentTime = 0;
-   [SerializeField] private Vector3 targetPostion;
-   private float flt_MovementSpeed = 1.5f;
+
+    [SerializeField]private Vector3 targetedPostion;
+    [SerializeField]private float flt_MovementSpeed = 1.5f;
    [SerializeField]private bool isVisible = true;
 
     
@@ -31,7 +29,10 @@ public class BatMovement : MonoBehaviour
     private const string Id_Attack = "Attack";
 
 
-   
+    private void OnEnable() {
+        targetedPostion = transform.position;
+    }
+
 
     private void Update() {
 
@@ -44,14 +45,8 @@ public class BatMovement : MonoBehaviour
         if (enemyState == EnemyState.BlackHole) {
             return;
         }
-        if (enemyState == EnemyState.charge) {
-
-            if (isVisible) {
-                ChargingTime();
-            }
-           
-        }
-        else if (enemyState == EnemyState.Run) {
+       
+        if (enemyState == EnemyState.Run) {
 
             if (isVisible) {
                 BatNormalMotion();
@@ -78,31 +73,20 @@ public class BatMovement : MonoBehaviour
         transform.SetParent(_target);
     }
     private void BatNormalMotion() {
-
-        transform.position = Vector3.MoveTowards(transform.position, targetPostion, flt_MovementSpeed
+        
+        transform.position = Vector3.MoveTowards(transform.position, targetedPostion, flt_MovementSpeed
             * Time.deltaTime);
-        float flt_Distance = Mathf.Abs(Vector3.Distance(transform.position, targetPostion));
+        float flt_Distance = Mathf.Abs(Vector3.Distance(transform.position, targetedPostion));
         if (flt_Distance<0.2f) {
 
+            GetRandomPostionToBatMove();
             enemyState = EnemyState.charge;
         
         }
     }
 
-    private void ChargingTime() {
-       
-        flt_CurrentTime += Time.deltaTime;
-        if (flt_CurrentTime>flt_MaxChargeTime) {
-
-            enemyState = EnemyState.Run;
-            GetRandomPostionToBatMove();
-            flt_CurrentTime = 0;
-           
-        }
-    }
-
     private void GetRandomPostionToBatMove() {
-        targetPostion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
+        targetedPostion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
                                                     LevelManager.instance.flt_BoundryX), transform.position.y,
                                     Random.Range(LevelManager.instance.flt_Boundry,
                                                   LevelManager.instance.flt_BoundryZ));

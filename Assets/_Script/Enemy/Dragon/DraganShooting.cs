@@ -50,6 +50,7 @@ public class DraganShooting : MonoBehaviour
     private void BulletShoot() {
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_FireRate) {
+            batMovement.enemyState = EnemyState.isbulletSpawn;
             SpawnBullet();
             flt_CurrentTime = 0;
         }
@@ -71,6 +72,7 @@ public class DraganShooting : MonoBehaviour
            transform_SpawnPostion.rotation);
         current.SetBulletData(transform_SpawnPostion.forward, flt_Damage , flt_Force);
         batMovement.DefaultAnimator();
+        batMovement.enemyState = EnemyState.Run;
     }
 
     private void FindTarget() {

@@ -34662,11 +34662,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8676952376304342872}
-  enemyState: 1
-  isEnemyCharged: 0
-  flt_MaxChargeTime: 3
-  flt_CurrentTime: 0
-  targetPostion: {x: 0, y: 0, z: 0}
+  enemyState: 2
+  is_BulletSpawn: 0
+  targetedPostion: {x: 0, y: 0, z: 0}
+  flt_MovementSpeed: 3
   isVisible: 1
 --- !u!114 &2310893308313603449
 MonoBehaviour:
@@ -34719,7 +34718,7 @@ MonoBehaviour:
   knockBackPersanatge: 15
   enemyPoint: 10
   flt_Damage: 5
-  flt_KnockBack: 20
+  flt_KnockBack: 25
   flt_MaxHealth: 100
 --- !u!1 &5957310452533689269
 GameObject:

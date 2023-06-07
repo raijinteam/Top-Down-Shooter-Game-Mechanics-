@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class ChainPowerUp : MonoBehaviour
 {
-    [SerializeField] private bool isPowerUpStart;
+    
     [SerializeField] private int Counter;
     [SerializeField] private float flt_Firerate;
     [SerializeField] private float flt_CurrentTime;
@@ -14,15 +14,12 @@ public class ChainPowerUp : MonoBehaviour
     [SerializeField] private bool isSetTarget;
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetChainVfxPowerUp();
-            Debug.Log("Eas");
-        }
+       
         ChainHanadler();
     }
 
     private void ChainHanadler() {
-        if (!isPowerUpStart  || isSetTarget) {
+        if (isSetTarget) {
             return;
         }
         flt_CurrentTime += Time.deltaTime;
@@ -89,7 +86,7 @@ public class ChainPowerUp : MonoBehaviour
     }
 
     private void SetChainVfxPowerUp() {
-        isPowerUpStart = true;
+       
         flt_CurrentTime = 0;
         isSetTarget = true;
         ChainEnemy();

@@ -59,6 +59,7 @@ public class MonsterPlantShootine : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision) {
         isGrounded = true;
+        enemyState = EnemyState.Idle;
     }
    
     private void OnCollisionExit(Collision collision) {

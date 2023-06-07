@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using Random = UnityEngine.Random;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -117,11 +118,18 @@ public class PlayerHealth : MonoBehaviour
             txt_Health.text = flt_CurrrentHealth.ToString();
         }
         else {
-            Destroy(gameObject);
+            
             GameManager.instance.isPlayerLive = false;
+            StartCoroutine(DelayofLoadScene());
             
         }
               
+    }
+
+    private IEnumerator DelayofLoadScene() {
+        
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(0);
     }
 
     private IEnumerator SetSlider(float targetValue) {

@@ -5324,7 +5324,7 @@ MonoBehaviour:
   skeletonCollisionHandler: {fileID: 492323939}
   enemyState: 2
   IsVisible: 1
-  flt_MovementSpeed: 0
+  flt_MovementSpeed: 5
   perasantageOfBlock: 0
   flt_KnockBackSpeed: 0
   flt_Range: 2.5
@@ -5461,7 +5461,7 @@ MonoBehaviour:
   knockBackPersanatge: 15
   enemyPoint: 10
   flt_Damage: 5
-  flt_KnockBack: 20
+  flt_KnockBack: 25
   flt_MaxHealth: 100
 --- !u!1 &1447863443620836448
 GameObject:

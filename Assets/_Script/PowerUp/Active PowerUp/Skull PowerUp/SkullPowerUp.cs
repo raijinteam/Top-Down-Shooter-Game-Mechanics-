@@ -8,7 +8,7 @@ public class SkullPowerUp : MonoBehaviour
 {
    
    
-    [SerializeField] private bool isPowerUpStart;
+    
     [Header("BulletData")]
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_FireRate;
@@ -22,15 +22,13 @@ public class SkullPowerUp : MonoBehaviour
 
     private void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetSkullPowerUp();
-        }
+       
         BulletHandler();
        
     }
 
     public void SetSkullPowerUp() {
-        isPowerUpStart = true;
+        
         flt_CurrentTime = 0;
        
     }
@@ -39,9 +37,7 @@ public class SkullPowerUp : MonoBehaviour
 
     private void BulletHandler() {
 
-        if (!isPowerUpStart) {
-            return;
-        }
+        
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_FireRate) {
             flt_CurrentTime = 0;

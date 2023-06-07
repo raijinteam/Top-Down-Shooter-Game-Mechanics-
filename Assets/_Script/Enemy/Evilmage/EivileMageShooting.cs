@@ -42,9 +42,7 @@ public class EivileMageShooting : MonoBehaviour {
         if (!isvisible) {
             return;
         }
-        if (evileMageMovement.enemyState == EnemyState.Run) {
-            return;
-        }
+      
         FindTarget();
 
     }
@@ -81,7 +79,7 @@ public class EivileMageShooting : MonoBehaviour {
 
         if (flt_CurrentTime > flt_BulletFireRate) {
             flt_CurrentTime = 0;
-
+            evileMageMovement.enemyState = EnemyState.isbulletSpawn;
             animator.SetTrigger(Id_Attack);
 
 
@@ -97,8 +95,8 @@ public class EivileMageShooting : MonoBehaviour {
 
             Instantiate(bullet_Muzzle, transform_BulletPostion.position, bullet_Muzzle.transform.rotation);
         }
-       
-       
+
+        evileMageMovement.enemyState = EnemyState.Run;
         if (evileMageMovement.isMove) {
             animator.SetTrigger(Id_Run);
         }

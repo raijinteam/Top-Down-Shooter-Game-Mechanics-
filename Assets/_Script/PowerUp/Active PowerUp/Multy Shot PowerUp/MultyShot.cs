@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class MultyShot : MonoBehaviour
 {
-    [Header("PowerUpData")]
-    [SerializeField] private bool isPowerUpStart;
+
 
     [Header("Bullet Data")]
     [SerializeField] private float flt_CurrentTime;
@@ -24,26 +23,21 @@ public class MultyShot : MonoBehaviour
 
     private void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetMolotovPowerUp();
-        }
+       
         BulletHandler();
        
 
     }
 
     private void SetMolotovPowerUp() {
-        isPowerUpStart = true;
+       
         flt_CurrentTime = 0;
        
     }
 
   
     private void BulletHandler() {
-        if (!isPowerUpStart) {
-            return;
-        }
-
+        
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_FireRate) {
             flt_CurrentTime = 0;

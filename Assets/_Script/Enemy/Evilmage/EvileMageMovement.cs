@@ -47,7 +47,9 @@ public class EvileMageMovement : MonoBehaviour
     // Courotine
     private Coroutine coro_KnockBack;
 
-   
+    private void OnEnable() {
+        movePostion = transform.position;
+    }
 
     private void Update() {
         if (!GameManager.instance.isPlayerLive) {
@@ -61,6 +63,7 @@ public class EvileMageMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision) {
         isGrounded = true;
+        enemyState = EnemyState.Run;
     }
     private void OnCollisionExit(Collision collision) {
         if (enemyState == EnemyState.BlackHole) {
@@ -108,13 +111,7 @@ public class EvileMageMovement : MonoBehaviour
             EvileMageKnockBackMotion();
 
         }
-        else if (enemyState == EnemyState.charge) {
-
-            if (isVisible) {
-                TimeCalaculation();
-            }
-           
-        }
+       
         else if (enemyState == EnemyState.Run) {
 
             if (isVisible) {
@@ -153,7 +150,7 @@ public class EvileMageMovement : MonoBehaviour
        float distance =  Mathf.Abs(Vector3.Distance(movePostion, transform.position));
         if (distance<0.5f) {
 
-            enemyState = EnemyState.charge;
+            GetRandomPostion();
             flt_CurrentTime = 0;
         }
     }

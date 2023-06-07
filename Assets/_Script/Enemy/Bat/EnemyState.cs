@@ -11,4 +11,5 @@ public enum EnemyState
     Not_Ground,
     BlackHole,
     Wave,
+    isbulletSpawn,
 }

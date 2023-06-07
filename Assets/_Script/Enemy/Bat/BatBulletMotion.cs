@@ -67,6 +67,7 @@ public class BatBulletMotion : MonoBehaviour
             }
 
         }
+        
         if (other.gameObject.CompareTag(tag_Obstackle)) {
             BulletDetrsoySetup();
         }

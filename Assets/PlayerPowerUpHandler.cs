@@ -33,6 +33,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
     public void setPowerUpIndex(int index) {
         SelectivePowerUpIndex = index;
+        UIManager.instance.uIGamePlayScreen.txt_PowerUpName.text = all_PowerUp[index].name;
     }
 
     public void StartUltimate() {

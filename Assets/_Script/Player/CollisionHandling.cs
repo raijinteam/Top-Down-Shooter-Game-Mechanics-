@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CollisionHandling : MonoBehaviour
 {
@@ -57,12 +58,18 @@ public class CollisionHandling : MonoBehaviour
             Debug.Log("GameOver");
             GameManager.instance.isPlayerLive = false;
             Instantiate(obj_WaterParticle, transform.position, transform.rotation);
-            Destroy(playerHealth.gameObject);
+
+            StartCoroutine(Delay_Gamobject());
+           
         }
        
     }
 
-   
+    private IEnumerator Delay_Gamobject() {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(0);
+        Destroy(playerHealth.gameObject);
+    }
 
     public void SetKavachActive() {
 

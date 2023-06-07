@@ -37214,5 +37214,5 @@ MonoBehaviour:
   knockBackPersanatge: 15
   enemyPoint: 10
   flt_Damage: 5
-  flt_KnockBack: 20
+  flt_KnockBack: 25
   flt_MaxHealth: 100

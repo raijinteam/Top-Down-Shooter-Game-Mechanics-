@@ -127,6 +127,7 @@ public class PlayerShooting : MonoBehaviour
 
         GameObject spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
+        // flt_damage = flt_currentdamage + ((playerdata.damage%/ 100) * flt_currentDamage)
 
         spawnedBullet.GetComponent<PlayerBulletMotion>().
             SetBulletData(spawnPosition_Bullet.forward, flt_CurrentDamage, flt_CurrentBulletForce,target.transform);

@@ -28,7 +28,7 @@ public class EnemyData : MonoBehaviour
         return ((int)flt_Damage);
     }
     public float GetKnockBackForce() {
-        return ((int)flt_Damage);
+        return ((int)flt_KnockBack);
     }
     public int GetEnemyPoint() {
         return enemyPoint;

@@ -6,12 +6,6 @@ using Random = UnityEngine.Random;
 
 public class explodingShot : MonoBehaviour
 {
-    [Header("PowerUp - Cantroller")]
-    [SerializeField] private bool isPowerUpStart;
-   
-  
-  
-
     [Header("Bullet - Data")]
     [SerializeField] private Transform bulletSpawnpostion;
     [SerializeField] private ExplodingBulletMotion obj_Bullet;
@@ -24,16 +18,12 @@ public class explodingShot : MonoBehaviour
 
    
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SetExplodingPowerUp();
-        }
-
-       
+             
         BulletHandler();
     }
 
     private void BulletHandler() {
-        if (!isPowerUpStart && GameManager.instance.list_ActiveEnemies.Count == 0) {
+        if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
         flt_CurrentTimeForSpawnBullet += Time.deltaTime;
@@ -65,7 +55,6 @@ public class explodingShot : MonoBehaviour
    
 
     private void SetExplodingPowerUp() {
-        isPowerUpStart = true;
         flt_CurrentTimeForSpawnBullet = 0;
     }
 }

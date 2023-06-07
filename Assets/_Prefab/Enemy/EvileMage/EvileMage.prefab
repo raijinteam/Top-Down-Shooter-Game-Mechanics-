@@ -17391,7 +17391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: -2974914823590081356}
   eivileMageShooting: {fileID: -6880859724990121579}
-  enemyState: 1
+  enemyState: 2
   evileMageTrigger: {fileID: 8949956903744187803}
   flt_MoveTime: 3
   isMove: 0
@@ -17442,7 +17442,7 @@ MonoBehaviour:
   knockBackPersanatge: 15
   enemyPoint: 10
   flt_Damage: 5
-  flt_KnockBack: 20
+  flt_KnockBack: 25
   flt_MaxHealth: 100
 --- !u!1 &6809846557040475031
 GameObject:

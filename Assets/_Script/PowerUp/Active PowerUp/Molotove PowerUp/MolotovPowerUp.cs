@@ -13,7 +13,7 @@ public class MolotovPowerUp : MonoBehaviour
 
 
   
-    [SerializeField] private bool isPowerUpStart;
+   
 
     [Header("Bullet Data")]
     [SerializeField] private float flt_CurrentTime;
@@ -42,7 +42,7 @@ public class MolotovPowerUp : MonoBehaviour
     }
 
     private void SetMolotovPowerUp() {
-        isPowerUpStart = true;
+       
         flt_CurrentTime = 0;
         isSpawnbullet = false;
     }
@@ -50,7 +50,7 @@ public class MolotovPowerUp : MonoBehaviour
    
 
     private void BulletHandler() {
-        if (!isPowerUpStart && isSpawnbullet) {
+        if (isSpawnbullet) {
             return;
         }
 
