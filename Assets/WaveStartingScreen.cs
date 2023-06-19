@@ -11,6 +11,9 @@ public class WaveStartingScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI txt_WaveScreen;
     [SerializeField] private float flt_DelayOfComplteAnimkation;
 
+
+
+   
     public void PlayUiBossLevelAnimation() {
 
         txt_WaveScreen.text = null;
@@ -52,7 +55,7 @@ public class WaveStartingScreen : MonoBehaviour
     private string GetWaveText(int index) {
         string Text;
         if (isApperance) {
-            Text = "{" + id_Animation + "}" + "Wave" + index + "Starting" + "{/" + id_Animation + "}";
+            Text = "{" + id_Animation + "}" + "Wave " + index + "{/" + id_Animation + "}";
         }
         else {
             Text = null;

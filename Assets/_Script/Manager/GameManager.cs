@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField]private int currentWaveIndex = 0;
     public int totalNumberOfWavesInThisStage;
     public int numberOfEnemiesInCurrentWave;
-    [SerializeField] private bool isNewWaveStart;
+    [SerializeField] private int  newwaveStartSpawn = 5;
 
     [Header("Boss handling")]
     [SerializeField] private bool IsBossActvated;
@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour {
                     currentStageIndex++;
                     UIManager.instance.uiStageCompletedScreen.PlayVictoryAnimation();
                     PlayerManager.instance.StageCompletd();
-                    isNewWaveStart = true;
+                    
                 }
 
 
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour {
             }
             else {
                 Debug.Log("Wave Change");
-                isNewWaveStart = true;
+                
                 UIManager.instance.uiWaveCompltedScreen.PlayWaveCompltedAnimation();
                 numberOfEnemiesInCurrentWave = LevelManager.instance.GetEnemiesInCurrentWave();
             }
@@ -145,6 +145,7 @@ public class GameManager : MonoBehaviour {
 
     public void ADDListOfEnemy(Transform current) {
         list_ActiveEnemies.Add(current);
+        Debug.Log("EndAdd In List");
 
     }
 
@@ -163,16 +164,19 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator SpawnEnemyInIntervals() {
 
-        int BaseValue = 1 ;
+       
+        int BaseValue = newwaveStartSpawn ;
 
         for (int i = 0; i < numberOfEnemiesInCurrentWave; i++) {
 
             if (i < BaseValue) {
                 SpawnEnemy();
+                yield return new WaitForSeconds(50000);
             }
             else {
-                SpawnEnemy();
+               
                 yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
+                SpawnEnemy();
             }
 
            

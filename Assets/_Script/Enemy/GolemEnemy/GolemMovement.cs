@@ -57,6 +57,8 @@ public class GolemMovement : MonoBehaviour
 
     [Header("Vfx")]
     [SerializeField] private GameObject obj_tagret;
+    [SerializeField] private GameObject jump_Start;
+   
 
     //Coroutine
     private Coroutine cour_KnockBack;
@@ -153,7 +155,7 @@ public class GolemMovement : MonoBehaviour
 
             if (isVisible) {
                 GolemMotion();
-                FindTarget();
+                
             }
             
         }
@@ -218,8 +220,10 @@ public class GolemMovement : MonoBehaviour
     private void GolemMotion() {
 
         if (!isGetDirection) {
+           
             targetPostion = PlayerManager.instance.Player.transform.position;
-             Obj_current_Target =  Instantiate(obj_tagret, targetPostion, obj_tagret.transform.rotation);
+            Vector3 postion = new Vector3(targetPostion.x, 0, targetPostion.z);
+            Obj_current_Target =  Instantiate(obj_tagret, postion, obj_tagret.transform.rotation);
             Cour_Jump = StartCoroutine(GolemJump());
             isGetDirection = true;
 
@@ -244,7 +248,7 @@ public class GolemMovement : MonoBehaviour
         Quaternion Qua_Target = Quaternion.Euler(0, targetAngle, 0);
         Quaternion current = transform.rotation;
 
-        transform.rotation = Quaternion.Slerp(current, Qua_Target, 100 * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(current, Qua_Target, 10 * Time.deltaTime);
 
 
     }
@@ -252,29 +256,36 @@ public class GolemMovement : MonoBehaviour
     private IEnumerator GolemJump() {
 
         Debug.Log("GolemJump");
+        yield return new WaitForSeconds(2);
 
-       
-        Vector3 startPostion = transform.position;
+
         jumpStart.PlayFeedbacks();
+        yield return new WaitForSeconds(0.25f);
+
+        Vector3 startPostion = transform.position;
         float jumpheight = flt_JumpAccerletion * flt_MaxJumpTime / (MathF.Sqrt(2 * Physics.gravity.magnitude));
 
         enemy_Animator.SetTrigger(Id_Jump);
         // Keep track of how much time has passed since the start of the jump
         float elapsedTime = 0f;
-
+       
         while (elapsedTime < 1) {
            
             elapsedTime += Time.deltaTime/flt_MaxJumpTime;
             float height = Mathf.Sin(elapsedTime * Mathf.PI) * jumpheight;
 
             transform.position = Vector3.Lerp(startPostion, targetPostion, elapsedTime) + Vector3.up * height;
+
+            if (elapsedTime > 0.9) {
+
+            }
             yield return null;
           
         }
         transform.position = targetPostion;
 
         Destroy(Obj_current_Target);
-        jumpEnd.PlayFeedbacks();
+       
         isGetDirection = false;
         Sphercast();
         enemy_Animator.SetTrigger(Id_Idle);

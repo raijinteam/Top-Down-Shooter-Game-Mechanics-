@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using System;
 
 public class UiStageCompletedScreen : MonoBehaviour
 {
@@ -15,18 +16,26 @@ public class UiStageCompletedScreen : MonoBehaviour
     [SerializeField] private int ChildLoop;
     [SerializeField] private float flt_ChildAnimationTime;
 
-    private void Start() {
-        txt_Victory.gameObject.SetActive(false);
-        txt_Victory.transform.localScale = new Vector3(8, 8, 8);
-        txt_VictoryChild.gameObject.SetActive(false);
-    }
+    //private void Start() {
+    //    txt_Victory.gameObject.SetActive(false);
+    //    txt_Victory.transform.localScale = new Vector3(8, 8, 8);
+    //    txt_VictoryChild.gameObject.SetActive(false);
+    //}
 
 
     public void PlayVictoryAnimation() {
         if (!isStartAnimation) {
             isStartAnimation = true;
-            StartAnimation();
+            //StartAnimation();
+            txt_Victory.gameObject.SetActive(true);
+            StartCoroutine(DelayWithStopAnimation());
         }
+    }
+
+    private IEnumerator DelayWithStopAnimation() {
+        yield return new WaitForSeconds(2);
+        txt_Victory.gameObject.SetActive(false);
+        isStartAnimation = false;
     }
 
     private void StartAnimation() {

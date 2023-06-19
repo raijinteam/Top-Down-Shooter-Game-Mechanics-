@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
+
+    public Transform body;
     public float flt_Damage;
     public float flt_Force;
     public float flt_Firerate;

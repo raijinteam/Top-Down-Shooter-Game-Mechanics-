@@ -11,7 +11,7 @@ public class EnemyAttacking : MonoBehaviour
     [SerializeField]private float flt_CurrentTime;
     [SerializeField]private bool isattack;
     public bool isAttckinInRange;
-    private string tag_Player = "Player";
+ 
     public bool IsVisible;
 
 

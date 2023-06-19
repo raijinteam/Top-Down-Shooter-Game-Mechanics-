@@ -6,13 +6,15 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
+
 public class EvileMageMovement : MonoBehaviour
 {
     [Header("Camponant")]
-    [SerializeField] private NavMeshAgent navMeshAgent;
+   
     [SerializeField] private EivileMageShooting eivileMageShooting;
     public EnemyState enemyState;
     [SerializeField] private EvileMageTrigger evileMageTrigger;
+   
     
 
     [Header("MovementData")]
@@ -35,7 +37,7 @@ public class EvileMageMovement : MonoBehaviour
 
     [Header("KnockBackMotion")]
     private float flt_KnockBackTime = 0.5f;
-    private bool isKnockBackStart;
+   
 
   
     private float flt_KnockBackSpeed;

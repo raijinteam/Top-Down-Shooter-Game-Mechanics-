@@ -13,8 +13,10 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private float flt_MaxHealth;
     [SerializeField] private float flt_CurrrentHealth;
     [SerializeField] private TextMeshProUGUI txt_Health;
-    [SerializeField] private Transform body;
+    public Transform body;
     [SerializeField] private GameObject enemy_UI;
+    [SerializeField] private GameObject particleVFX;
+
 
     [Header("Health Slider")]
     [SerializeField] private Slider slider_Health; // normal slider
@@ -156,7 +158,7 @@ public class EnemyHealth : MonoBehaviour
 
             Cour_Slider_Animation = StartCoroutine(SetSlider(flt_CurrrentHealth));
 
-            FeelManager.instance.GetDamage(transform.position, damage, obj_txtDamageSpawnPostion,isCrtical);
+            FeelManager.instance.SpawnDamagePopUp(transform.position, damage, obj_txtDamageSpawnPostion,isCrtical);
 
             mmf_Damage.PlayFeedbacks();
 
@@ -165,6 +167,9 @@ public class EnemyHealth : MonoBehaviour
             txt_Health.text = flt_CurrrentHealth.ToString();
         }
         else {
+
+            Instantiate(particleVFX, transform.position, transform.rotation);
+
 
             PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>()
                 .IncreasingPlayerPoint(enemyData.GetEnemyPoint());

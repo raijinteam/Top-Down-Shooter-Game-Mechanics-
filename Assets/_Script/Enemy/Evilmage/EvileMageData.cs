@@ -1,4 +1,5 @@
 using DG.Tweening;
+using MoreMountains.Feedbacks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class EvileMageData : EnemyHandler
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private EvileMageMovement evileMageMovement;
     [SerializeField] private Collider body;
+    [SerializeField] private MMF_Player spawn_MMFPlayer;
 
     private EvileMageData current;
 
@@ -52,24 +54,39 @@ public class EvileMageData : EnemyHandler
                  current = Instantiate(evileMage, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
-                float flt_CurrentScale = current.transform.localScale.y;
-                float flt_AnimatScale = flt_CurrentScale - 0.3f;
+                Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
+                                    PlayerManager.instance.Player.transform.position.z);
 
-
+                current.transform.LookAt(PlayerPostion);
                 Sequence seq = DOTween.Sequence();
-                seq.AppendInterval(0.5F).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5F)).
-                    AppendCallback(current.DestroyIndicator).AppendCallback(ScaleAnimation).AppendInterval(0.5f)
-                    .AppendCallback(current.SetAllScriptData);
 
-                current.transform.rotation = Quaternion.identity;
+                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5f)).
+                    AppendCallback(current.DestroyIndicator);
+
+                
                 isSpawn = true;
             }
         }
     }
 
-    private void ScaleAnimation() {
-        FeelManager.instance.PlayScaleAnimation(current.transform);
+    public void DestroyIndicator() {
+        Destroy(Obj_Indicator);
+        spawn_MMFPlayer.PlayFeedbacks();
+        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
+        StartCoroutine(SetAllScriptData(0.5f));
     }
+
+    public IEnumerator SetAllScriptData(float flt_MaxTime) {
+
+        yield return new WaitForSeconds(flt_MaxTime);
+        SetData();
+        Debug.Log("StartAdd In List");
+        GameManager.instance.ADDListOfEnemy(transform);
+        ExpandSpherCast();
+       
+    }
+
+
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
 
         enemyHealth.SetLaserAffacted(damage);
@@ -96,13 +113,7 @@ public class EvileMageData : EnemyHandler
         evileMageShooting.SetVisible();
     }
 
-    public void SetAllScriptData() {
-       
-        SetData();
-        GameManager.instance.ADDListOfEnemy(transform);
-        ExpandSpherCast();
-        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
-    }
+   
 
     private void ExpandSpherCast() {
         Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_RangeOfSpheareCast);
@@ -136,7 +147,5 @@ public class EvileMageData : EnemyHandler
         this.Obj_Indicator = indicator;
     }
 
-    public void DestroyIndicator() {
-        Destroy(Obj_Indicator);
-    }
+   
 }

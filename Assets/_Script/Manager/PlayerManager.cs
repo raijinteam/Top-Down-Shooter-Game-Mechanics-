@@ -60,6 +60,8 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator PlayerGoesToEndPostion(Vector3 targetpostion) {
 
+
+        yield return new WaitForSeconds(2); // VictoryANimation
         float flt_fltcurrenttime = 0;
         Vector3 dirction = (targetpostion - Player.transform.position).normalized;
         float targetAngle = Mathf.Atan2(dirction.z, -dirction.x) * Mathf.Rad2Deg;
@@ -80,7 +82,7 @@ public class PlayerManager : MonoBehaviour
             yield return null;
         }
                
-        Player.transform.position = new Vector3(targetPostion.x,Player.transform.localScale.y, targetPostion.z);
+        Player.transform.position = targetpostion;
 
         
        
@@ -94,7 +96,7 @@ public class PlayerManager : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         GameEndBoat.gameObject.SetActive(true);
         GameEndBoat.transform.position = new Vector3(GameEndBoat.position.x, GameEndBoat.position.y, 39);
-        Debug.Log("playerPostion" + Player.transform.position);
+  
         seq.AppendCallback(JumpEndAnimation).AppendInterval(flt_JumpTime).
             AppendCallback(GameEndProcdure).AppendInterval(2.5f).AppendCallback(ResetPlayer);
     }
@@ -163,10 +165,14 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator Jump(Vector3 targetpostion,bool isEndPostion) {
 
-        //Player.GetComponent<PlayerMovement>().player_Animator.SetTrigger("Jump");
-        FeelManager.instance.PlayPlayerJump(Player.transform, flt_JumpTime, levelStartPostion.position);
+        Player.GetComponent<PlayerMovement>().player_Animator.SetTrigger("Jump");
 
-        yield return new WaitForSeconds(0.1f);
+        if (!isEndPostion) {
+            FeelManager.instance.PlayPlayerJump(Player.body);
+
+            yield return new WaitForSeconds(0.25f);
+        }
+       
 
         // Get the starting position of the player
         Vector3 startPosition = Player.transform.position;

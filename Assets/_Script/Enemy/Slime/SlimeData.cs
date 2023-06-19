@@ -1,4 +1,5 @@
 using DG.Tweening;
+using MoreMountains.Feedbacks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,8 @@ public class SlimeData : EnemyHandler
     [SerializeField] private SlimeAttacking slimeAttacking;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private Collider body;
-   
+    [SerializeField] private MMF_Player spawn_MMFPlayer;
+
     private GameObject obj_Indicator;
 
     [Header("ChainVfx")]
@@ -49,24 +51,37 @@ public class SlimeData : EnemyHandler
                  current = Instantiate(slimeData, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
-                float flt_CurrentScale = current.transform.localScale.y;
-                float flt_AnimatScale = flt_CurrentScale - 0.3f;
+                current.SetSpawnIndicator(indicator);
+                Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
+                                    PlayerManager.instance.Player.transform.position.z);
 
-
+                current.transform.LookAt(PlayerPostion);
                 Sequence seq = DOTween.Sequence();
-                seq.AppendInterval(0.5F).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5F)).
-                    AppendCallback(current.DestroyIndicator).AppendCallback(ScaleAnimation).AppendInterval(0.5f)
-                    .AppendCallback(current.SetAllScriptData);
 
-                current.transform.rotation = Quaternion.identity;
+                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5f)).
+                    AppendCallback(current.DestroyIndicator);
                 isSpawn = true;
             }
         }
     }
 
-    private void ScaleAnimation() {
-        FeelManager.instance.PlayScaleAnimation(current.transform);
+    private void DestroyIndicator() {
+        Destroy(obj_Indicator);
+        spawn_MMFPlayer.PlayFeedbacks();
+        StartCoroutine(SetAllScriptData(0.5f));
+        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
     }
+
+    private IEnumerator SetAllScriptData(float flt_AnimationTime) {
+
+        yield return new WaitForSeconds(flt_AnimationTime);
+        SetData();
+        GameManager.instance.ADDListOfEnemy(transform);
+        ExpandSpherCast();
+       
+    }
+
+   
 
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
 
@@ -95,13 +110,7 @@ public class SlimeData : EnemyHandler
         slimeAttacking.isvisible = true;
     }
 
-    public void SetAllScriptData() {
-
-        SetData();
-        GameManager.instance.ADDListOfEnemy(transform);
-        ExpandSpherCast();
-        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
-    }
+    
 
     private void ExpandSpherCast() {
         Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_RangeOfSpheareCast);
@@ -134,7 +143,5 @@ public class SlimeData : EnemyHandler
         this.obj_Indicator = indicator;
     }
 
-    public void DestroyIndicator() {
-        Destroy(obj_Indicator);
-    }
+   
 }

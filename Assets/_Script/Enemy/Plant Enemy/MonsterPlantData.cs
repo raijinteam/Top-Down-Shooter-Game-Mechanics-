@@ -1,4 +1,5 @@
 using DG.Tweening;
+using MoreMountains.Feedbacks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class MonsterPlantData : EnemyHandler
     [Header("All Script Campaotant")]
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private MonsterPlantShootine monsterPlantShootine;
+    [SerializeField] private MMF_Player spawn_Enemy;
     private GameObject obj_Indicator;
 
     [Header("Chain Vfx")]
@@ -45,18 +47,25 @@ public class MonsterPlantData : EnemyHandler
                       postion.z), obj_Indiacter.transform.rotation);
 
                 MonsterPlantData current = Instantiate(obj_Plant, postion, transform.rotation);
-                current.transform.localScale = new Vector3(flt_Scale, 0, flt_Scale);
+               
                 current.SetSpawnIndicator(Indicator);
-                Sequence seq = DOTween.Sequence();
-                seq.AppendInterval(2).AppendCallback(current.DestroyIndicator).
-                    Append(current.transform.DOScaleY(flt_MaxScale, 0.5f)).
-                    Append(current.transform.DOScaleY(flt_Scale, 0.25f))
+                spawn_Enemy.PlayFeedbacks();
 
-                    .AppendCallback(current.GetComponent<MonsterPlantData>().SetAllScriptData);
-                current.transform.rotation = Quaternion.identity;
+                Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
+                StartCoroutine(SetAllScriptData(2));
                 isSpawn = true;
             }
         }
+    }
+
+
+    public IEnumerator SetAllScriptData(float flt_AnimationTime) {
+
+        yield return new WaitForSeconds(flt_AnimationTime);
+        SetData();
+        GameManager.instance.ADDListOfEnemy(transform);
+        ExpandSpherCast();
+       
     }
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
 
@@ -85,13 +94,7 @@ public class MonsterPlantData : EnemyHandler
     }
 
 
-    public void SetAllScriptData() {
-
-        SetData();
-        GameManager.instance.ADDListOfEnemy(transform);
-        ExpandSpherCast();
-        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
-    }
+   
 
     private void ExpandSpherCast() {
         Collider[] all_Collider = Physics.OverlapSphere(transform.position, flt_RangeOfSpheareCast);
