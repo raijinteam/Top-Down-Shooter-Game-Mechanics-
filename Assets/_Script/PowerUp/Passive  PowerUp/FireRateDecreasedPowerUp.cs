@@ -4,9 +4,32 @@ using UnityEngine;
 
 public class FireRateDecreasedPowerUp : PowerUpData
 {
+   
     [SerializeField] private bool isUnlocked;
     [SerializeField] private int Level;
+    [SerializeField] private int persantage_Firerate;
 
+
+    public override void FatchMyUpdateData() {
+
+        fireRateDecreasedProperites this_Properity = AbiltyManager.instance.all_Property[myPowerIndex].
+                            GetComponent<fireRateDecreasedProperites>();
+
+        persantage_Firerate = this_Properity.flt_FireRatePersantage[Level];
+        all_MyDataDisplay[0].headerName = "FireRate";
+        all_MyDataDisplay[0].OldValue = "+" + persantage_Firerate;
+        if (Level != PowerUpHandler.instance.MaxLevelUp) {
+            all_MyDataDisplay[0].newValue = "+" + this_Properity.flt_FireRatePersantage[Level + 1];
+        }
+        else {
+            all_MyDataDisplay[0].newValue = "Upgrade";
+        }
+
+        PlayerManager.instance.Player.DecreasedPersentageFireRate = persantage_Firerate;
+        
+
+
+    }
     public override bool IsUnlocked() {
         return isUnlocked;
     }

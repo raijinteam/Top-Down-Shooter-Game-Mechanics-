@@ -26,7 +26,8 @@ public class RagePowerUp : MonoBehaviour
         float damage = playerData.flt_Damage + ((playerData.flt_Damage * flt_DamagePercentage) / 100);
         float force = playerData.flt_Force + ((playerData.flt_Force * flt_ForcePercentage / 100));
         float firerate = playerData.flt_Firerate - ((playerData.flt_Firerate * flt_FireratePercentage / 100));
-        playerShooting.SetPowerupTime(damage, force, firerate);
+
+       
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_PowerupTime);
        
     }
@@ -37,7 +38,8 @@ public class RagePowerUp : MonoBehaviour
    
 
     private void RagePowerUpTimer() {
-      
+
+       
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime >= flt_PowerupTime) {
 

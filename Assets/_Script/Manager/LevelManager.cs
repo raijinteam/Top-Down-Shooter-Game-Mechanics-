@@ -39,11 +39,13 @@ public class LevelManager : MonoBehaviour {
     }
 
 
+
+
     public void StartLevel() {
         for (int i = 0; i < all_EnemyAndItsPersantage.Length; i++) {
 
             if (all_EnemyAndItsPersantage[i].ChageLevelValue >= GameManager.instance.currentStageIndex) {
-                
+
                 GameManager.instance.SetCurrentStageData(all_EnemyAndItsPersantage[i], baseWaveValue,
                     GetEnemiesInCurrentWave());
                 break;
@@ -53,11 +55,11 @@ public class LevelManager : MonoBehaviour {
     }
 
 
-   
 
-   
 
-   
+
+
+
     public void SetNewStage() {
 
         GameManager.instance.currentStageIndex++;
@@ -74,8 +76,8 @@ public class LevelManager : MonoBehaviour {
 
         GameManager.instance.totalNumberOfWavesInThisStage = baseWaveValue;
 
-     
-        
+
+
 
 
     }

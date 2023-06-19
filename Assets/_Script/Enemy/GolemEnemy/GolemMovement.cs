@@ -1,4 +1,5 @@
 using DG.Tweening;
+using MoreMountains.Feedbacks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,10 @@ public class GolemMovement : MonoBehaviour
     [SerializeField] private Vector3 targetPostion;
     [SerializeField]private float flt_Currenttime; // flt_CurrentTimePassedForCharging
 
+
+    [SerializeField] private MMF_Player jumpStart;
+    [SerializeField] private MMF_Player jumpEnd;
+
    
 
     [SerializeField]private float flt_MaxJumpTime;
@@ -36,7 +41,7 @@ public class GolemMovement : MonoBehaviour
     private float gravityForce = -0.75f;
     public bool isGrounded = true;
 
-    private GameObject Obj_current_Target;
+    public GameObject Obj_current_Target;
     [SerializeField]private bool isVisible = true;
   
     [Header("KnockBackData")]
@@ -60,7 +65,7 @@ public class GolemMovement : MonoBehaviour
 
     // tag & id
     private string tag_Player = "Player";
-    private const  string Id_Idle = "Idle";
+    private const string Id_Idle = "Idle";
     private const string Id_Jump = "Jump";
 
 
@@ -148,6 +153,7 @@ public class GolemMovement : MonoBehaviour
 
             if (isVisible) {
                 GolemMotion();
+                FindTarget();
             }
             
         }
@@ -228,18 +234,28 @@ public class GolemMovement : MonoBehaviour
             return;
         }
 
-        Vector3 targetDirection = new Vector3(PlayerManager.instance.Player.transform.position.x, 0,
-                                            PlayerManager.instance.Player.transform.position.z);
-        transform.LookAt(targetDirection);
+        Vector3 targetDirection = (new Vector3(PlayerManager.instance.Player.transform.position.x, 0,
+                                            PlayerManager.instance.Player.transform.position.z) - transform.position).normalized;
+        //transform.LookAt(targetDirection);
+
+       
+       float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+
+        Quaternion Qua_Target = Quaternion.Euler(0, targetAngle, 0);
+        Quaternion current = transform.rotation;
+
+        transform.rotation = Quaternion.Slerp(current, Qua_Target, 100 * Time.deltaTime);
+
+
     }
 
     private IEnumerator GolemJump() {
 
         Debug.Log("GolemJump");
 
-        yield return new WaitForSeconds(2);
-        Vector3 startPostion = transform.position;
        
+        Vector3 startPostion = transform.position;
+        jumpStart.PlayFeedbacks();
         float jumpheight = flt_JumpAccerletion * flt_MaxJumpTime / (MathF.Sqrt(2 * Physics.gravity.magnitude));
 
         enemy_Animator.SetTrigger(Id_Jump);
@@ -247,7 +263,7 @@ public class GolemMovement : MonoBehaviour
         float elapsedTime = 0f;
 
         while (elapsedTime < 1) {
-
+           
             elapsedTime += Time.deltaTime/flt_MaxJumpTime;
             float height = Mathf.Sin(elapsedTime * Mathf.PI) * jumpheight;
 
@@ -256,8 +272,9 @@ public class GolemMovement : MonoBehaviour
           
         }
         transform.position = targetPostion;
-        
-             
+
+        Destroy(Obj_current_Target);
+        jumpEnd.PlayFeedbacks();
         isGetDirection = false;
         Sphercast();
         enemy_Animator.SetTrigger(Id_Idle);
@@ -266,6 +283,7 @@ public class GolemMovement : MonoBehaviour
     }
 
    
+
 
     private void Sphercast() {
         Collider[] all_Collider = Physics.OverlapSphere(transform.position, 5);

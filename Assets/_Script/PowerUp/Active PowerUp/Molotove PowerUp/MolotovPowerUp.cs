@@ -9,19 +9,20 @@ public class MolotovPowerUp : MonoBehaviour
     // private float flt_FireRate;
     // private float currentTimePassed
     // private int molotovCount;
-    
 
 
-  
-   
+
+
+
 
     [Header("Bullet Data")]
+    [SerializeField] private MolotoveData molotoveData;
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private float flt_FireRate;
-    [SerializeField] private float flt_Damage;
+   
     
     [SerializeField] private float flt_DestroyTime;
-    [SerializeField] private int counter;
+   
     [SerializeField] private float MinRange;
     [SerializeField] private float maxRange;
     [SerializeField] private float flt_DelayBetweenTwoBullet;
@@ -55,7 +56,8 @@ public class MolotovPowerUp : MonoBehaviour
         }
 
         flt_CurrentTime += Time.deltaTime;
-        if (flt_CurrentTime > flt_FireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
+        if (flt_CurrentTime > CoolDown) {
            
             isSpawnbullet = true;
             StartCoroutine(Spawnbullet());
@@ -64,15 +66,15 @@ public class MolotovPowerUp : MonoBehaviour
     }
 
     private IEnumerator Spawnbullet() {
-        for (int i = 0; i < counter; i++) {
+        for (int i = 0; i < molotoveData.MolotovCounter; i++) {
 
             GameObject current = Instantiate(obj_Grenade, spawnPostion.position, spawnPostion.rotation);
 
             Vector3 direction = new Vector3(Random.Range(-100, 100), 0, Random.Range(-100, 100)).normalized;
             float distance = Random.Range(MinRange, maxRange);
             Vector3 taregtPostion = transform.position + direction * distance;
-
-            current.GetComponent<GrnadeBulletMotion>().SetBulletData(taregtPostion, flt_Damage,
+            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(molotoveData.Damage);
+            current.GetComponent<GrnadeBulletMotion>().SetBulletData(taregtPostion, Damage,
                              flt_DestroyTime);
 
             yield return new WaitForSeconds(flt_DelayBetweenTwoBullet);

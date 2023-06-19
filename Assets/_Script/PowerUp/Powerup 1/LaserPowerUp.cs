@@ -84,6 +84,8 @@ public class LaserPowerUp : MonoBehaviour
         if (_target.gameObject.TryGetComponent<EnemyHandler>(out EnemyHandler _movement)) {
 
             // _movement.KnockBack(_direction, 10f);
+            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+           
             _movement.SetHitByLaser(_direction, flt_Force, flt_Damage);
         }
 

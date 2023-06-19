@@ -5,12 +5,12 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    public UiPenalScreen uiPenalScreen;
-    public UiVictory uiVictory;
-    public UiWavePanel uiWavePanel;
-    public UiLevelPanel uiLevelPanel;
+
+    public UiWavePanel uilevelScreen;
+    public WaveStartingScreen waveStartingScreen;
     public UIGamePlayScreen uIGamePlayScreen;
-    public UiPowerUpScreen powerUpScreen;
+    public UiWaveCompletedScreen uiWaveCompltedScreen;
+    public UiStageCompletedScreen uiStageCompletedScreen;
 
     private void Awake() {
         instance = this;

@@ -129,8 +129,9 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
 
         FindTarget();
 
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_CurrentFirerate);
         flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > flt_CurrentFirerate) {
+        if (flt_CurrentTimeForFireRate > CoolDown) {
             flt_CurrentTimeForFireRate = 0;
             SpawnBullet();
         }
@@ -180,9 +181,9 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
 
         GameObject spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
-
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_CurrentDamage);
         spawnedBullet.GetComponent<PlayerBulletMotion>().
-            SetBulletData(spawnPosition_Bullet.forward, flt_CurrentDamage, flt_CurrentBulletForce,target.transform);
+            SetBulletData(spawnPosition_Bullet.forward, Damage, flt_CurrentBulletForce,target.transform,0,0,0);
 
 
         bulletMuzzle.Play();

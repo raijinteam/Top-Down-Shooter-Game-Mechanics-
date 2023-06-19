@@ -48,7 +48,8 @@ public class PlayerMovement : MonoBehaviour
    
 
     private void Start() {
-                   
+
+        joystick = UIManager.instance.uIGamePlayScreen.variableJoystick;
         playerShooting = GetComponent<PlayerShooting>();
     }
     private void Update() {
@@ -79,11 +80,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetInput() {
 
-        //flt_HorizontalInput = Input.GetAxis("Horizontal");
-        //flt_VerticalInput = Input.GetAxis("Vertical");
+        flt_HorizontalInput = Input.GetAxis("Horizontal");
+        flt_VerticalInput = Input.GetAxis("Vertical");
 
-        flt_HorizontalInput = joystick.Horizontal;
-        flt_VerticalInput = joystick.Vertical;
+        //flt_HorizontalInput = joystick.Horizontal;
+        //flt_VerticalInput = joystick.Vertical;
 
         //if (Input.GetMouseButtonDown(0)) {
         //    isJump = true;

@@ -15,7 +15,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Transform[] all_SpawnPostion;
     [SerializeField] private GameObject obj_Bullet;
     [SerializeField] private Transform spawnPosition_Bullet;
-    private GameObject target;
+    [SerializeField] private GameObject target;
     private float MinDistnce = 0;
 
 
@@ -69,30 +69,28 @@ public class PlayerShooting : MonoBehaviour
         isEnemyAcive = true;
 
         FindTarget();
-
+      float  firrate = playerData.GetDecreasedFirerate(flt_CurrentFirerate);
         flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > flt_CurrentFirerate) {
+        if (flt_CurrentTimeForFireRate > firrate) {
             flt_CurrentTimeForFireRate = 0;
+           
             SpawnBullet();
         }
     }
 
     private void FindTarget() {
+        MinDistnce = 0;
 
-      
-        
-       
-      
         for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
 
             if (GameManager.instance.list_ActiveEnemies[i] == null) {
                 continue;
             }
 
-
+           
             float distance = MathF.Abs(Vector3.Distance(transform.position,
                 GameManager.instance.list_ActiveEnemies[i].transform.position));
-            if (target == null) {
+            if (MinDistnce == 0) {
                 target = GameManager.instance.list_ActiveEnemies[i].gameObject;
                 MinDistnce = distance;
             }
@@ -127,10 +125,12 @@ public class PlayerShooting : MonoBehaviour
 
         GameObject spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
-        // flt_damage = flt_currentdamage + ((playerdata.damage%/ 100) * flt_currentDamage)
 
+        float damage = playerData.GetIncreasedDamage(flt_CurrentDamage);
+       
         spawnedBullet.GetComponent<PlayerBulletMotion>().
-            SetBulletData(spawnPosition_Bullet.forward, flt_CurrentDamage, flt_CurrentBulletForce,target.transform);
+            SetBulletData(spawnPosition_Bullet.forward, damage, flt_CurrentBulletForce,target.transform
+            ,playerData.RechoestCounter,playerData.Rechoest_damagePersantage,playerData.persantageOfDelathBow);
     
         
         bulletMuzzle.Play();
@@ -142,7 +142,7 @@ public class PlayerShooting : MonoBehaviour
 
     private void SpwnMisssle() {
         int Index = Random.Range(0, 100);
-        if (Index < playerData.PersantageOfSpawn) {
+        if (Index < playerData.PersantageOfMissileSpawn) {
 
             for (int i = 0; i < playerData.MissileCounter; i++) {
 
@@ -151,9 +151,10 @@ public class PlayerShooting : MonoBehaviour
                 GameObject spawnedBullet = Instantiate(obj_Missile, all_SpawnPostion[i].position,
                             spawnPosition_Bullet.rotation);
 
+                float damage = playerData.GetIncreasedDamage(playerData.flt_MissileDamage);
 
                 spawnedBullet.GetComponent<MicroMissileMotion>().
-                    SetBulletData(spawnPosition_Bullet.forward, playerData.flt_MisisleDamage);
+                    SetBulletData(spawnPosition_Bullet.forward, damage);
             }
             
                               

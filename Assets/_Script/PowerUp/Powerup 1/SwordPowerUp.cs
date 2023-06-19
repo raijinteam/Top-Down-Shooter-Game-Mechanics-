@@ -32,7 +32,8 @@ public class SwordPowerUp : MonoBehaviour
       
 
         flt_CurrentSpawnSwordTime += Time.deltaTime;
-        if (flt_CurrentSpawnSwordTime > flt_SwordFireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_SwordFireRate);
+        if (flt_CurrentSpawnSwordTime > CoolDown) {
             SpawnSoword();
             flt_CurrentSpawnSwordTime = 0;
         }
@@ -40,7 +41,8 @@ public class SwordPowerUp : MonoBehaviour
 
     private void SpawnSoword() {
       SwordMovement current =   Instantiate(swordMovement, transform.position, transform.rotation);
-        current.SetSwordData(flt_Force, flt_Damage);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+        current.SetSwordData(flt_Force, Damage);
     }
 
     private void PowerUpHandler() {

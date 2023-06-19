@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
 
-    [SerializeField] private int GameLevel;
+    [SerializeField] private int GameLevel; // player level.private int playerLevel
     [Header("PlayerData")]
     public bool isPlayerLive;
 
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField]private int currentWaveIndex = 0;
     public int totalNumberOfWavesInThisStage;
     public int numberOfEnemiesInCurrentWave;
+    [SerializeField] private bool isNewWaveStart;
 
     [Header("Boss handling")]
     [SerializeField] private bool IsBossActvated;
@@ -42,9 +44,7 @@ public class GameManager : MonoBehaviour {
         instance = this;
     }
 
-    private void Start() {
-        StartSpawningEnemyForCurrentWave();
-    }
+   
 
 
     public int GetLevel() {
@@ -76,9 +76,20 @@ public class GameManager : MonoBehaviour {
 
     public void StartSpawningEnemyForCurrentWave() {
 
-        LevelManager.instance.StartLevel();
-        StartCoroutine(SpawnEnemyInIntervals());
+       LevelManager.instance.StartLevel();
+        UIManager.instance.waveStartingScreen.PlayUiWaveStartAnimation(currentWaveIndex + 1);
+       
+
+
+
     }
+
+    public void PLayLeveAnimation() {
+        UIManager.instance.uilevelScreen.PlayUiWaveAnimation(currentStageIndex + 1);
+    }
+    
+
+    
 
     public void EnemyKilled(Transform _enemy) {
 
@@ -91,30 +102,40 @@ public class GameManager : MonoBehaviour {
             currentWaveIndex++;
             if (currentWaveIndex > totalNumberOfWavesInThisStage) {
 
-                if (currentStageIndex % BossIndex == 0  && !IsBossActvated) {
+                if (currentStageIndex % BossIndex == 0 && !IsBossActvated) {
                     Debug.Log("Boss Is Coming");
                     IsBossActvated = true;
-                    UIManager.instance.uiLevelPanel.gameObject.SetActive(true);
-                    UIManager.instance.uiLevelPanel.PlayUiLevelAnimation();
+                    UIManager.instance.waveStartingScreen.gameObject.SetActive(true);
+                    UIManager.instance.waveStartingScreen.PlayUiBossLevelAnimation();
                     return;
                 }
 
-                IsBossActvated = false;
-                Debug.Log("Stage Change");
-                currentWaveIndex = 0;
-                UIManager.instance.uiVictory.PlayVictoryAnimation();
-                LevelManager.instance.SetNewStage();
-               
-              
+                if (currentWaveIndex != 0) {
+                    IsBossActvated = false;
+                    Debug.Log("Stage Change");
+                    currentWaveIndex = 0;
+                    currentStageIndex++;
+                    UIManager.instance.uiStageCompletedScreen.PlayVictoryAnimation();
+                    PlayerManager.instance.StageCompletd();
+                    isNewWaveStart = true;
+                }
+
+
+
             }
             else {
                 Debug.Log("Wave Change");
-                UIManager.instance.uiPenalScreen.PlayMissionCompltedAnimation();
-              numberOfEnemiesInCurrentWave = LevelManager.instance.GetEnemiesInCurrentWave();
+                isNewWaveStart = true;
+                UIManager.instance.uiWaveCompltedScreen.PlayWaveCompltedAnimation();
+                numberOfEnemiesInCurrentWave = LevelManager.instance.GetEnemiesInCurrentWave();
             }
         }
 
-       
+
+    }
+
+    public void WaveCompleteAnimationComplted() {
+        UIManager.instance.waveStartingScreen.PlayUiWaveStartAnimation(currentWaveIndex + 1);
     }
 
     public void SpawnBoss() {
@@ -135,16 +156,26 @@ public class GameManager : MonoBehaviour {
     }
 
     public void SpwnEnemyNewWave() {
+
+      
         StartCoroutine(SpawnEnemyInIntervals());
     }
 
     private IEnumerator SpawnEnemyInIntervals() {
 
-        
+        int BaseValue = 1 ;
+
         for (int i = 0; i < numberOfEnemiesInCurrentWave; i++) {
 
-            SpawnEnemy();
-            yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
+            if (i < BaseValue) {
+                SpawnEnemy();
+            }
+            else {
+                SpawnEnemy();
+                yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
+            }
+
+           
         }
     }
 

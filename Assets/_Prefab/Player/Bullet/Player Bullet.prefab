@@ -34566,7 +34566,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flt_Force: 50
   flt_Damage: 0
-  flt_BulletSpeed: 15
+  flt_BulletSpeed: 20
   IncreasedHealth: 0
   target: {fileID: 0}
   body: {fileID: 6198830080741601386}

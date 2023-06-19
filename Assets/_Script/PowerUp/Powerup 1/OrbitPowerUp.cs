@@ -47,7 +47,8 @@ public class OrbitPowerUp : MonoBehaviour
     private void PowerUpHandler() {
        
         flt_CurrentTime += Time.deltaTime;
-        if (flt_CurrentTime > flt_FireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
+        if (flt_CurrentTime > CoolDown) {
             flt_CurrentTime = 0;
             bulletCounter++;
             SpawnBullet();
@@ -61,7 +62,8 @@ public class OrbitPowerUp : MonoBehaviour
         Vector3 spawnPostion = new Vector3(Random.Range(flt_Boundry, flt_Boundry_X), flt_DownY_Postion,
                                             Random.Range(flt_Boundry, flt_Boundry_Z));
         OrbitBullet current = Instantiate(orbitBullet, spawnPostion, transform.rotation);
-        current.SetBulletData(flt_range, flt_force, flt_Damage);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+        current.SetBulletData(flt_range, flt_force, Damage);
 
         bulletCounter++;
         if (bulletCounter >=  max_Bullet) {

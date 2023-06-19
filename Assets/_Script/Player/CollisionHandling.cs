@@ -58,18 +58,20 @@ public class CollisionHandling : MonoBehaviour
             Debug.Log("GameOver");
             GameManager.instance.isPlayerLive = false;
             Instantiate(obj_WaterParticle, transform.position, transform.rotation);
-
-            StartCoroutine(Delay_Gamobject());
+            StartCoroutine(delay_Destroy());
+          
            
         }
        
     }
 
-    private IEnumerator Delay_Gamobject() {
-        yield return new WaitForSeconds(0.5f);
+    private IEnumerator delay_Destroy() {
+        yield return new WaitForSeconds(1);
+        Destroy(gameObject);
         SceneManager.LoadScene(0);
-        Destroy(playerHealth.gameObject);
     }
+
+
 
     public void SetKavachActive() {
 

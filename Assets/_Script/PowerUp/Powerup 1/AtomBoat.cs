@@ -26,7 +26,8 @@ public class AtomBoat : MonoBehaviour
                                 normalized;
             Vector3 targetPostion = transform.position + direction * flt_Range;
             RobotMotion rb = Instantiate(Robot, targetPostion, Quaternion.identity);
-            rb.SetRobotData(flt_Damage , flt_Force,flt_DetsroyTime);
+            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+            rb.SetRobotData(Damage , flt_Force,flt_DetsroyTime);
         }
 
         this.gameObject.SetActive(false);

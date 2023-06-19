@@ -47,7 +47,8 @@ public class AstrlArrowPowerUp : MonoBehaviour {
 
     private void BulletHandler() {
         flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > flt_FireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
+        if (flt_CurrentTimeForFireRate > CoolDown) {
             SpawnArrow();
             flt_CurrentTimeForFireRate = 0;
         }
@@ -56,7 +57,8 @@ public class AstrlArrowPowerUp : MonoBehaviour {
     private void SpawnArrow() {
         for (int i = 0; i < No_OfArrow_Spawn; i++) {
             Arrow current = Instantiate(arrow, GetRandomPostion(), arrow.transform.rotation);
-            arrow.SetBulletData(flt_Damage);
+            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+            arrow.SetBulletData(Damage);
         }
         
     }

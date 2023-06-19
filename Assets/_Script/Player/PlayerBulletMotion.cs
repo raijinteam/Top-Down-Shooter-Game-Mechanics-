@@ -41,13 +41,19 @@ public class PlayerBulletMotion : MonoBehaviour
     private string tag_Obstackle = "Obstackle";
     
 
-    public void SetBulletData(Vector3 direction, float damage, float force, Transform  target) {
+    public void SetBulletData(Vector3 direction, float damage, float force, Transform  target ,int _RchoestCounter, int
+                    int_RechestDamagePersantage , int persantageOfdealthBlow) {
+
         this.flt_Damage = damage;
         this.bulletMotionDirection = direction;
         this.flt_Force = force;
         this.target = target;
         currentCounter = 0;
-    
+        this.MaxCounter = _RchoestCounter;
+        this.damagePersantage = int_RechestDamagePersantage;
+       this.persantageOfDelathBow = persantageOfdealthBlow;
+
+
     }
     private void Start() {
         thisCollider = GetComponent<Collider>();

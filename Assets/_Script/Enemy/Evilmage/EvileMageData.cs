@@ -21,7 +21,9 @@ public class EvileMageData : EnemyHandler
     [SerializeField] private EvileMageMovement evileMageMovement;
     [SerializeField] private Collider body;
 
-    [Header("Chain Vfx")]
+    private EvileMageData current;
+
+   [Header("Chain Vfx")]
     [SerializeField] private GameObject obj_ChainVfx;
 
     [Header("Spawner")]
@@ -47,7 +49,7 @@ public class EvileMageData : EnemyHandler
                 GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
                                                  obj_Indiacter.transform.rotation);
 
-                EvileMageData current = Instantiate(evileMage, postion, transform.rotation);
+                 current = Instantiate(evileMage, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
                 float flt_CurrentScale = current.transform.localScale.y;
@@ -56,14 +58,17 @@ public class EvileMageData : EnemyHandler
 
                 Sequence seq = DOTween.Sequence();
                 seq.AppendInterval(0.5F).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5F)).
-                    AppendCallback(current.DestroyIndicator).
-                    Append(current.transform.DOScaleY(flt_AnimatScale, 0.5F)).
-                    Append(current.transform.DOScaleY(flt_CurrentScale, 0.5F))
-                        .AppendCallback(current.SetAllScriptData);
+                    AppendCallback(current.DestroyIndicator).AppendCallback(ScaleAnimation).AppendInterval(0.5f)
+                    .AppendCallback(current.SetAllScriptData);
+
                 current.transform.rotation = Quaternion.identity;
                 isSpawn = true;
             }
         }
+    }
+
+    private void ScaleAnimation() {
+        FeelManager.instance.PlayScaleAnimation(current.transform);
     }
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
 

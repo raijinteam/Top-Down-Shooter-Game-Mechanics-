@@ -7,11 +7,13 @@ using TMPro;
 
 public class UIGamePlayScreen : MonoBehaviour
 {
+
+    public VariableJoystick variableJoystick;
     public TextMeshProUGUI txt_PowerUpName;
     [SerializeField] private Image img_PowerUp;
     [SerializeField] private Image img_Ultimate;
     [SerializeField] private Button btn_PowerUp;
-
+    public Image img_BG;
     public PowerUpDataUI[] all_PowerUpData;
     [SerializeField] private GameObject obj_Panel;
 
@@ -20,6 +22,8 @@ public class UIGamePlayScreen : MonoBehaviour
     [SerializeField] private float flt_UltimateSpriteSeTime = 1;
     
     private bool isMove = false;
+
+   
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.T)) {

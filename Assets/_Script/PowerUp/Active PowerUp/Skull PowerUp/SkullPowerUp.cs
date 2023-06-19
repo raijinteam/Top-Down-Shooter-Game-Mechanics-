@@ -6,12 +6,11 @@ using Random = UnityEngine.Random;
 
 public class SkullPowerUp : MonoBehaviour
 {
-   
-   
-    
+
+
+
     [Header("BulletData")]
-    [SerializeField] private float flt_Damage;
-    [SerializeField] private float flt_FireRate;
+    [SerializeField] private SkullData skullData;
     [SerializeField] private float flt_CurrentTime;
 
     [Header("Bullet")]
@@ -39,7 +38,8 @@ public class SkullPowerUp : MonoBehaviour
 
         
         flt_CurrentTime += Time.deltaTime;
-        if (flt_CurrentTime > flt_FireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(skullData.Firerate);
+        if (flt_CurrentTime > CoolDown) {
             flt_CurrentTime = 0;
 
             SpawnBullet();
@@ -60,6 +60,7 @@ public class SkullPowerUp : MonoBehaviour
         int Index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
         Transform Target = GameManager.instance.list_ActiveEnemies[Index];
         spawnPostion.LookAt(Target);
-        current.SetBulletData(spawnPostion.forward, flt_Damage);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(skullData.Damage);
+        current.SetBulletData(spawnPostion.forward, Damage);
     }
 }

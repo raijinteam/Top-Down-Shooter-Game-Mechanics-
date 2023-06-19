@@ -38,7 +38,8 @@ public class SpikePowerUp : MonoBehaviour
     private void SpikeHandler() {
        
         flt_Currentime += Time.deltaTime;
-        if (flt_Currentime > flt_FireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
+        if (flt_Currentime > CoolDown) {
             SpawnSpike();
             flt_Currentime = 0;
         }
@@ -47,7 +48,8 @@ public class SpikePowerUp : MonoBehaviour
     private void SpawnSpike() {
         SpikeData currentSpike = Instantiate(spikeData, spawnPostion.position, spawnPostion.rotation);
         Debug.Log("Spawn Spike");
-        currentSpike.SetSpikeData(flt_Damage, flt_Force);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+        currentSpike.SetSpikeData(Damage, flt_Force);
     }
 
     private void SetSpikePowerUp() {

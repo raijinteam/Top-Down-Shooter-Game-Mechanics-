@@ -8,17 +8,21 @@ using Random = UnityEngine.Random;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 
+
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private float flt_MaxHealth;
+    public float flt_MaxHealth;
     [SerializeField] private float flt_CurrrentHealth; 
     [SerializeField] private TextMeshProUGUI txt_Health;
     [SerializeField] private PlayerData PlayerData;
-
+    [SerializeField] private Transform body;
     [SerializeField] private GameObject player_UI;
 
     [Header("Health Slider")]
     [SerializeField] private Slider slider_Health; // normal slider
+
+   
+
     [SerializeField] private Slider slider_Animation; // another slider to give damage effect
     private float flt_CurrentSliderHealth;
 
@@ -54,7 +58,39 @@ public class PlayerHealth : MonoBehaviour
         player_UI.transform.localEulerAngles = new Vector3(Camera.main.transform.localEulerAngles.x, -transform.eulerAngles.y, 0);
     }
 
-    public void IncreasedHealth(float damage) {
+    public void IncresedHPReagon(float healthPersantage) {
+        if (flt_CurrrentHealth == flt_MaxHealth) {
+            return;
+        }
+
+        float flt_Health = (flt_CurrrentHealth * (healthPersantage / 100));
+
+        float GetHealth = flt_Health;
+        flt_CurrrentHealth += flt_Health;
+
+
+        if (flt_CurrrentHealth > flt_MaxHealth) {
+            GetHealth = flt_CurrrentHealth - flt_MaxHealth;
+            flt_CurrrentHealth = flt_MaxHealth;
+        }
+
+        SetIncresedSlider(GetHealth);
+
+    }
+
+    public void IncreasedMaxHealth(float health) {
+
+        flt_MaxHealth = health;
+        float increasedHealth = flt_MaxHealth - flt_CurrrentHealth;
+        flt_CurrrentHealth = flt_MaxHealth;
+        if (Cour_Slider_Animation != null) {
+            StopCoroutine(Cour_Slider_Animation);
+        }
+
+        SetSlider(increasedHealth);
+       
+    }
+    public void IncreasedHealthLifeStealTime(float damage) {
 
         if (flt_CurrrentHealth == flt_MaxHealth) {
             return;
@@ -71,8 +107,12 @@ public class PlayerHealth : MonoBehaviour
             flt_CurrrentHealth = flt_MaxHealth;
         }
 
-      
-       
+
+        SetIncresedSlider(GetHealth);
+
+    }
+
+    private void SetIncresedSlider(float increasedHealth) {
 
         if (Cour_Slider_Animation != null) {
             StopCoroutine(Cour_Slider_Animation);
@@ -83,22 +123,21 @@ public class PlayerHealth : MonoBehaviour
         GameObject current = Instantiate(txt_Damage, new Vector3(transform.position.x, flt_SpawnTextYpositionOffset,
             transform.position.z), Quaternion.identity, obj_txtDamageSpawnPostion);
 
-       
-        current.GetComponent<DamagePanel>().IncresedHealth(((int)GetHealth), Color.yellow);
+
+        current.GetComponent<DamagePanel>().IncresedHealth(((int)increasedHealth), Color.yellow);
 
 
 
         slider_Health.value = flt_CurrrentHealth;
         txt_Health.text = flt_CurrrentHealth.ToString();
-
     }
 
     public void TakeDamage(float damage) {
      
 
         flt_CurrrentHealth -= damage;
-       
 
+      
         if (flt_CurrrentHealth > 0) {
 
             if (Cour_Slider_Animation != null) {
@@ -111,8 +150,9 @@ public class PlayerHealth : MonoBehaviour
                 transform.position.z), Quaternion.identity, obj_txtDamageSpawnPostion);
 
             current.GetComponent<DamagePanel>().SetDamagePanel(damage, Color.red);
-           
 
+           
+            FeelManager.instance.PlayerDamageTimeCameraShake(body.transform);
 
             slider_Health.value = flt_CurrrentHealth;
             txt_Health.text = flt_CurrrentHealth.ToString();
@@ -120,15 +160,15 @@ public class PlayerHealth : MonoBehaviour
         else {
             
             GameManager.instance.isPlayerLive = false;
-            StartCoroutine(DelayofLoadScene());
+            StartCoroutine(delay_Destroy());
             
         }
               
     }
 
-    private IEnumerator DelayofLoadScene() {
-        
+    private IEnumerator delay_Destroy() {
         yield return new WaitForSeconds(1);
+        Destroy(gameObject);
         SceneManager.LoadScene(0);
     }
 

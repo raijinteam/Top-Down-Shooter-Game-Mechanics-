@@ -33,7 +33,8 @@ public class TerrorShort : MonoBehaviour
     private void BulletHandler() {
       
         flt_CurrentTimeSpawnBullet += Time.deltaTime;
-        if (flt_CurrentTimeSpawnBullet > flt_FireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
+        if (flt_CurrentTimeSpawnBullet > CoolDown) {
             SpawnBullet();
             flt_CurrentTimeSpawnBullet = 0;
         }
@@ -48,9 +49,10 @@ public class TerrorShort : MonoBehaviour
 
         int index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
         spawnPostion.LookAt(GameManager.instance.list_ActiveEnemies[index]);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
         TerrorShotBullet currentBullet = Instantiate(terroShotBullet,
                                      spawnPostion.position, spawnPostion.rotation);
-        currentBullet.SetBulletData(spawnPostion.forward,flt_Damage, flt_force);
+        currentBullet.SetBulletData(spawnPostion.forward,Damage, flt_force);
     }
 
     private void PowerUpHandler() {

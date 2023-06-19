@@ -87,7 +87,9 @@ public class InvisblePowerup : MonoBehaviour
         Debug.Log("Damage" + damage);
         Debug.Log(flt_DamagePercentage);
         Debug.Log(playerData.flt_Damage +  " playerData.flt_Damage");
-        playerShooting.SetPowerupTime(damage, force, firerate);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(damage);
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(firerate);
+        playerShooting.SetPowerupTime(Damage, force, CoolDown);
 
        
     }

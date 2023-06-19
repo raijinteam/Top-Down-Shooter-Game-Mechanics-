@@ -37,7 +37,8 @@ public class DamageAuraPowerUp : MonoBehaviour
 
     private void ChargeAura() {
         flt_CurrentTimeForSphereCast += Time.deltaTime;
-        if (flt_CurrentTimeForSphereCast > flt_DelayOfTweSpherCast) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_DelayOfTweSpherCast);
+        if (flt_CurrentTimeForSphereCast > CoolDown) {
             SetSphereCast();
             flt_CurrentTimeForSphereCast = 0;
         }
@@ -50,7 +51,8 @@ public class DamageAuraPowerUp : MonoBehaviour
            
                 Vector3 direction = (all_Collider[i].transform.position - transform.position).normalized;
                 direction = new Vector3(direction.x, 0, direction.z).normalized;
-                all_Collider[i].GetComponent<EnemyTrigger>().SethitByAura(flt_Damage,flt_Force,direction);
+            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+            all_Collider[i].GetComponent<EnemyTrigger>().SethitByAura(Damage,flt_Force,direction);
            
         }
     }

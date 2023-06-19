@@ -33,7 +33,9 @@ public class TidalPowerUp : MonoBehaviour
 
     private void SpawnTidal() {
         flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > flt_DelayBetweenTwoWave) {
+
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_DelayBetweenTwoWave);
+        if (flt_CurrentTimeForFireRate > CoolDown) {
 
             SpawnTidalWave();
             flt_CurrentTimeForFireRate = 0;
@@ -43,8 +45,9 @@ public class TidalPowerUp : MonoBehaviour
 
     private void SpawnTidalWave() {
 
-      TidalWave current =   Instantiate(tidalWave, spawnPostion.position, transform.rotation);
-        current.setBulletData(spawnPostion.forward, 0, this.flt_Damage, flt_DestryTime);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(this.flt_Damage);
+        TidalWave current =   Instantiate(tidalWave, spawnPostion.position, transform.rotation);
+        current.setBulletData(spawnPostion.forward, 0,Damage, flt_DestryTime);
        
     }
 

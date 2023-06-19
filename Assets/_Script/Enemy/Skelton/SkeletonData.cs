@@ -33,8 +33,7 @@ public class SkeletonData : EnemyHandler {
     [SerializeField] private float flt_BoundryZ;
     [SerializeField] private LayerMask obstckle_Layer;
     [SerializeField]private GameObject obj_Indiacter;
-
-   
+    private SkeletonData current;
 
     public override void SpawnEnemy() {
         float flt_YTopPostion = 100;
@@ -49,7 +48,7 @@ public class SkeletonData : EnemyHandler {
                 GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
                                                  obj_Indiacter.transform.rotation);
 
-                SkeletonData current = Instantiate(skeletonData, postion, transform.rotation);
+                 current = Instantiate(skeletonData, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
                 float flt_CurrentScale = current.transform.localScale.y;
@@ -58,15 +57,18 @@ public class SkeletonData : EnemyHandler {
 
                 Sequence seq = DOTween.Sequence();
                 seq.AppendInterval(0.5F).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5F)).
-                    AppendCallback(current.DestroyIndicator).
-                    Append(current.transform.DOScaleY(flt_AnimatScale, 0.5F)).
-                    Append(current.transform.DOScaleY(flt_CurrentScale, 0.5F))
-                        .AppendCallback(current.SetAllScriptData);
+                    AppendCallback(current.DestroyIndicator).AppendCallback(ScaleAnimation).AppendInterval(0.5f)
+                    .AppendCallback(current.SetAllScriptData);
                 current.transform.rotation = Quaternion.identity;
                 isSpawn = true;
             }
         }
     }
+
+    private void ScaleAnimation() {
+        FeelManager.instance.PlayScaleAnimation(current.transform);
+    }
+
     public override void SetHitByLaser(Vector3 _Dircetion ,float _force, float _damage) {
         enemyMovement.KnockBack(_Dircetion, _force);
         enemyHealth.SetLaserAffacted(_damage);

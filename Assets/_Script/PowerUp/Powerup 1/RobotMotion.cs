@@ -62,8 +62,8 @@ public class RobotMotion : MonoBehaviour
     private void SpawnBullet() {
         PlayerBulletMotion bullet = Instantiate(playerBulletMotion, spawnpostion.position,
             spawnpostion.rotation);
-
-        bullet.SetBulletData(spawnpostion.forward, flt_Damage, flt_Force,null);
+       
+        bullet.SetBulletData(spawnpostion.forward, flt_Damage, flt_Force,null ,0 ,0,0);
     }
 
     private void FindTarget() {

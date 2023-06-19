@@ -37,7 +37,8 @@ public class ClusterPowerUp : MonoBehaviour
        
         flt_CurrentTimeForSpwnBomb += Time.deltaTime;
 
-        if (flt_CurrentTimeForSpwnBomb > flt_BombFireRate) {
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_BombFireRate);
+        if (flt_CurrentTimeForSpwnBomb > CoolDown) {
             flt_CurrentTimeForSpwnBomb = 0;
             SpawnClusterBomb();
         }
@@ -47,7 +48,8 @@ public class ClusterPowerUp : MonoBehaviour
         ClusterBombMotion currentCluster = Instantiate(clusterBomb, spawnPostion.position, transform.rotation);
 
         Vector3 randomDiection = new Vector3(Random.Range(-100, 100), 0, Random.Range(-100, 100)).normalized;
-        currentCluster.SetBombData(randomDiection, flt_BulletFireRate, flt_Damage, flt_Force,
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+        currentCluster.SetBombData(randomDiection, flt_BulletFireRate, Damage, flt_Force,
             counter);
     }
 

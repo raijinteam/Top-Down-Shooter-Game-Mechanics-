@@ -37,6 +37,7 @@ public class NukeBarragePowerUp : MonoBehaviour
     public void SetNukePowerUp() {
         flt_CurrentTime = 0;
         bulletCounter = 0;
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
     }
 
     private void OnEnable() {
@@ -59,7 +60,8 @@ public class NukeBarragePowerUp : MonoBehaviour
         }
      
         flt_CurrentTime += Time.deltaTime;
-        if (flt_CurrentTime > flt_FireRate) {
+        float cooldown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
+        if (flt_CurrentTime > cooldown) {
            
             isspawn = true;
             SpawnBullet();
@@ -82,7 +84,9 @@ public class NukeBarragePowerUp : MonoBehaviour
 
         yield return new WaitForSeconds(flt_DelayBullwetSpawn);
          current_Bullet = Instantiate(Obj_Bullet, _spawnPostion, Quaternion.identity);
-        current_Bullet.SetBulletData(flt_range, flt_force, flt_Damage, _Indicator);
+
+        float damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+        current_Bullet.SetBulletData(flt_range, flt_force, damage, _Indicator);
         flt_CurrentTime = 0;
         isspawn = false;
         bulletCounter++;

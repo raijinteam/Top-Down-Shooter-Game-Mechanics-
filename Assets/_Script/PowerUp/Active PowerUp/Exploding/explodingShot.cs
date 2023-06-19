@@ -9,16 +9,13 @@ public class explodingShot : MonoBehaviour
     [Header("Bullet - Data")]
     [SerializeField] private Transform bulletSpawnpostion;
     [SerializeField] private ExplodingBulletMotion obj_Bullet;
-    [SerializeField] private float flt_BulletFireRate;
+    [SerializeField] private ExplodingData exploding_Data;
     [SerializeField] private float flt_CurrentTimeForSpawnBullet;
-    [SerializeField] private float flt_BulletDamage;
-    [SerializeField] private float flt_BulletForce;
-    [SerializeField] private float flt_BulletAreaDamage;
-    [SerializeField] private float flt_Area_Range;
 
-   
+
+
     private void Update() {
-             
+
         BulletHandler();
     }
 
@@ -26,8 +23,9 @@ public class explodingShot : MonoBehaviour
         if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
+        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(exploding_Data.FireRate);
         flt_CurrentTimeForSpawnBullet += Time.deltaTime;
-        if (flt_CurrentTimeForSpawnBullet > flt_BulletFireRate) {
+        if (flt_CurrentTimeForSpawnBullet > CoolDown) {
             flt_CurrentTimeForSpawnBullet = 0;
             SpawnBullet();
         }
@@ -40,7 +38,7 @@ public class explodingShot : MonoBehaviour
         }
 
         int Index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
-        
+
         Transform target = GameManager.instance.list_ActiveEnemies[Index].transform;
         bulletSpawnpostion.LookAt(target);
 
@@ -48,11 +46,17 @@ public class explodingShot : MonoBehaviour
                             transform.rotation);
 
         Vector3 direction = bulletSpawnpostion.forward;
-        current.SetBulletData(direction, flt_BulletDamage, flt_BulletForce, flt_BulletAreaDamage,
-                                                    flt_Area_Range);    
+
+
+
+
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(exploding_Data.Damage);
+
+        current.SetBulletData(direction, Damage, exploding_Data.Force, exploding_Data.AreaDamage,
+                                                    exploding_Data.AreaRange);
     }
 
-   
+
 
     private void SetExplodingPowerUp() {
         flt_CurrentTimeForSpawnBullet = 0;

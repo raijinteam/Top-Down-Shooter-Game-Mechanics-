@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using MoreMountains.Feedbacks;
+using Random = UnityEngine.Random;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private float flt_MaxHealth;
     [SerializeField] private float flt_CurrrentHealth;
     [SerializeField] private TextMeshProUGUI txt_Health;
-
+    [SerializeField] private Transform body;
     [SerializeField] private GameObject enemy_UI;
 
     [Header("Health Slider")]
@@ -26,6 +28,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Transform obj_txtDamageSpawnPostion;
     [SerializeField] private float flt_SpawnTextYpositionOffset;
     [SerializeField] private float currentTimePassed;
+    [SerializeField] private MMF_Player mmf_Damage;
 
     [Header("Laser Data")]
     private bool isHitByLaser = false;
@@ -43,7 +46,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private float flt_DamageOverTime = 1;
     [SerializeField] private float flt_MonotioniveDamage;
 
-
+   
 
     private void OnEnable() {
 
@@ -126,11 +129,22 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(float damage) {
 
+
+        bool isCrtical = false;
         
+        //// CRITICAL DAMAGE 
+        int index = Random.Range(0, 100);
+        if (index < PlayerManager.instance.Player.persantage_CriticalDamageChance) {
+
+            damage = (damage + ((PlayerManager.instance.Player.persantage_CriticalDamage / 100) * damage));
+            isCrtical = true;
+        }
+
         flt_CurrrentHealth -= damage;
 
+       
         if (GameManager.instance.isLifeStealPowerUpActive) {
-            PlayerManager.instance.Player.GetComponent<PlayerHealth>().IncreasedHealth(damage);
+            PlayerManager.instance.Player.GetComponent<PlayerHealth>().IncreasedHealthLifeStealTime(damage);
         }
 
 
@@ -142,11 +156,9 @@ public class EnemyHealth : MonoBehaviour
 
             Cour_Slider_Animation = StartCoroutine(SetSlider(flt_CurrrentHealth));
 
-            GameObject current = Instantiate(txt_Damage, new Vector3(transform.position.x, flt_SpawnTextYpositionOffset,
-                transform.position.z), Quaternion.identity, obj_txtDamageSpawnPostion);
+            FeelManager.instance.GetDamage(transform.position, damage, obj_txtDamageSpawnPostion,isCrtical);
 
-            current.GetComponent<DamagePanel>().SetDamagePanel(damage, Color.yellow);
-
+            mmf_Damage.PlayFeedbacks();
 
 
             slider_Health.value = flt_CurrrentHealth;
@@ -157,6 +169,9 @@ public class EnemyHealth : MonoBehaviour
             PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>()
                 .IncreasingPlayerPoint(enemyData.GetEnemyPoint());
             GameManager.instance.EnemyKilled(transform);
+            if (transform.TryGetComponent<GolemMovement>(out GolemMovement golem)) {
+               Destroy (golem.Obj_current_Target);
+            }
 
 
         }

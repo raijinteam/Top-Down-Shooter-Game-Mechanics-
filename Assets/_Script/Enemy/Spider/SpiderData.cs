@@ -33,8 +33,7 @@ public class SpiderData : EnemyHandler {
     [SerializeField] private float flt_BoundryZ;
     [SerializeField] private LayerMask obstckle_Layer;
     [SerializeField] private GameObject obj_Indiacter;
-
-
+    private SpiderData current;
 
     public override void SpawnEnemy() {
         float flt_YTopPostion = 100;
@@ -49,24 +48,28 @@ public class SpiderData : EnemyHandler {
                 GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
                                                  obj_Indiacter.transform.rotation);
 
-                SpiderData current = Instantiate(spiderData, postion, transform.rotation);
+                 current = Instantiate(spiderData, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
                 float flt_CurrentScale = current.transform.localScale.y;
                 float flt_AnimatScale = flt_CurrentScale - 0.3f;
 
 
+
                 Sequence seq = DOTween.Sequence();
                 seq.AppendInterval(0.5F).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5F)).
-                    AppendCallback(current.DestroyIndicator).
-                    Append(current.transform.DOScaleY(flt_AnimatScale, 0.5F)).
-                    Append(current.transform.DOScaleY(flt_CurrentScale, 0.5F))
-                        .AppendCallback(current.SetAllScriptData);
+                    AppendCallback(current.DestroyIndicator).AppendCallback(ScaleAnimation).AppendInterval(0.5f)
+                    .AppendCallback(current.SetAllScriptData);
                 current.transform.rotation = Quaternion.identity;
                 isSpawn = true;
             }
         }
     }
+
+    private void ScaleAnimation() {
+        FeelManager.instance.PlayScaleAnimation(current.transform);
+    }
+
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
         enemyHealth.SetLaserAffacted(damage);
         slimeMovement.KnockBack(_Direction, force);

@@ -6,9 +6,8 @@ using Random = UnityEngine.Random;
 
 public class ChainPowerUp : MonoBehaviour
 {
-    
-    [SerializeField] private int Counter;
-    [SerializeField] private float flt_Firerate;
+
+    [SerializeField] private ChainData chainData;
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private List<GameObject> list_ChainAffected;
     [SerializeField] private bool isSetTarget;
@@ -23,8 +22,8 @@ public class ChainPowerUp : MonoBehaviour
             return;
         }
         flt_CurrentTime += Time.deltaTime;
-
-        if (flt_CurrentTime > flt_Firerate) {
+        
+        if (flt_CurrentTime > chainData.ChainTime) {
             isSetTarget = true;
             ChainEnemy();
             flt_CurrentTime = 0;
@@ -44,9 +43,9 @@ public class ChainPowerUp : MonoBehaviour
             }
         }
         list_ChainAffected.Clear();
-        if (total_Enemy > Counter) {
+        if (total_Enemy > chainData.ChainCounter) {
 
-            for (int i = 0; i < Counter; i++) {
+            for (int i = 0; i < chainData.ChainCounter; i++) {
 
                 bool isSetTarget = false;
 

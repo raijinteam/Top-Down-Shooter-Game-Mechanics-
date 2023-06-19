@@ -5,6 +5,7 @@ using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
 using System;
+using MoreMountains.Feedbacks;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -12,13 +13,13 @@ public class PlayerManager : MonoBehaviour
    
     [SerializeField] private Transform levelStartPostion;
     [SerializeField] private Transform levelEndPostion;
-    [SerializeField] private Transform gameStartBoat;
+    [SerializeField] private MMF_Player gameStartBoat;
     [SerializeField] private Transform GameEndBoat;
     [SerializeField] private Transform spawnPostion;
     [SerializeField] private Transform BoatEndPostion;
-    [SerializeField] private GameObject obj_Player;
+    [SerializeField] private PlayerData obj_Player;
     [SerializeField] private CinemachineVirtualCamera cinemachine;
-    public GameObject Player;
+    public PlayerData Player;
     [SerializeField]private float flt_JumpTime;
     [SerializeField]private float flt_JumpAccerletion;
 
@@ -27,16 +28,16 @@ public class PlayerManager : MonoBehaviour
     }
 
     private void Start() {
-       // SpawnPLayer();
+        SpawnPLayer();
+       
     }
     private void SpawnPLayer() {
-        GameObject player = Instantiate(obj_Player, spawnPostion.position, spawnPostion.rotation, gameStartBoat);
+        PlayerData player = Instantiate(obj_Player, spawnPostion.position, spawnPostion.rotation, gameStartBoat.transform);
         this.Player = player;
-        Player.GetComponent<Rigidbody>().useGravity = false;
+
        
-        UIManager.instance.uiLevelPanel.gameObject.SetActive(true);
-      
-       
+
+
         StartAnimation();
        
        
@@ -44,11 +45,17 @@ public class PlayerManager : MonoBehaviour
     }
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Backspace)) {
-            GameManager.instance.isPlayerLive = false;
-            StartCoroutine(PlayerGoesToEndPostion(levelEndPostion.position));
+            StageCompletd();
         }
 
-       
+
+    }
+
+    public void StageCompletd() {
+        GameManager.instance.isPlayerLive = false;
+        
+        Player.transform.LookAt(levelEndPostion);
+        StartCoroutine(PlayerGoesToEndPostion(levelEndPostion.position));
     }
 
     private IEnumerator PlayerGoesToEndPostion(Vector3 targetpostion) {
@@ -68,57 +75,102 @@ public class PlayerManager : MonoBehaviour
         while (flt_fltcurrenttime < 1) {
 
             flt_fltcurrenttime += Time.deltaTime / CurrentMaxTime;
+            Player.transform.LookAt(targetpostion);
             Player.transform.position = Vector3.Lerp(startPostion, targetpostion, flt_fltcurrenttime);
             yield return null;
         }
                
         Player.transform.position = new Vector3(targetPostion.x,Player.transform.localScale.y, targetPostion.z);
-        Player.GetComponent<Rigidbody>().useGravity = true;
+
+        
        
+
+
         LevelEndAnimation();
         
     }
 
     private void LevelEndAnimation() {
         Sequence seq = DOTween.Sequence();
-        GameEndBoat.transform.position = new Vector3(GameEndBoat.position.x, GameEndBoat.position.y, 33);
-       
-        seq.Append(GameEndBoat.DOMoveZ(1.36f, 2)).AppendCallback(JumpEndAnimation).AppendInterval(2).
-            Append(GameEndBoat.DOMoveZ(-33, 2));
+        GameEndBoat.gameObject.SetActive(true);
+        GameEndBoat.transform.position = new Vector3(GameEndBoat.position.x, GameEndBoat.position.y, 39);
+        Debug.Log("playerPostion" + Player.transform.position);
+        seq.AppendCallback(JumpEndAnimation).AppendInterval(flt_JumpTime).
+            AppendCallback(GameEndProcdure).AppendInterval(2.5f).AppendCallback(ResetPlayer);
     }
 
+    private void ResetPlayer() {
+
+
+        GameEndBoat.gameObject.SetActive(false);
+        Player.transform.position = spawnPostion.position;
+        Player.transform.rotation = spawnPostion.rotation;
+        Player.transform.localScale = obj_Player.transform.localScale;
+        Player.transform.SetParent(gameStartBoat.transform);
+        GameEndBoat.transform.position = new Vector3(GameEndBoat.position.x, GameEndBoat.position.y, 39);
+        cinemachine.Follow = levelStartPostion;
+        GameEndBoat.transform.localPosition = new Vector3(GameEndBoat.localPosition.x, GameEndBoat.localPosition.y, 40);
+        UIManager.instance.uIGamePlayScreen.img_BG.DOFade(0, 1);
+          StartAnimation();
+        
+     
+
+       
+    }
+
+    private void GameEndProcdure() {
+        GameEndBoat.DOMoveZ(100, 2);
+        UIManager.instance.uIGamePlayScreen.img_BG.DOFade(1, 2);
+    }
+
+
+
+
     private void StartAnimation() {
+        gameStartBoat.PlayFeedbacks();
+       
+        Player.GetComponent<Rigidbody>().useGravity = false;
         Sequence seq = DOTween.Sequence();
-        gameStartBoat.transform.position = new Vector3(gameStartBoat.position.x,gameStartBoat.position.y, -33);
-        seq.Append(gameStartBoat.DOMoveZ(-23.5f, 2)).AppendCallback(JumpStartAnimation);
+
+        GameManager.instance.PLayLeveAnimation();
+       
+        gameStartBoat.transform.position = new Vector3(gameStartBoat.transform.position.x,gameStartBoat.transform.position.y, -60);
+        gameStartBoat.PlayFeedbacks();
+        seq.Append(gameStartBoat.transform.DOMoveZ(-40, 4)).AppendCallback(JumpStartAnimation);
            
     }
 
     private void JumpStartAnimation() {
+
+        gameStartBoat.enabled = false;
         Vector3 childPostion = Player.transform.localPosition;
         Quaternion childQuternion = Player.transform.localRotation;
         Vector3 childScale = Player.transform.localScale;
         Player.transform.parent = null;
-       // Player.transform.position = childPostion;
+      
         Player.transform.rotation = childQuternion;
         Player.transform.localScale = childScale;
+       
 
+       
         StartCoroutine(Jump(levelStartPostion.position,false));
     }
     private void JumpEndAnimation() {
-        Player.transform.SetParent(GameEndBoat);
+
        
         StartCoroutine(Jump(BoatEndPostion.position,true));
     }
 
     private IEnumerator Jump(Vector3 targetpostion,bool isEndPostion) {
 
-        Player.GetComponent<PlayerMovement>().player_Animator.SetTrigger("Jump");
+        //Player.GetComponent<PlayerMovement>().player_Animator.SetTrigger("Jump");
+        FeelManager.instance.PlayPlayerJump(Player.transform, flt_JumpTime, levelStartPostion.position);
 
+        yield return new WaitForSeconds(0.1f);
 
         // Get the starting position of the player
         Vector3 startPosition = Player.transform.position;
-
+      
 
         float jumpheight = flt_JumpAccerletion * flt_JumpTime / (MathF.Sqrt(2*Physics.gravity.magnitude));
 
@@ -149,14 +201,32 @@ public class PlayerManager : MonoBehaviour
         // Snap the player to the final position to ensure accuracy
         Player.transform.position = targetpostion;
 
-
         Rigidbody rb = Player.GetComponent<Rigidbody>();
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        Player.transform.localEulerAngles = Vector3.zero;
-        GameManager.instance.isPlayerLive = true;
-        GameManager.instance.isKilltimeCalculation = true;
-        cinemachine.Follow = Player.transform;
+
+        if (!isEndPostion) {
+            GameManager.instance.isPlayerLive = true;
+            GameManager.instance.StartSpawningEnemyForCurrentWave();
+            cinemachine.Follow = Player.transform;
+            CinemachineBasicMultiChannelPerlin camera = cinemachine.
+                GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            camera.m_AmplitudeGain = 0;
+            camera.m_FrequencyGain = 0;
+            rb.useGravity = true;
+        }
+        else {
+            Player.transform.SetParent(GameEndBoat);
+           
+            rb.useGravity = false;
+            cinemachine.Follow = levelEndPostion;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            Player.transform.localEulerAngles = Vector3.zero;
+            Player.transform.localScale = obj_Player.transform.localScale;
+            GameManager.instance.isPlayerLive = true;
+            GameManager.instance.isKilltimeCalculation = true;
+        }
+       
+       
 
     }
 

@@ -31,9 +31,7 @@ public class DraganShooting : MonoBehaviour
             return;
         }
         
-        if (batMovement.enemyState == EnemyState.Run) {
-            return;
-        }
+        
         FindTarget();
         BulletShoot();
     }
