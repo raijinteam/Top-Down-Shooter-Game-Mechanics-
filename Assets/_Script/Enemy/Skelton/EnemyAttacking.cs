@@ -38,7 +38,8 @@ public class EnemyAttacking : MonoBehaviour
     private void AttackBySword() {
 
         if (isAttckinInRange) {
-    
+
+            enemyMovement.enemyState = EnemyState.isbulletSpawn;
             if (!isattack) {
               
                 enemyMovement.SetAttackAnimation(true);
@@ -49,6 +50,8 @@ public class EnemyAttacking : MonoBehaviour
             
         }
         else {
+
+            enemyMovement.enemyState = EnemyState.Run;
             enemyMovement.SetAttackAnimation(false);
         }
     }

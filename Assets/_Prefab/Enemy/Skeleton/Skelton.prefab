@@ -60,7 +60,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492323937}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.214, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -130,7 +130,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521335194}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -149,7 +149,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.14112854, z: 0.2}
+  m_Size: {x: 0.79, y: 0.4, z: 0.79}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1794414191
 GameObject:
@@ -5700,10 +5700,9 @@ MonoBehaviour:
   txt_Health: {fileID: 32594148909205512}
   body: {fileID: 1048448681396618912}
   enemy_UI: {fileID: 8931760571098108973}
-  particleVFX: {fileID: 9160755104973182080, guid: 57119169c3c8da24a86bad2e0e89ed29, type: 3}
+  particleVFX: {fileID: 1570356560379450644, guid: e1c844460ed01ac47b47cad819cc4950, type: 3}
   slider_Health: {fileID: 6762110238576544913}
   slider_Animation: {fileID: 7844276260412696189}
-  txt_Damage: {fileID: 5630232472635139410, guid: 6a470debba1e0ec4bb113e8bde02b568, type: 3}
   obj_txtDamageSpawnPostion: {fileID: 1791258829859883663}
   flt_SpawnTextYpositionOffset: 0
   currentTimePassed: 0
@@ -7410,7 +7409,8 @@ Transform:
   m_LocalPosition: {x: -0.13964394, y: -0.012275841, z: 0.061538935}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5036906865422700310}
   m_Father: {fileID: 3029132370620150427}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7444,9 +7444,10 @@ MonoBehaviour:
   parent: {fileID: 1048448681503496704}
   damage: 0
   flt_KnockBack: 0
-  PlaySwordTuchVfx: {fileID: 5297991674837013039, guid: 83ccab1d65e270e408b58f2687eb0ace, type: 3}
+  PlaySwordTuchVfx: {fileID: 7477494831192093689, guid: b4e44898cd89206409ecc40479016f6e, type: 3}
   isSpider: 0
   isSlime: 0
+  spawnPoint: {fileID: 5036906865422700310}
 --- !u!1 &3027359445226950399
 GameObject:
   m_ObjectHideFlags: 0
@@ -33157,6 +33158,37 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &6043259807349450593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5036906865422700310}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5036906865422700310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6043259807349450593}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.005, y: 0.253, z: 1.553}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3028768088349903229}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6254438489863379363
 GameObject:
   m_ObjectHideFlags: 0

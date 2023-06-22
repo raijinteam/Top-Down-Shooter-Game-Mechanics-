@@ -13,6 +13,7 @@ public class DraganShooting : MonoBehaviour
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_Force;
     [SerializeField] private BatBulletMotion bullet;
+    [SerializeField] private GameObject bullet_Muzzle;
 
     private bool isVisible;
 
@@ -46,6 +47,9 @@ public class DraganShooting : MonoBehaviour
     }
 
     private void BulletShoot() {
+        if (batMovement.enemyState == EnemyState.isbulletSpawn) {
+            return;
+        }
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_FireRate) {
             batMovement.enemyState = EnemyState.isbulletSpawn;
@@ -66,10 +70,25 @@ public class DraganShooting : MonoBehaviour
     private IEnumerator Delay_SpwnBullet() {
 
         yield return new WaitForSeconds(1f);
-        BatBulletMotion current = Instantiate(bullet, transform_SpawnPostion.position,
-           transform_SpawnPostion.rotation);
-        current.SetBulletData(transform_SpawnPostion.forward, flt_Damage , flt_Force);
-        batMovement.DefaultAnimator();
+        for (int i = 0; i < 3; i++) {
+
+            BatBulletMotion current = Instantiate(bullet, transform_SpawnPostion.position,
+            transform_SpawnPostion.rotation);
+            Instantiate(bullet_Muzzle, transform_SpawnPostion.position,
+               transform_SpawnPostion.rotation);
+            current.SetBulletData(transform_SpawnPostion.forward, flt_Damage, flt_Force);
+
+            if (i == 0) {
+
+                yield return new WaitForSeconds(0.6667f);
+            }
+            else if (i == 1) {
+                yield return new WaitForSeconds(0.3333f);
+            }
+            
+        }
+       
+        
         batMovement.enemyState = EnemyState.Run;
     }
 

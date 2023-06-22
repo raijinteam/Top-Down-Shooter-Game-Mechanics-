@@ -46,6 +46,7 @@ public class CollisionHandling : MonoBehaviour
             else if (other.TryGetComponent<OrcWepon>(out OrcWepon orcWepon)) {
                 Vector3 direction = (orcWepon.parent.position - transform.position).normalized;
                 orcWepon.SetAllColider(false);
+                orcWepon.PLaySworVFx(other.ClosestPoint(transform.position));
                 playerMovement.KnockBack(-direction, orcWepon.flt_Force);
                 playerHealth.TakeDamage(orcWepon.flt_Damage);
             }

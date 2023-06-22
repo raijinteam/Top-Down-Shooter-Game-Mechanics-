@@ -26,7 +26,6 @@ public class EnemyHealth : MonoBehaviour
     
 
     [Header("Damage effect popup")]
-    [SerializeField] private GameObject txt_Damage;
     [SerializeField] private Transform obj_txtDamageSpawnPostion;
     [SerializeField] private float flt_SpawnTextYpositionOffset;
     [SerializeField] private float currentTimePassed;

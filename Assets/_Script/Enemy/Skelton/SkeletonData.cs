@@ -70,7 +70,7 @@ public class SkeletonData : EnemyHandler {
         Destroy(spawn_Indicator);
         spawn_MMFPlayer.PlayFeedbacks();
         StartCoroutine(SetAllScriptData(0.5f));
-        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
+        Instantiate(obj_Explotion, new Vector3(transform.position.x,0,transform.position.z), obj_Explotion.transform.rotation);
     }
     private IEnumerator SetAllScriptData(float flt_AnimationTime) {
 

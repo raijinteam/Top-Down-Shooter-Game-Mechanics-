@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class MonsterPlantData : EnemyHandler
 {
     [SerializeField] private int flt_MinKnockBackForce;
@@ -15,58 +16,71 @@ public class MonsterPlantData : EnemyHandler
     [Header("All Script Campaotant")]
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private MonsterPlantShootine monsterPlantShootine;
-    [SerializeField] private MMF_Player spawn_Enemy;
-    private GameObject obj_Indicator;
+    
+    
+    public GameObject body;
+    [SerializeField]private GameObject obj_Indicator;
 
     [Header("Chain Vfx")]
     [SerializeField] private GameObject obj_ChainVfx;
 
+   
     [Header("Spawner")]
-    [SerializeField] private MonsterPlantData obj_Plant;
-    [SerializeField] private float flt_Scale;
-    [SerializeField] private float flt_MaxScale;
+    [SerializeField] private MonsterPlantData plant;
     [SerializeField] private float flt_Boundry;
     [SerializeField] private float flt_BoundryX;
     [SerializeField] private float flt_BoundryZ;
     [SerializeField] private LayerMask obstckle_Layer;
     [SerializeField] private GameObject obj_Indiacter;
-
+    private MonsterPlantData current;
+    [SerializeField] private MMF_Player spawn_MMFPlayer;
+    private GameObject spawn_Indicator;
 
     public override void SpawnEnemy() {
-
-        float flt_YDownPostion = 1.5f;
+        float flt_YTopPostion = 100;
+        float flt_YDownPostion = 2;
         bool isSpawn = false;
         while (!isSpawn) {
             Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
-               LevelManager.instance.flt_BoundryX), flt_YDownPostion,
-               Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
+                LevelManager.instance.flt_BoundryX), flt_YTopPostion,
+                Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
 
+            if (!Physics.Raycast(postion, Vector3.down, 1000, obstckle_Layer)) {
+                GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
+                                                 obj_Indiacter.transform.rotation);
 
-            if (!Physics.Raycast(postion, Vector3.down, 10000, obstckle_Layer)) {
-                GameObject Indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0,
-                      postion.z), obj_Indiacter.transform.rotation);
+                current = Instantiate(plant, postion, transform.rotation);
 
-                MonsterPlantData current = Instantiate(obj_Plant, postion, transform.rotation);
-               
-                current.SetSpawnIndicator(Indicator);
-                spawn_Enemy.PlayFeedbacks();
+                current.SetSpawnIndicator(indicator);
+                Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
+                                    PlayerManager.instance.Player.transform.position.z);
 
-                Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
-                StartCoroutine(SetAllScriptData(2));
+                current.transform.LookAt(PlayerPostion);
+                Sequence seq = DOTween.Sequence();
+
+                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5f)).
+                    AppendCallback(current.DestroyIndicator);
                 isSpawn = true;
             }
         }
     }
 
-
-    public IEnumerator SetAllScriptData(float flt_AnimationTime) {
+    public void DestroyIndicator() {
+        Destroy(spawn_Indicator);
+        spawn_MMFPlayer.PlayFeedbacks();
+        StartCoroutine(SetAllScriptData(0.5f));
+        Instantiate(obj_Explotion, new Vector3(transform.position.x, 0, transform.position.z), obj_Explotion.transform.rotation);
+    }
+    private IEnumerator SetAllScriptData(float flt_AnimationTime) {
 
         yield return new WaitForSeconds(flt_AnimationTime);
         SetData();
         GameManager.instance.ADDListOfEnemy(transform);
         ExpandSpherCast();
-       
+
     }
+
+
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
 
         enemyHealth.SetLaserAffacted(damage);
@@ -123,10 +137,8 @@ public class MonsterPlantData : EnemyHandler
     }
 
     public void SetSpawnIndicator(GameObject indicator) {
-        this.obj_Indicator = indicator;
+        this.spawn_Indicator = indicator;
     }
 
-    public void DestroyIndicator() {
-        Destroy(obj_Indicator);
-    }
+    
 }

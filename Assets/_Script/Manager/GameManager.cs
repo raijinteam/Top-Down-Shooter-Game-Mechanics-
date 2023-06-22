@@ -44,7 +44,9 @@ public class GameManager : MonoBehaviour {
         instance = this;
     }
 
-   
+    private void Start() {
+        Physics.gravity = new Vector3(0, -15f, 0f);
+    }
 
 
     public int GetLevel() {
@@ -102,13 +104,14 @@ public class GameManager : MonoBehaviour {
             currentWaveIndex++;
             if (currentWaveIndex > totalNumberOfWavesInThisStage) {
 
-                if (currentStageIndex % BossIndex == 0 && !IsBossActvated) {
-                    Debug.Log("Boss Is Coming");
-                    IsBossActvated = true;
-                    UIManager.instance.waveStartingScreen.gameObject.SetActive(true);
-                    UIManager.instance.waveStartingScreen.PlayUiBossLevelAnimation();
-                    return;
-                }
+                //if (currentStageIndex % BossIndex == 0 && !IsBossActvated) {
+                //    Debug.Log("Boss Is Coming");
+                //    IsBossActvated = true;
+                //    PlayerManager.instance.StageCompletd();
+                //    UIManager.instance.waveStartingScreen.gameObject.SetActive(true);
+                //    UIManager.instance.waveStartingScreen.PlayUiBossLevelAnimation();
+                //    return;
+                //}
 
                 if (currentWaveIndex != 0) {
                     IsBossActvated = false;
@@ -158,29 +161,46 @@ public class GameManager : MonoBehaviour {
 
     public void SpwnEnemyNewWave() {
 
-      
+        SpawnFirstWave(); 
         StartCoroutine(SpawnEnemyInIntervals());
+    }
+
+    private void SpawnFirstWave() {
+        int BaseValue = newwaveStartSpawn;
+
+        for (int i = 0; i <BaseValue; i++) {
+            SpawnEnemy();
+        }
     }
 
     private IEnumerator SpawnEnemyInIntervals() {
 
-       
-        int BaseValue = newwaveStartSpawn ;
+        int BaseValue = newwaveStartSpawn;
+        BaseValue = numberOfEnemiesInCurrentWave - BaseValue;
 
-        for (int i = 0; i < numberOfEnemiesInCurrentWave; i++) {
+        for (int i = 0; i < BaseValue; i++) {
+            yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
+            SpawnEnemy();
 
-            if (i < BaseValue) {
-                SpawnEnemy();
-                yield return new WaitForSeconds(50000);
-            }
-            else {
-               
-                yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
-                SpawnEnemy();
-            }
-
-           
         }
+
+        //int BaseValue = newwaveStartSpawn ;
+
+        //for (int i = 0; i < numberOfEnemiesInCurrentWave; i++) {
+
+        //    if (i < BaseValue) {
+        //        SpawnEnemy();
+
+        //        yield return new WaitForSeconds(50000);
+        //    }
+        //    else {
+
+        //        yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
+        //        SpawnEnemy();
+        //    }
+
+
+        //}
     }
 
     private void SpawnEnemy() {

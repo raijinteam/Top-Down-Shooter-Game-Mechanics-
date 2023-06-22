@@ -15,7 +15,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Transform[] all_SpawnPostion;
     [SerializeField] private GameObject obj_Bullet;
     [SerializeField] private Transform spawnPosition_Bullet;
-    [SerializeField] private GameObject target;
+    public GameObject target;
     private float MinDistnce = 0;
 
 
@@ -102,9 +102,6 @@ public class PlayerShooting : MonoBehaviour
             }
         }
 
-        if (target == null) {
-            return;
-        }
        
         Vector3 dirction = (target.transform.position - transform.position).normalized;
          targetAngle = Mathf.Atan2(dirction.x,dirction.z) * Mathf.Rad2Deg;
@@ -127,6 +124,9 @@ public class PlayerShooting : MonoBehaviour
 
 
         float damage = playerData.GetIncreasedDamage(flt_CurrentDamage);
+
+
+       
        
         spawnedBullet.GetComponent<PlayerBulletMotion>().
             SetBulletData(spawnPosition_Bullet.forward, damage, flt_CurrentBulletForce,target.transform

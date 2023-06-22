@@ -53,8 +53,7 @@ public class SpiderData : EnemyHandler {
                  current = Instantiate(spiderData, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
-                current.SetSpawnIndicator(indicator);
-                current.SetSpawnIndicator(indicator);
+              
                 Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
                                     PlayerManager.instance.Player.transform.position.z);
 
@@ -116,7 +115,7 @@ public class SpiderData : EnemyHandler {
         SetData();
         GameManager.instance.ADDListOfEnemy(transform);
         ExpandSpherCast();
-        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
+        Instantiate(obj_Explotion, new Vector3(transform.position.x, 0, transform.position.z), obj_Explotion.transform.rotation);
     }
 
     private void ExpandSpherCast() {

@@ -56,6 +56,10 @@ public class BatBulletMotion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
 
+        if (other.gameObject.CompareTag("Enemy")) {
+            return;
+        }
+       
         if (other.gameObject.CompareTag(tag_Player)) {
             
 
@@ -71,6 +75,7 @@ public class BatBulletMotion : MonoBehaviour
         if (other.gameObject.CompareTag(tag_Obstackle)) {
             BulletDetrsoySetup();
         }
+        BulletDetrsoySetup();
     }
 
 

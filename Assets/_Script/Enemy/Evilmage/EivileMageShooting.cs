@@ -75,26 +75,36 @@ public class EivileMageShooting : MonoBehaviour {
     }
 
     private void FireBullet() {
+
+        if (evileMageMovement.enemyState == EnemyState.isbulletSpawn) {
+            return;
+        }
         flt_CurrentTime += Time.deltaTime;
 
         if (flt_CurrentTime > flt_BulletFireRate) {
             flt_CurrentTime = 0;
             evileMageMovement.enemyState = EnemyState.isbulletSpawn;
+            
             animator.SetTrigger(Id_Attack);
-
+            StartCoroutine(DelayBullet());
 
 
         }
     }
-    public void SpwnBullet() {
+   
 
+    private IEnumerator DelayBullet() {
+
+        yield return new WaitForSeconds(0.3333f);
         EvileMageBulletMotion gameObject = Instantiate(bullet, transform_BulletPostion.position, transform.rotation);
         if (PlayerManager.instance.Player != null) {
             Vector3 direction = (-transform.position + PlayerManager.instance.Player.transform.position).normalized;
-            gameObject.SetBulletData(direction, damage,force);
+            gameObject.SetBulletData(direction, damage, force);
 
             Instantiate(bullet_Muzzle, transform_BulletPostion.position, bullet_Muzzle.transform.rotation);
         }
+
+        yield return new WaitForSeconds(0.6667f);
 
         evileMageMovement.enemyState = EnemyState.Run;
         if (evileMageMovement.isMove) {
@@ -104,6 +114,8 @@ public class EivileMageShooting : MonoBehaviour {
             animator.SetTrigger(ID_Idle);
         }
     }
+
+   
     public  void SetAnimator(bool isRun) {
         if (isRun) {
             animator.SetTrigger(Id_Run);

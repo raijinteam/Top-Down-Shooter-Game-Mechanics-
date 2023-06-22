@@ -11,7 +11,7 @@ public class SlimeRangeCheck : MonoBehaviour
 
         if (other.gameObject.tag.Equals(tag_Player)) {
 
-            Debug.Log("PlayerIn Range");
+            
             slimeAttcking.isAttckinInRange = true;
 
         }
@@ -20,7 +20,7 @@ public class SlimeRangeCheck : MonoBehaviour
         if (other.gameObject.tag.Equals(tag_Player)) {
 
             slimeAttcking.isAttckinInRange = false;
-            Debug.Log("Player OutOf Range");
+           
 
 
         }

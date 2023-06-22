@@ -6,8 +6,7 @@ using Random = UnityEngine.Random;
 
 public class SkullPowerUp : MonoBehaviour
 {
-
-
+    
 
     [Header("BulletData")]
     [SerializeField] private SkullData skullData;

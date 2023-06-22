@@ -28930,7 +28930,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj_Body: {fileID: 2884260836138733871}
-  Collider_Bullet: {fileID: 2884260836138733911}
+  Collider_Bullet: {fileID: 4127943639545688149}
   flt_BulletDamage: 0
   flt_BulletKnockBackforce: 0
   bulletTargetDirection: {x: 0, y: 0, z: 0}
@@ -28947,7 +28947,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2884260836138733864}
-  - component: {fileID: 2884260836138733911}
+  - component: {fileID: 4127943639545688149}
   m_Layer: 0
   m_Name: Body
   m_TagString: Enemy
@@ -28971,7 +28971,7 @@ Transform:
   m_Father: {fileID: 2884260834497426866}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &2884260836138733911
+--- !u!135 &4127943639545688149
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

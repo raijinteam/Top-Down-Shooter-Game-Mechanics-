@@ -13,12 +13,12 @@ public class WaveStartingScreen : MonoBehaviour
 
 
 
-   
+
     public void PlayUiBossLevelAnimation() {
 
-        txt_WaveScreen.text = null;
+       // txt_WaveScreen.text = null;
         this.gameObject.SetActive(true);
-        textAnimatorPlayer.ShowText(GetBossText());
+       // textAnimatorPlayer.ShowText(GetBossText());
         StartCoroutine(EndOfLevelAnimation(true));
     }
 

@@ -11,6 +11,7 @@ public class Wepon : MonoBehaviour
     [SerializeField] private GameObject PlaySwordTuchVfx;
     [SerializeField] private bool isSpider;
     [SerializeField] private bool isSlime;
+    [SerializeField] private  Transform spawnPoint;
 
     private void Start() {
 
@@ -20,6 +21,6 @@ public class Wepon : MonoBehaviour
         Sword.enabled = true;
     }
     public  void PLaySworVFx() {
-        Instantiate(PlaySwordTuchVfx, transform.position, transform.rotation);
+        Instantiate(PlaySwordTuchVfx, spawnPoint.position, transform.rotation);
     }
 }

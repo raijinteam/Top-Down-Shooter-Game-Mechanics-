@@ -16,6 +16,7 @@ public class MonsterPlantShootine : MonoBehaviour
   
     [Header("Bullet Data")]
     [SerializeField] private GameObject obj_Bullet;
+    [SerializeField] private GameObject obj_Muzzle;
     [SerializeField] private Transform transform_Spawnpostion;
     [SerializeField] private float flt_BulletFireRate;
     [SerializeField] private float flt_BulletDamage;
@@ -33,8 +34,7 @@ public class MonsterPlantShootine : MonoBehaviour
 
    
 
-    //[Header("Vfx")]
-    ////[SerializeField] private ParticleSystem bullet_Muzzle;
+   
 
     // Tag & Id
     private const string ID_Idle = "Idle";
@@ -50,6 +50,8 @@ public class MonsterPlantShootine : MonoBehaviour
     private bool isGrounded;
     private float currentAffectedGravityForce;
     private float gravityForce = -0.75f;
+
+    private bool isBulletSpawn;
 
 
     private void OnEnable() {
@@ -75,7 +77,15 @@ public class MonsterPlantShootine : MonoBehaviour
         enemyState = EnemyState.Not_Ground;
     }
 
+    public bool shouldCalculateTime = false;
+    public float currentTime = 0f;
+
+   
+
     private void Update() {
+
+       
+
         if (!GameManager.instance.isPlayerLive) {
             enemy_Animator.SetTrigger(ID_Idle);
             return;
@@ -132,10 +142,14 @@ public class MonsterPlantShootine : MonoBehaviour
 
     private void FireBullet() {
 
+        if (isBulletSpawn) {
+            return;
+        }
         flt_CurrentTime += Time.deltaTime;
 
         if (flt_CurrentTime > flt_BulletFireRate) {
 
+            isBulletSpawn = true;
             flt_CurrentTime = 0;
 
             StartCoroutine(SpawnBullet());
@@ -144,23 +158,37 @@ public class MonsterPlantShootine : MonoBehaviour
 
     private IEnumerator SpawnBullet() {
 
+
        
+
         for (int i = 0; i < noofBullet; i++) {
+
             enemy_Animator.SetTrigger(Id_Attack);
-            enemy_Animator.SetTrigger(ID_Idle);
+
+            yield return new WaitForSeconds(0.1f * 0.833f);
+
+
             GameObject currentBullet = Instantiate(obj_Bullet, transform_Spawnpostion.position,
                         transform_Spawnpostion.rotation);
+
+            Instantiate(obj_Muzzle, transform_Spawnpostion.position, transform_Spawnpostion.rotation);
             Vector3 playerPostion = PlayerManager.instance.Player.transform.position;
             Vector3 shootingPostion = new Vector3(Random.Range(playerPostion.x - flt_offsetTargetpostion,
-                playerPostion.x + flt_offsetTargetpostion), playerPostion.y, Random.Range(playerPostion.z - flt_offsetTargetpostion,
+                playerPostion.x + flt_offsetTargetpostion), 0, Random.Range(playerPostion.z - flt_offsetTargetpostion,
                                 playerPostion.z + flt_offsetTargetpostion));
           
             currentBullet.GetComponent<MonsterPlantBulletMotion>().SetBulletData(shootingPostion, flt_BulletDamage,
                 flt_KnockbackForce);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds( 0.833f);
+
+
         }
 
+      
+        isBulletSpawn = false;
+        flt_CurrentTime = 0;
        
+
     }
 
     private void PlantKnockBackMotion() {
@@ -182,7 +210,7 @@ public class MonsterPlantShootine : MonoBehaviour
 
     public void PlantKnockBack(Vector3 _KnockBackDirection, float _KnockBackSpeed) {
 
-        //ScaleAnimation();
+        
 
         enemyState = EnemyState.knockBack;
         flt_KnockBackSpeed = _KnockBackSpeed;

@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviour
     private float flt_CurrentSliderHealth;
 
     [Header("Damage effect popup")]
-    [SerializeField] private GameObject txt_Damage;
+   
     [SerializeField] private Transform obj_txtDamageSpawnPostion;
     [SerializeField] private float flt_SpawnTextYpositionOffset;
     [SerializeField]private float currentTimePassed;
@@ -118,13 +118,11 @@ public class PlayerHealth : MonoBehaviour
             StopCoroutine(Cour_Slider_Animation);
         }
 
-        Cour_Slider_Animation = StartCoroutine(SetSlider(flt_CurrrentHealth));
+        int health = ((int)increasedHealth);
+        Cour_Slider_Animation = StartCoroutine(SetSlider(health));
 
-        GameObject current = Instantiate(txt_Damage, new Vector3(transform.position.x, flt_SpawnTextYpositionOffset,
-            transform.position.z), Quaternion.identity, obj_txtDamageSpawnPostion);
+        FeelManager.instance.SpawnDamagePopUp(transform.position, health, obj_txtDamageSpawnPostion, false);
 
-
-        current.GetComponent<DamagePanel>().IncresedHealth(((int)increasedHealth), Color.yellow);
 
 
 
@@ -145,13 +143,10 @@ public class PlayerHealth : MonoBehaviour
             }
 
             Cour_Slider_Animation =  StartCoroutine(SetSlider(flt_CurrrentHealth));
-           
-            GameObject current = Instantiate(txt_Damage, new Vector3(transform.position.x, flt_SpawnTextYpositionOffset,
-                transform.position.z), Quaternion.identity, obj_txtDamageSpawnPostion);
 
-            current.GetComponent<DamagePanel>().SetDamagePanel(damage, Color.red);
+            FeelManager.instance.SpawnDamagePopUp(transform.position, damage, obj_txtDamageSpawnPostion, true);
 
-           
+
             FeelManager.instance.PlayerDamageTimeCameraShake(body.transform);
 
             slider_Health.value = flt_CurrrentHealth;
@@ -174,13 +169,8 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator SetSlider(float targetValue) {
 
-      
-        
-      
-
         float startValue = flt_CurrentSliderHealth;
       
-       
         currentTimePassed = 0.0f;
         
         float flt_MaxTime = 2;

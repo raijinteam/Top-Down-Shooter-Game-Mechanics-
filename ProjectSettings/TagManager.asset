@@ -24,7 +24,7 @@ TagManager:
   - GroundCollider
   - Arrow
   - Enemy
-  - 
+  - GroundTouchBullet
   - 
   - 
   - 

@@ -82,6 +82,8 @@ public class EnemyMovement : MonoBehaviour {
 
     private void OnCollisionExit(Collision collision) {
 
+      
+
         if (enemyState == EnemyState.BlackHole) {
             return;
         }
@@ -114,6 +116,7 @@ public class EnemyMovement : MonoBehaviour {
 
            
         }
+       
         else if (enemyState == EnemyState.Not_Ground) {
             EnemyNot_GroundMotion();
         }
@@ -153,14 +156,6 @@ public class EnemyMovement : MonoBehaviour {
         float currentAngle = MathF.Atan2(dirction.x, dirction.z) * Mathf.Rad2Deg;
         transform.eulerAngles = new Vector3(0, currentAngle, 0);
 
-        float flt_Distance = MathF.Abs(Vector3.Distance(transform.position, PlayerManager.instance.Player.transform.position));
-
-   
-        if (flt_Distance < flt_Range) {
-
-           
-            return;
-        }
         dirction = new Vector3(direction.x, transform.position.y, direction.z);
 
         transform.Translate(direction * flt_MovementSpeed * Time.deltaTime, Space.World);

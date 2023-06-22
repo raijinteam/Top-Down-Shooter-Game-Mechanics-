@@ -35982,7 +35982,7 @@ MonoBehaviour:
   txt_Health: {fileID: 7947911960808657329}
   body: {fileID: 6968121270411337497}
   enemy_UI: {fileID: 1570796463314554260}
-  particleVFX: {fileID: 9160755104973182080, guid: 57119169c3c8da24a86bad2e0e89ed29, type: 3}
+  particleVFX: {fileID: 6954394381141015235, guid: cdd331abf77d9f845bc562c28714b880, type: 3}
   slider_Health: {fileID: 3740446793285653800}
   slider_Animation: {fileID: 208041170268651460}
   txt_Damage: {fileID: 5630232472635139410, guid: 6a470debba1e0ec4bb113e8bde02b568, type: 3}
@@ -38663,6 +38663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e63db457eea2df4185e41d4f1e2f27b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlaySwordTuchVfx: {fileID: 8998293451472813154, guid: 0f43c19326e8a0940bbb271e322e2394, type: 3}
   collider_Hamer: {fileID: 7944186900489235334}
   collider_Stick: {fileID: 7944186900489235335}
   collisionHandlerForEnemy: {fileID: 1662624949389051974}

@@ -78,7 +78,7 @@ public class orcEnemyData : EnemyHandler {
     private void ScaleAnimation() {
         Debug.Log("Start SpawnAnimation");
         spawn_MMf_Enemy.PlayFeedbacks();
-        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
+        Instantiate(obj_Explotion, new Vector3(transform.position.x,0,transform.position.z), obj_Explotion.transform.rotation);
         StartCoroutine(SetAllScriptData(0.5f));
     }
 

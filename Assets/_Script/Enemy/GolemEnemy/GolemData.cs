@@ -68,7 +68,7 @@ public class GolemData : EnemyHandler
     public void DestroyIndicator() {
         Destroy(obj_Indicator);
         spawn_MMFPlayer.PlayFeedbacks();
-        Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
+        Instantiate(obj_Explotion,new Vector3(transform.position.x,0,transform.position.z), obj_Explotion.transform.rotation);
         StartCoroutine(SetAllScriptData(0.5f));
 
     }

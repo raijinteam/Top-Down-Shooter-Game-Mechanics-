@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class PlayerData : MonoBehaviour
 {
 
+    [SerializeField] private PlayerShooting playerShooting;
     public Transform body;
     public float flt_Damage;
     public float flt_Force;
@@ -61,4 +63,9 @@ public class PlayerData : MonoBehaviour
         return currentDamage;
    }
 
+    public void RemoveShootingTarget(Transform enemy) {
+        //if (playerShooting.target == enemy.gameObject) {
+        //    playerShooting.target = transform.gameObject;
+        //}
+    }
 }

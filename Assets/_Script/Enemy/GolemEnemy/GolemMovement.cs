@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class GolemMovement : MonoBehaviour
 {
+
+    [SerializeField] private LineRenderer line;
     [Header("Componant")]
     [SerializeField] private EnemyData enemyData;
     [SerializeField] private Animator enemy_Animator;
@@ -19,7 +21,7 @@ public class GolemMovement : MonoBehaviour
     [SerializeField] private Vector3 targetPostion;
     [SerializeField]private float flt_Currenttime; // flt_CurrentTimePassedForCharging
 
-
+    [SerializeField] private float flt_Offset;
     [SerializeField] private MMF_Player jumpStart;
     [SerializeField] private MMF_Player jumpEnd;
 
@@ -71,19 +73,24 @@ public class GolemMovement : MonoBehaviour
     private const string Id_Jump = "Jump";
 
 
+
+
     private void Start() {
         flt_Damage = enemyData.GetDamage();
         flt_MaxKnockBackForce = enemyData.GetKnockBackForce();
         flt_MinKnockBackForce = 0;
-        
+
     }
 
     private void Update() {
+
+
         if (!GameManager.instance.isPlayerLive) {
             enemy_Animator.SetTrigger(Id_Idle);
             return;
         }
 
+     
         GolemStateMotion();
     }
 
@@ -220,9 +227,15 @@ public class GolemMovement : MonoBehaviour
     private void GolemMotion() {
 
         if (!isGetDirection) {
+
+            Transform player = PlayerManager.instance.Player.transform;
+        
+            Vector3 direction = (player.transform.position - transform.position).normalized;
+            Vector3 endPosition = player.transform.position - direction * 7f;
+         
+            targetPostion = endPosition;
            
-            targetPostion = PlayerManager.instance.Player.transform.position;
-            Vector3 postion = new Vector3(targetPostion.x, 0, targetPostion.z);
+            Vector3 postion = new Vector3(player.position.x, 0, player.position.z);
             Obj_current_Target =  Instantiate(obj_tagret, postion, obj_tagret.transform.rotation);
             Cour_Jump = StartCoroutine(GolemJump());
             isGetDirection = true;
@@ -261,34 +274,37 @@ public class GolemMovement : MonoBehaviour
 
         jumpStart.PlayFeedbacks();
         yield return new WaitForSeconds(0.25f);
-
+        enemy_Animator.SetTrigger(Id_Jump);
+        Debug.Log("Trigger JUmp");
         Vector3 startPostion = transform.position;
         float jumpheight = flt_JumpAccerletion * flt_MaxJumpTime / (MathF.Sqrt(2 * Physics.gravity.magnitude));
 
-        enemy_Animator.SetTrigger(Id_Jump);
+       
         // Keep track of how much time has passed since the start of the jump
         float elapsedTime = 0f;
-       
+     
         while (elapsedTime < 1) {
            
             elapsedTime += Time.deltaTime/flt_MaxJumpTime;
             float height = Mathf.Sin(elapsedTime * Mathf.PI) * jumpheight;
-
+           
+           
             transform.position = Vector3.Lerp(startPostion, targetPostion, elapsedTime) + Vector3.up * height;
 
-            if (elapsedTime > 0.9) {
-
-            }
+           
             yield return null;
           
         }
-        transform.position = targetPostion;
 
+
+
+        transform.position = targetPostion;
         Destroy(Obj_current_Target);
-       
-        isGetDirection = false;
         Sphercast();
-        enemy_Animator.SetTrigger(Id_Idle);
+
+        yield return new WaitForSeconds(1);
+        
+        isGetDirection = false;
         enemyState = EnemyState.charge;
 
     }
@@ -340,14 +356,7 @@ public class GolemMovement : MonoBehaviour
         }
     }
 
-    private void ScaleAnimation() {
-        float flt_CurrntScale = transform.localScale.x;
-        float flt_AnimateScale = flt_CurrntScale - flt_Reducescale;
-
-        Sequence seq = DOTween.Sequence();
-        seq.Append(transform.DOScaleX(flt_AnimateScale, flt_ScaleAnimationTime).SetEase(Ease.InSine)).
-            Append(transform.DOScaleX(flt_CurrntScale, flt_ScaleAnimationTime).SetEase(Ease.OutSine));
-    }
+   
 
     public void GolemKnockBack(Vector3 _knockBackDirection ,float _flt_Force) {
         if (enemyState == EnemyState.Run) {
@@ -405,4 +414,6 @@ public class GolemMovement : MonoBehaviour
         Debug.Log("StopKnockbackOverTime 2");
 
     }
+
+   
 }

@@ -7,6 +7,7 @@ using DG.Tweening;
 public class OrcWepon : MonoBehaviour {
 
     [Header("Camponanat")]
+    [SerializeField] private GameObject PlaySwordTuchVfx;
     [SerializeField] private Collider collider_Hamer;
     [SerializeField] private Collider collider_Stick;
     [SerializeField] private EnemyData collisionHandlerForEnemy;
@@ -25,7 +26,10 @@ public class OrcWepon : MonoBehaviour {
         flt_Force = collisionHandlerForEnemy.GetKnockBackForce();
         flt_Damage = collisionHandlerForEnemy.GetDamage();
 
-        transform_Weapon.DOScale(1.2f, 0.5f).SetEase(Ease.InSine).SetLoops(-1, LoopType.Yoyo);
+        transform_Weapon.DOScaleZ(1.1f, 0.4f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+    }
+    public void PLaySworVFx(Vector3 collsionPoint) {
+        Instantiate(PlaySwordTuchVfx, collsionPoint, transform.rotation);
     }
     public void SetAllColider(bool value) {
         collider_Hamer.enabled = value;

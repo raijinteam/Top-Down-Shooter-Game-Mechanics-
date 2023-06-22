@@ -13,7 +13,11 @@ public class BatShootnig : MonoBehaviour
     [SerializeField] private float flt_FireRate;
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private EvileMageBulletMotion bullet;
+    [SerializeField] private GameObject bullet_Muzzle;
     private bool isvisible = true;
+
+    
+    private Coroutine SpawnCoroutine;
    
 
 
@@ -58,17 +62,26 @@ public class BatShootnig : MonoBehaviour
     private void SpawnBullet() {
 
         batMovement.SetAttck();
-        StartCoroutine(Delay_SpwnBullet());
+        if (SpawnCoroutine == null) {
+            StartCoroutine(Delay_SpwnBullet());
+        }
+       
       
     }
 
     private IEnumerator Delay_SpwnBullet() {
 
-        yield return new WaitForSeconds(0.5f);
+
+        
+        yield return new WaitForSeconds(0.6668f);
         EvileMageBulletMotion current = Instantiate(bullet, transform_SpawnPostion.position,
            transform_SpawnPostion.rotation);
+
+        Instantiate(bullet_Muzzle, transform_SpawnPostion.position, transform_SpawnPostion.rotation);
+
+        Debug.Log("Bullet Spawn");
         current.SetBulletData(transform_SpawnPostion.forward,flt_Damage,flt_Force);
-        batMovement.DefaultAnimator();
+       
         batMovement.enemyState = EnemyState.Run;
 
 
