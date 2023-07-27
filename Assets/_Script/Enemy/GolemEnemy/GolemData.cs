@@ -66,6 +66,7 @@ public class GolemData : EnemyHandler
     }
 
     public void DestroyIndicator() {
+        enemyHealth.EnemySound.Play_GroundTouchSFX();
         Destroy(obj_Indicator);
         spawn_MMFPlayer.PlayFeedbacks();
         Instantiate(obj_Explotion,new Vector3(transform.position.x,0,transform.position.z), obj_Explotion.transform.rotation);

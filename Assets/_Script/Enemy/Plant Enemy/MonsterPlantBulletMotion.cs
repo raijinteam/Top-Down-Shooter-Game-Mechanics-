@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MonsterPlantBulletMotion : MonoBehaviour {
     [Header("Componant")]
+    [SerializeField] private BulletSoundSystem bulletSound;
     [SerializeField] private GameObject obj_Body;
     [SerializeField] private Collider Collider_Bullet;
 
@@ -32,7 +33,7 @@ public class MonsterPlantBulletMotion : MonoBehaviour {
         this.bulletTargetDirection = _BulletTargetPostion;
         this.flt_BulletDamage = _BulletDamage;
         this.flt_BulletKnockBackforce = _KnockbackForce;
-
+        bulletSound.Play_BulletSpawn();
         obj_CurrentTarget =  Instantiate(obj_TargetPostion, bulletTargetDirection, Quaternion.identity);
         StartCoroutine(BulletMotion());
     }
@@ -74,6 +75,7 @@ public class MonsterPlantBulletMotion : MonoBehaviour {
         transform.position = bulletTargetDirection;
         particle_Explotion.gameObject.SetActive(true);
         particle_Explotion.Play();
+        bulletSound.Play_BulletDestroyed();
         obj_Body.SetActive(false);
         Collider_Bullet.enabled = false;
         StartCoroutine(DestroyedBullet());

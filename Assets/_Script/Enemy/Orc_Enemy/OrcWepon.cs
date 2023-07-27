@@ -11,6 +11,7 @@ public class OrcWepon : MonoBehaviour {
     [SerializeField] private Collider collider_Hamer;
     [SerializeField] private Collider collider_Stick;
     [SerializeField] private EnemyData collisionHandlerForEnemy;
+    [SerializeField] private EnemySoundManager enemySound;
     public Transform parent;
 
 
@@ -30,6 +31,8 @@ public class OrcWepon : MonoBehaviour {
     }
     public void PLaySworVFx(Vector3 collsionPoint) {
         Instantiate(PlaySwordTuchVfx, collsionPoint, transform.rotation);
+        enemySound.Play_Attack();
+        
     }
     public void SetAllColider(bool value) {
         collider_Hamer.enabled = value;

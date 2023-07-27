@@ -67,6 +67,7 @@ public class SkeletonData : EnemyHandler {
     }
 
     private void DestroyIndicator() {
+        enemyHealth.EnemySound.Play_GroundTouchSFX();
         Destroy(spawn_Indicator);
         spawn_MMFPlayer.PlayFeedbacks();
         StartCoroutine(SetAllScriptData(0.5f));

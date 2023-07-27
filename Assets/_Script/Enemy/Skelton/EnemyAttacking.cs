@@ -51,7 +51,11 @@ public class EnemyAttacking : MonoBehaviour
         }
         else {
 
-            enemyMovement.enemyState = EnemyState.Run;
+            if (enemyMovement.enemyState == EnemyState.isbulletSpawn) {
+                enemyMovement.enemyState = EnemyState.Run;
+            }
+
+           
             enemyMovement.SetAttackAnimation(false);
         }
     }

@@ -9,7 +9,7 @@ public class PowerUpHandler : MonoBehaviour
 
     public static PowerUpHandler instance;
     
-    [SerializeField] private PowerUpData[] all_PowerUp;
+    public PowerUpData[] all_PowerUp;
 
     [SerializeField] private List<PowerUpData> list_AllPowerUpsInGame = new List<PowerUpData>();
     [SerializeField] private List<PowerUpData> list_powerUpSelected = new List<PowerUpData>();
@@ -38,6 +38,7 @@ public class PowerUpHandler : MonoBehaviour
 
     public void SetPlayerPowerUpSelected(int index) {
 
+       
         if (!list_powerUpSelected[index].IsUnlocked()) {
             list_powerUpSelected[index].gameObject.SetActive(true);
             list_powerUpSelected[index].SetUnLockedStatus();
@@ -53,9 +54,7 @@ public class PowerUpHandler : MonoBehaviour
         else {
             list_powerUpSelected[index].SetLevelOfPowerUp();
             list_powerUpSelected[index].FatchMyUpdateData();
-            
-          
-          
+        
         }
         
        
@@ -65,8 +64,8 @@ public class PowerUpHandler : MonoBehaviour
 
     public void SetPowerUpPanel() {
 
-      
-
+       
+       
         if (list_AllPowerUpsInGame.Count != 0) {
             list_AllPowerUpsInGame.Clear();
         }
@@ -78,9 +77,10 @@ public class PowerUpHandler : MonoBehaviour
         AddFromActivePowerups();
         AddFromPassivePowerups();
         RandomizePowerUps();
+        UIManager.instance.powerup2Ui.StartSlotAnimation();
 
 
-       
+
     }
 
     private void AddFromActivePowerups() {

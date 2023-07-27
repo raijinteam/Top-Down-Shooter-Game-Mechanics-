@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BatShootnig : MonoBehaviour
 {
+   
     [SerializeField] private EnemyData enemyData;
     [SerializeField] private BatMovement batMovement;
     [SerializeField] private Transform transform_SpawnPostion;
@@ -76,7 +77,7 @@ public class BatShootnig : MonoBehaviour
         yield return new WaitForSeconds(0.6668f);
         EvileMageBulletMotion current = Instantiate(bullet, transform_SpawnPostion.position,
            transform_SpawnPostion.rotation);
-
+       
         Instantiate(bullet_Muzzle, transform_SpawnPostion.position, transform_SpawnPostion.rotation);
 
         Debug.Log("Bullet Spawn");

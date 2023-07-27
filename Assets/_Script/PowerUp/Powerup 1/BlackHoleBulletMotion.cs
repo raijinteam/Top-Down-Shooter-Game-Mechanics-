@@ -103,6 +103,7 @@ public class BlackHoleBulletMotion : MonoBehaviour {
 
             if (other.TryGetComponent<EnemyTrigger>( out EnemyTrigger enemyTrigger)) {
 
+                
                 if (!List_balckHoleAffectedEnemey.Contains(enemyTrigger)) {
                 List_balckHoleAffectedEnemey.Add(enemyTrigger);
                     enemyTrigger.HitByBlackHole(transform);

@@ -9,6 +9,9 @@ using Random = UnityEngine.Random;
 
 public class EnemyHealth : MonoBehaviour
 {
+
+    public EnemySoundManager EnemySound;
+    [Header("EnemyData")]
     private EnemyData enemyData;
     [SerializeField] private float flt_MaxHealth;
     [SerializeField] private float flt_CurrrentHealth;
@@ -169,7 +172,7 @@ public class EnemyHealth : MonoBehaviour
 
             Instantiate(particleVFX, transform.position, transform.rotation);
 
-
+            EnemySound.Play_DieSFX();
             PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>()
                 .IncreasingPlayerPoint(enemyData.GetEnemyPoint());
             GameManager.instance.EnemyKilled(transform);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class PowerUpData : MonoBehaviour
 {
-
+    public Sprite powerupSprite;
     public int myPowerIndex;
     public myDataDisplay[] all_MyDataDisplay = new myDataDisplay[4];
     public abstract bool IsActivePowerUp();

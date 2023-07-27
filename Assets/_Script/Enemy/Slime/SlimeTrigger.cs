@@ -101,6 +101,8 @@ public class SlimeTrigger : EnemyTrigger
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag(tag_Water)) {
+
+            enemyHealth.EnemySound.Play_WaterDropSFX();
             Instantiate(obj_WaterParticle, transform.position, transform.rotation);
             GameManager.instance.EnemyKilled(enemyHealth.transform);
         }

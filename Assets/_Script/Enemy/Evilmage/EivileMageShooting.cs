@@ -6,6 +6,7 @@ using UnityEngine;
 public class EivileMageShooting : MonoBehaviour {
 
     [Header("Camponant")]
+   
     [SerializeField] private EnemyData enemyData;
     [SerializeField] private Animator animator;
     [SerializeField]private EvileMageMovement evileMageMovement;
@@ -101,6 +102,7 @@ public class EivileMageShooting : MonoBehaviour {
             Vector3 direction = (-transform.position + PlayerManager.instance.Player.transform.position).normalized;
             gameObject.SetBulletData(direction, damage, force);
 
+            
             Instantiate(bullet_Muzzle, transform_BulletPostion.position, bullet_Muzzle.transform.rotation);
         }
 

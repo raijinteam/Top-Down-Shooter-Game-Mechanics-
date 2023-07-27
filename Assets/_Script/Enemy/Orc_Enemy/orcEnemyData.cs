@@ -71,6 +71,7 @@ public class orcEnemyData : EnemyHandler {
     }
 
     public void DestroyIndicator() {
+        enemyHealth.EnemySound.Play_GroundTouchSFX();
         Destroy(Obj_Indicator);
         ScaleAnimation();
     }

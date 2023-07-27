@@ -54,9 +54,17 @@ public class GameManager : MonoBehaviour {
     }
     public void SetLevel() {
         GameLevel++;
+       
     }
 
     private void Update() {
+
+        if (Input.GetKeyDown(KeyCode.L)) {
+            Time.timeScale = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.M)) {
+            Time.timeScale = 1;
+        }
         KillstreachCalculation();
     }
 
@@ -162,12 +170,12 @@ public class GameManager : MonoBehaviour {
     public void SpwnEnemyNewWave() {
 
         SpawnFirstWave(); 
-        StartCoroutine(SpawnEnemyInIntervals());
+        // StartCoroutine(SpawnEnemyInIntervals());
     }
 
     private void SpawnFirstWave() {
         int BaseValue = newwaveStartSpawn;
-
+       BaseValue = 1;
         for (int i = 0; i <BaseValue; i++) {
             SpawnEnemy();
         }

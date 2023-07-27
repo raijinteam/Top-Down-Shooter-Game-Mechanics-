@@ -13,7 +13,7 @@ public class PlayerShooting : MonoBehaviour
     [Header("Bullet Instantiate")]
     [SerializeField] private GameObject obj_Missile;
     [SerializeField] private Transform[] all_SpawnPostion;
-    [SerializeField] private GameObject obj_Bullet;
+    [SerializeField] private PlayerBulletMotion obj_Bullet;
     [SerializeField] private Transform spawnPosition_Bullet;
     public GameObject target;
     private float MinDistnce = 0;
@@ -120,7 +120,7 @@ public class PlayerShooting : MonoBehaviour
 
     private void SpawnBullet() {
 
-        GameObject spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
+        PlayerBulletMotion spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
 
         float damage = playerData.GetIncreasedDamage(flt_CurrentDamage);
@@ -128,9 +128,9 @@ public class PlayerShooting : MonoBehaviour
 
        
        
-        spawnedBullet.GetComponent<PlayerBulletMotion>().
-            SetBulletData(spawnPosition_Bullet.forward, damage, flt_CurrentBulletForce,target.transform
-            ,playerData.RechoestCounter,playerData.Rechoest_damagePersantage,playerData.persantageOfDelathBow);
+        spawnedBullet.SetBulletData(spawnPosition_Bullet.forward, damage, flt_CurrentBulletForce, target.transform
+
+            , playerData.RechoestCounter,playerData.Rechoest_damagePersantage,playerData.persantageOfDelathBow);
     
         
         bulletMuzzle.Play();

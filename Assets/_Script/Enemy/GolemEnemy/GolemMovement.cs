@@ -9,12 +9,14 @@ using Random = UnityEngine.Random;
 public class GolemMovement : MonoBehaviour
 {
 
-    [SerializeField] private LineRenderer line;
+   
     [Header("Componant")]
+    [SerializeField] private EnemySoundManager enemySound;
     [SerializeField] private EnemyData enemyData;
     [SerializeField] private Animator enemy_Animator;
     [SerializeField] private EnemyState enemyState;
     [SerializeField] private GolemTrigger golemTrigger;
+  
 
     [Header("Enemy - Data")]
     [SerializeField] private float flt_EnemyChargeTime; // flt_EnemyChargingTimeForJump
@@ -34,8 +36,8 @@ public class GolemMovement : MonoBehaviour
     [SerializeField]private float flt_MinKnockBackForce;
     [SerializeField]private float flt_MaxKnockBackForce;
 
-   
 
+    [SerializeField] private Vector3 castPosition;
     [SerializeField]private float flt_RangeOfSpheareCast;
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_Force;
@@ -54,8 +56,7 @@ public class GolemMovement : MonoBehaviour
    
 
     private float flt_KnockBackTime = 0.5f;
-    private float flt_ScaleAnimationTime = 0.2f;
-    private float flt_Reducescale = 0.3f;
+   
 
     [Header("Vfx")]
     [SerializeField] private GameObject obj_tagret;
@@ -236,6 +237,7 @@ public class GolemMovement : MonoBehaviour
             targetPostion = endPosition;
            
             Vector3 postion = new Vector3(player.position.x, 0, player.position.z);
+            castPosition = postion;
             Obj_current_Target =  Instantiate(obj_tagret, postion, obj_tagret.transform.rotation);
             Cour_Jump = StartCoroutine(GolemJump());
             isGetDirection = true;
@@ -276,6 +278,8 @@ public class GolemMovement : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         enemy_Animator.SetTrigger(Id_Jump);
         Debug.Log("Trigger JUmp");
+        Instantiate(jump_Start, transform.position, transform.rotation);
+        enemySound.Play_Attack();
         Vector3 startPostion = transform.position;
         float jumpheight = flt_JumpAccerletion * flt_MaxJumpTime / (MathF.Sqrt(2 * Physics.gravity.magnitude));
 
@@ -299,9 +303,10 @@ public class GolemMovement : MonoBehaviour
 
 
         transform.position = targetPostion;
-        Destroy(Obj_current_Target);
+       
         Sphercast();
-
+        enemySound.Play_Attack();
+        Destroy(Obj_current_Target);
         yield return new WaitForSeconds(1);
         
         isGetDirection = false;
@@ -313,25 +318,40 @@ public class GolemMovement : MonoBehaviour
 
 
     private void Sphercast() {
-        Collider[] all_Collider = Physics.OverlapSphere(transform.position, 5);
+        Collider[] all_Collider = Physics.OverlapSphere(castPosition, flt_RangeOfSpheareCast);
 
         for (int i = 0; i < all_Collider.Length; i++) {
             if (all_Collider[i].gameObject.CompareTag(tag_Player)) {
 
                 if (all_Collider[i].TryGetComponent<CollisionHandling>(out CollisionHandling collision)) {
 
-                    float distance = Mathf.Abs(Vector3.Distance(transform.position, all_Collider[i].transform.position));
+                    float distance = Mathf.Abs(Vector3.Distance(new Vector3(castPosition.x, 0, castPosition.z),
+                                   new Vector3(all_Collider[i].transform.position.x, 0, all_Collider[i].transform.position.z)));
+                    Debug.Log(distance + "Distance");
                     flt_KnockBackForce = ((flt_MinKnockBackForce - flt_MaxKnockBackForce) / flt_RangeOfSpheareCast) * distance +
                         flt_MaxKnockBackForce;
-                    Vector3 knockBackDirection = (-transform.position + all_Collider[i].transform.position).normalized;
+                    Vector3 knockBackDirection = (-new Vector3(castPosition.x, 0, castPosition.z) +
+                           new Vector3(all_Collider[i].transform.position.x, 0, all_Collider[i].transform.position.z)).normalized;
+
+
                     if (distance <= 0.5f) {
-                        Vector3 randomDirection = new Vector3(Random.Range(0, 10), 0, Random.Range(0, 10)).normalized;
+                        Vector3 randomDirection = new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)).normalized;
                         knockBackDirection = randomDirection;
+                        Debug.Log("Random" + randomDirection);
+                        flt_KnockBackForce = flt_MaxKnockBackForce;
                     }
+
+                    Debug.Log("flt_KnockBackForce" +  flt_KnockBackForce);
+                    Debug.Log("flt_Direction" + knockBackDirection);
                     collision.SetHitByNormalBullet(flt_Damage,flt_KnockBackForce, knockBackDirection);
                 }
             }
         }
+    }
+
+
+    private void OnDrawGizmos() {
+        Gizmos.DrawWireSphere(castPosition, flt_RangeOfSpheareCast);
     }
 
     private void GolemKnockBackMotion() {

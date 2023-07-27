@@ -14,6 +14,7 @@ public class PlayerBulletMotion : MonoBehaviour
     [SerializeField] private Transform target;
 
     [Header("Camponanat")]
+    [SerializeField] private BulletSoundSystem bullet_Sound;
     [SerializeField] private GameObject body;
     private Collider thisCollider;
 
@@ -52,10 +53,12 @@ public class PlayerBulletMotion : MonoBehaviour
         this.MaxCounter = _RchoestCounter;
         this.damagePersantage = int_RechestDamagePersantage;
        this.persantageOfDelathBow = persantageOfdealthBlow;
+       
 
 
     }
     private void Start() {
+        bullet_Sound.Play_BulletSpawn();
         thisCollider = GetComponent<Collider>();
         isMove = true;
         Destroy(gameObject, 5);
@@ -178,6 +181,7 @@ public class PlayerBulletMotion : MonoBehaviour
     }
 
     private void BulletDetrsoySetup() {
+        bullet_Sound.Play_BulletDestroyed();
         body.gameObject.SetActive(false);
         thisCollider.enabled = false;
         explotion.gameObject.SetActive(true);

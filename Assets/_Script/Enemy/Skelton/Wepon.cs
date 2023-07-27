@@ -12,6 +12,7 @@ public class Wepon : MonoBehaviour
     [SerializeField] private bool isSpider;
     [SerializeField] private bool isSlime;
     [SerializeField] private  Transform spawnPoint;
+    [SerializeField] private EnemySoundManager enemySound;
 
     private void Start() {
 
@@ -22,5 +23,6 @@ public class Wepon : MonoBehaviour
     }
     public  void PLaySworVFx() {
         Instantiate(PlaySwordTuchVfx, spawnPoint.position, transform.rotation);
+        enemySound.Play_Attack();
     }
 }

@@ -7,6 +7,7 @@ public class EvileMageBulletMotion : MonoBehaviour
     [Header("Camponant")]
     [SerializeField] private Collider thisCollider;
     [SerializeField] private Transform body;
+    [SerializeField] private BulletSoundSystem bulletSound;
 
     [Header("Bullet Data")]
     [SerializeField] private float amplitude = 1f;    // amplitude of the snake movement
@@ -19,7 +20,7 @@ public class EvileMageBulletMotion : MonoBehaviour
 
     [Header("Particle System")]
     [SerializeField] private ParticleSystem explotion;
-
+   
     private Vector3 dirction;
     private Vector3 perpendiqulerDirection;
     private bool isMove;
@@ -47,6 +48,7 @@ public class EvileMageBulletMotion : MonoBehaviour
         this.dirction = direction;
         this.force = flt_Force;
         perpendiqulerDirection = Vector3.Cross(direction, Vector3.up);
+        bulletSound.Play_BulletSpawn();
 
     }
     private void Update() {
@@ -87,6 +89,7 @@ public class EvileMageBulletMotion : MonoBehaviour
 
     private void BulletDestroy() {
 
+        bulletSound.Play_BulletDestroyed();
         body.gameObject.SetActive(false);
         thisCollider.enabled = false;
         explotion.gameObject.SetActive(true);

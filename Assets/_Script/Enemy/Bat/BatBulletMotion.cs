@@ -5,6 +5,7 @@ using UnityEngine;
 public class BatBulletMotion : MonoBehaviour
 {
     [Header("BulletData")]
+    [SerializeField] private BulletSoundSystem bulletSound;
     [SerializeField] private float flt_Force;
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_BulletSpeed;
@@ -33,6 +34,7 @@ public class BatBulletMotion : MonoBehaviour
         this.flt_Damage = damage;
         this.bulletMotionDirection = direction;
         this.flt_Force = flt_Force;
+        bulletSound.Play_BulletSpawn();
 
     }
     private void Start() {
@@ -82,6 +84,8 @@ public class BatBulletMotion : MonoBehaviour
    
 
     private void BulletDetrsoySetup() {
+
+        bulletSound.Play_BulletDestroyed();
         body.gameObject.SetActive(false);
         thisCollider.enabled = false;
         explotion.gameObject.SetActive(true);

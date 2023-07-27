@@ -66,6 +66,7 @@ public class SlimeData : EnemyHandler
     }
 
     private void DestroyIndicator() {
+        enemyHealth.EnemySound.Play_GroundTouchSFX();
         Destroy(obj_Indicator);
         spawn_MMFPlayer.PlayFeedbacks();
         StartCoroutine(SetAllScriptData(0.5f));

@@ -98,6 +98,7 @@ public class GolemTrigger : EnemyTrigger
 
             Instantiate(obj_WaterParicle, transform.position, transform.rotation);
             GameManager.instance.EnemyKilled(enemyHealth.transform);
+            enemyHealth.EnemySound.Play_WaterDropSFX();
         }
        
     }

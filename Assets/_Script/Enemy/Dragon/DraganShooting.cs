@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DraganShooting : MonoBehaviour
 {
+   
     [SerializeField] private EnemyData enemyData;
     [SerializeField] private BatMovement batMovement;
     [SerializeField] private Transform transform_SpawnPostion;
@@ -74,6 +75,8 @@ public class DraganShooting : MonoBehaviour
 
             BatBulletMotion current = Instantiate(bullet, transform_SpawnPostion.position,
             transform_SpawnPostion.rotation);
+
+           
             Instantiate(bullet_Muzzle, transform_SpawnPostion.position,
                transform_SpawnPostion.rotation);
             current.SetBulletData(transform_SpawnPostion.forward, flt_Damage, flt_Force);

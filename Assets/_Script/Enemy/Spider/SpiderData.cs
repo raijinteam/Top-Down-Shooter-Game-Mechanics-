@@ -68,6 +68,7 @@ public class SpiderData : EnemyHandler {
     }
 
     public void DestroyIndicator() {
+        enemyHealth.EnemySound.Play_GroundTouchSFX();
         Destroy(obj_Indicator);
         spawn_MMFPlayer.PlayFeedbacks();
         Instantiate(obj_Explotion, transform.position, obj_Explotion.transform.rotation);
