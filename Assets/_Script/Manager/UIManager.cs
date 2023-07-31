@@ -6,7 +6,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public UiWavePanel uilevelScreen;
+    public UiLevelPanel uilevelScreen;
     public WaveStartingScreen waveStartingScreen;
     public UIGamePlayScreen uIGamePlayScreen;
     public UiWaveCompletedScreen uiWaveCompltedScreen;

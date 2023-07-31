@@ -36,6 +36,7 @@ public class SlimeData : EnemyHandler
     private SlimeData current;
 
     public override void SpawnEnemy() {
+
         float flt_YTopPostion = 100;
         float flt_YDownPostion = 2;
         bool isSpawn = false;
@@ -66,6 +67,7 @@ public class SlimeData : EnemyHandler
     }
 
     private void DestroyIndicator() {
+        Debug.Log("DestroyIndiacter");
         enemyHealth.EnemySound.Play_GroundTouchSFX();
         Destroy(obj_Indicator);
         spawn_MMFPlayer.PlayFeedbacks();
@@ -132,9 +134,11 @@ public class SlimeData : EnemyHandler
         }
     }
     public void SetData() {
+
+        Debug.Log("SetData");
         enemyHealth.enabled = true;
         slimeMovement.enabled = true;
-            slimeAttacking.enabled = true;
+        slimeAttacking.enabled = true;
         // navMeshAgent.enabled = true;
         body.enabled = true;
 

@@ -11,15 +11,22 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance;
    
+
+    [Header("Player Start & End Data")]
     [SerializeField] private Transform levelStartPostion;
     [SerializeField] private Transform levelEndPostion;
     [SerializeField] private MMF_Player gameStartBoat;
     [SerializeField] private Transform GameEndBoat;
     [SerializeField] private Transform spawnPostion;
     [SerializeField] private Transform BoatEndPostion;
+
     [SerializeField] private PlayerData obj_Player;
+
+    [Header("Componenet")]
     [SerializeField] private CinemachineVirtualCamera cinemachine;
     public PlayerData Player;
+
+    [Header("Player AnimationData")]
     [SerializeField]private float flt_JumpTime;
     [SerializeField]private float flt_JumpAccerletion;
 
@@ -134,7 +141,7 @@ public class PlayerManager : MonoBehaviour
         Player.GetComponent<Rigidbody>().useGravity = false;
         Sequence seq = DOTween.Sequence();
 
-        GameManager.instance.PLayLeveAnimation();
+        UIManager.instance.uilevelScreen.PlayLevelAnimation(GameManager.instance.currentStageIndex + 1 , 2);
        
         gameStartBoat.transform.position = new Vector3(gameStartBoat.transform.position.x,gameStartBoat.transform.position.y, -60);
         gameStartBoat.PlayFeedbacks();
@@ -229,7 +236,7 @@ public class PlayerManager : MonoBehaviour
             Player.transform.localEulerAngles = Vector3.zero;
             Player.transform.localScale = obj_Player.transform.localScale;
             GameManager.instance.isPlayerLive = true;
-            GameManager.instance.isKilltimeCalculation = true;
+            GameManager.instance.IsKillStetch = true;
         }
        
        

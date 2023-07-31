@@ -147,7 +147,7 @@ public class EnemyHealth : MonoBehaviour
         flt_CurrrentHealth -= damage;
 
        
-        if (GameManager.instance.isLifeStealPowerUpActive) {
+        if (GameManager.instance.IsLifeSteal) {
             PlayerManager.instance.Player.GetComponent<PlayerHealth>().IncreasedHealthLifeStealTime(damage);
         }
 

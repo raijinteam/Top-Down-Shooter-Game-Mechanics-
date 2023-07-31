@@ -135,7 +135,7 @@ public class PlayerShooting : MonoBehaviour
         
         bulletMuzzle.Play();
 
-        if (GameManager.instance.isMissilePowerUpActive) {
+        if (GameManager.instance.IsMicroMissile) {
             SpwnMisssle();
         }
     }

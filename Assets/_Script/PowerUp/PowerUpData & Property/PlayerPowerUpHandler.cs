@@ -56,8 +56,8 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
         if (currentPlayerPoint >= currrentPointToNextLevel) {
 
-           
-            GameManager.instance.SetLevel();
+
+            GameManager.instance.CurrentGameLevel++;
 
             currentPlayerPoint = currrentPointToNextLevel - currentPlayerPoint;
             currrentPointToNextLevel = currrentPointToNextLevel +

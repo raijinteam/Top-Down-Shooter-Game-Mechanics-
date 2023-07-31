@@ -11084,6 +11084,7 @@ MonoBehaviour:
   uIGamePlayScreen: {fileID: 784055434}
   uiWaveCompltedScreen: {fileID: 0}
   uiStageCompletedScreen: {fileID: 0}
+  powerup2Ui: {fileID: 0}
 --- !u!1 &1139495915
 GameObject:
   m_ObjectHideFlags: 0
@@ -11544,6 +11545,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fdb39185c6cef04393e446465f8ecec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  bg: {fileID: 0}
+  ShowPanel: {fileID: 0}
+  all_Img: []
   myIndex: 0
   img_Symbole: {fileID: 1532567794}
   txt_PowerUpName: {fileID: 1128764487}
@@ -11949,6 +11954,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fdb39185c6cef04393e446465f8ecec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  bg: {fileID: 0}
+  ShowPanel: {fileID: 0}
+  all_Img: []
   myIndex: 2
   img_Symbole: {fileID: 1634253785}
   txt_PowerUpName: {fileID: 192108483}
@@ -18318,6 +18327,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fdb39185c6cef04393e446465f8ecec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  bg: {fileID: 0}
+  ShowPanel: {fileID: 0}
+  all_Img: []
   myIndex: 1
   img_Symbole: {fileID: 1674641963}
   txt_PowerUpName: {fileID: 1383285127}

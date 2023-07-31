@@ -96,15 +96,15 @@ public class PlayerBulletMotion : MonoBehaviour
     private void EnemyyHandler(Collider other) {
        
         if (other.gameObject.TryGetComponent<EnemyTrigger>(out EnemyTrigger enemyTrigger)) {
-            Vector3 direction = (other.gameObject.transform.position - transform.
+            Vector3 direction = (other.transform.position - transform.
                 position).normalized;
             enemyTrigger.SethitByBullet(flt_Damage, flt_Force,
                 new Vector3(direction.x, 0, direction.z).normalized);
 
-            if (GameManager.instance.isRichoestPowerUp) {
+            if (GameManager.instance.IsRechoest) {
                 RechoestPowerUp();
             }
-            else if (GameManager.instance.isDealthBlowPowerUpActivated) {
+            else if (GameManager.instance.IsDeathBlow) {
                 int Inedex = Random.Range(0, 100);
                 if (Inedex <= persantageOfDelathBow) {
                     enemyTrigger.SetDamageBlast();

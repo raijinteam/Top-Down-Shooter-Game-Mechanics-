@@ -22,13 +22,13 @@ public class DealthBlow : MonoBehaviour
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_Maxtime) {
             this.gameObject.SetActive(false);
-            GameManager.instance.isDealthBlowPowerUpActivated = false;
+            GameManager.instance.IsDeathBlow = false;
         }
     }
 
     private void SetDealthBlowPowerUpHandler() {
         flt_CurrentTime = 0;
        
-        GameManager.instance.isDealthBlowPowerUpActivated = true;
+        GameManager.instance.IsDeathBlow = true;
     }
 }

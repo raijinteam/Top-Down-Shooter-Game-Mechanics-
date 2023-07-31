@@ -18,7 +18,7 @@ public class EnemyData : MonoBehaviour
 
 
     private void OnEnable() {
-        baseValue = GameManager.instance.GetLevel();
+        baseValue = GameManager.instance.CurrentGameLevel;
         SetLevel();
     }
     public float GetmaxHealth() {
@@ -43,7 +43,7 @@ public class EnemyData : MonoBehaviour
 
        
 
-        for (int i = 0; i < GameManager.instance.GetLevel(); i++) {
+        for (int i = 0; i < GameManager.instance.CurrentGameLevel; i++) {
 
             flt_Damage = flt_Damage + (flt_Damage * damageIncreasingPersantage * 0.01f);
             flt_MaxHealth = flt_MaxHealth + (flt_MaxHealth * HealthIncreasingPersantage * 0.01f);

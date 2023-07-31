@@ -9,18 +9,18 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
 
-    [SerializeField] private int GameLevel; // player level.private int playerLevel
+    [SerializeField] private int playerLevel; // player level.private int playerLevel
     [Header("PlayerData")]
     public bool isPlayerLive;
 
     [Header("PowerUp Handler")]
-    public bool isRichoestPowerUp;
-    internal bool isDealthBlowPowerUpActivated;
-    public bool isLifeStealPowerUpActive;
-    public bool isMissilePowerUpActive;
-    [Header("killStreach Data")]
-    public bool isKilltimeCalculation;
+    private bool isRichoestPowerUp;
+    private bool isDealthBlowPowerUpActivated;
+    private  bool isLifeStealPowerUpActive;
+    private bool isMissilePowerUpActive;
 
+    [Header("killStreach Data")]
+    [SerializeField]private  bool isKilltimeCalculation;
     [SerializeField] private KillStretch killStretch;
     [SerializeField] private float flt_MaxKillStreachTime;
     [SerializeField] private float flt_CurrentTime;
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
     public List<Transform> list_ActiveEnemies = new List<Transform>();
     public EnemyAndItsPresantage currentEnemyData;
     public int currentStageIndex;
-    [SerializeField]private int currentWaveIndex = 0;
+    public int currentWaveIndex = 0;
     public int totalNumberOfWavesInThisStage;
     public int numberOfEnemiesInCurrentWave;
     [SerializeField] private int  newwaveStartSpawn = 5;
@@ -49,22 +49,42 @@ public class GameManager : MonoBehaviour {
     }
 
 
-    public int GetLevel() {
-        return GameLevel;
+
+    #region Property
+   
+    public int CurrentGameLevel {
+        get { return playerLevel; }
+        set { playerLevel++; }
     }
-    public void SetLevel() {
-        GameLevel++;
-       
+
+    public bool IsRechoest {
+        get { return isRichoestPowerUp; }
+        set { isRichoestPowerUp = value; }
     }
+    public bool IsDeathBlow {
+        get { return isDealthBlowPowerUpActivated; }
+        set { isDealthBlowPowerUpActivated = value; }
+    }
+    public bool IsLifeSteal {
+        get { return isLifeStealPowerUpActive; }
+        set { isLifeStealPowerUpActive = value; }
+    }
+    public bool IsMicroMissile {
+        get { return isMissilePowerUpActive; }
+        set { isMissilePowerUpActive = value; }
+    }
+
+    public bool IsKillStetch {
+        get { return isKilltimeCalculation; }
+        set { isKilltimeCalculation = value; }
+    }
+    #endregion
+
+
+
 
     private void Update() {
-
-        if (Input.GetKeyDown(KeyCode.L)) {
-            Time.timeScale = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.M)) {
-            Time.timeScale = 1;
-        }
+        
         KillstreachCalculation();
     }
 
@@ -94,9 +114,6 @@ public class GameManager : MonoBehaviour {
 
     }
 
-    public void PLayLeveAnimation() {
-        UIManager.instance.uilevelScreen.PlayUiWaveAnimation(currentStageIndex + 1);
-    }
     
 
     
@@ -170,7 +187,7 @@ public class GameManager : MonoBehaviour {
     public void SpwnEnemyNewWave() {
 
         SpawnFirstWave(); 
-        // StartCoroutine(SpawnEnemyInIntervals());
+        StartCoroutine(SpawnEnemyInIntervals());
     }
 
     private void SpawnFirstWave() {
@@ -192,23 +209,23 @@ public class GameManager : MonoBehaviour {
 
         }
 
-        //int BaseValue = newwaveStartSpawn ;
+         BaseValue = newwaveStartSpawn;
 
-        //for (int i = 0; i < numberOfEnemiesInCurrentWave; i++) {
+        for (int i = 0; i < numberOfEnemiesInCurrentWave; i++) {
 
-        //    if (i < BaseValue) {
-        //        SpawnEnemy();
+            if (i < BaseValue) {
+                SpawnEnemy();
 
-        //        yield return new WaitForSeconds(50000);
-        //    }
-        //    else {
+                yield return new WaitForSeconds(50000);
+            }
+            else {
 
-        //        yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
-        //        SpawnEnemy();
-        //    }
+                yield return new WaitForSeconds(currentEnemyData.waitBetweenEnemySpawn);
+                SpawnEnemy();
+            }
 
 
-        //}
+        }
     }
 
     private void SpawnEnemy() {

@@ -27,7 +27,7 @@ public class LifeStealPowerUp : MonoBehaviour
         flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_MaxTimeForThisPowerUp) {
             this.gameObject.SetActive(false);
-            GameManager.instance.isLifeStealPowerUpActive = false;
+            GameManager.instance.IsLifeSteal = false;
             obj_Indicator.gameObject.SetActive(false);
         }
     }
@@ -35,7 +35,7 @@ public class LifeStealPowerUp : MonoBehaviour
     private void SetLifeStealPowerUp() {
       
         flt_CurrentTime = 0;
-        GameManager.instance.isLifeStealPowerUpActive = true;
+        GameManager.instance.IsLifeSteal = true;
         obj_Indicator.gameObject.SetActive(true);
     }
 }
