@@ -27,22 +27,22 @@ public class HpReagonPowerUp : PowerUpData
 
         HealthPersantage = this_Property.all_Level_HpReagon_Persantage[Level];
         all_MyDataDisplay[0].headerName = "% HPReagon";
-        all_MyDataDisplay[0].OldValue = HealthPersantage.ToString();
+        all_MyDataDisplay[0].CurrentValue = HealthPersantage.ToString();
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Property.all_Level_HpReagon_Persantage[Level +1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Property.all_Level_HpReagon_Persantage[Level +1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
         HealthIncreasedTime = this_Property.all_Level_HpReagon_Time[Level];
         all_MyDataDisplay[0].headerName = " HPReagon Time";
-        all_MyDataDisplay[0].OldValue = HealthIncreasedTime.ToString();
+        all_MyDataDisplay[0].CurrentValue = HealthIncreasedTime.ToString();
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Property.all_Level_HpReagon_Time[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Property.all_Level_HpReagon_Time[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
 

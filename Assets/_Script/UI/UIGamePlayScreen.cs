@@ -45,10 +45,13 @@ public class UIGamePlayScreen : MonoBehaviour
 
     public void OnClick_PowerUpBtnClick() {
         img_PowerUp.gameObject.SetActive(true);
-        PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>().isPowerUpStart = true;
-        btn_PowerUp.interactable = false;
-        PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>().StartUltimate();
         img_Ultimate.fillAmount = 0;
+        btn_PowerUp.interactable = false;
+        PlayerManager.instance.Player.GetComponent<PowerUpHandler>().SetPowerUpPanel();
+        PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>().IncresedPowerUpPoint();
+       
+       
+       
       
        
     }
@@ -74,7 +77,7 @@ public class UIGamePlayScreen : MonoBehaviour
         Debug.Log("PowerUpCompltered");
         img_PowerUp.gameObject.SetActive(false);
 
-        PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>().UltimateCompleted();
+       
     }
 
     public void SetUltimateScore(float fillAmmount) {

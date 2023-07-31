@@ -16,22 +16,22 @@ public class ChainData : PowerUpData {
 
         ChainCounter = this_Prperity.counter[Level];
         all_MyDataDisplay[0].headerName = "ChainCounter";
-        all_MyDataDisplay[0].OldValue = "+" + chainCounter;
+        all_MyDataDisplay[0].CurrentValue = "+" + chainCounter;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Prperity.counter[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Prperity.counter[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
         ChainTime = this_Prperity.flt_MaxTimeAffectChain[Level];
         all_MyDataDisplay[1].headerName = "ChainTime";
-        all_MyDataDisplay[1].OldValue = "+" + ChainTime;
+        all_MyDataDisplay[1].CurrentValue = "+" + ChainTime;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[1].newValue = "+" + this_Prperity.flt_MaxTimeAffectChain[Level + 1];
+            all_MyDataDisplay[1].UpdateValue = "+" + this_Prperity.flt_MaxTimeAffectChain[Level + 1];
         }
         else {
-            all_MyDataDisplay[1].newValue = "Upgrade";
+            all_MyDataDisplay[1].UpdateValue = "Upgrade";
         }
     }
     public int ChainCounter {

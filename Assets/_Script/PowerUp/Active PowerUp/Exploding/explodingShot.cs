@@ -13,6 +13,19 @@ public class explodingShot : MonoBehaviour
     [SerializeField] private float flt_CurrentTimeForSpawnBullet;
 
 
+    [Header("Properites")]
+    [SerializeField] private float flt_FireRate;
+    [SerializeField] private float flt_Damage;
+    [SerializeField] private float flt_force;
+    [SerializeField] private float flt_AreaDamage;
+    [SerializeField] private float flt_AreaRange;
+
+
+
+    private void OnEnable() {
+        
+        
+    }
 
     private void Update() {
 
@@ -23,9 +36,9 @@ public class explodingShot : MonoBehaviour
         if (GameManager.instance.list_ActiveEnemies.Count == 0) {
             return;
         }
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(exploding_Data.FireRate);
+       
         flt_CurrentTimeForSpawnBullet += Time.deltaTime;
-        if (flt_CurrentTimeForSpawnBullet > CoolDown) {
+        if (flt_CurrentTimeForSpawnBullet > flt_FireRate) {
             flt_CurrentTimeForSpawnBullet = 0;
             SpawnBullet();
         }
@@ -50,10 +63,10 @@ public class explodingShot : MonoBehaviour
 
 
 
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(exploding_Data.Damage);
+        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
 
-        current.SetBulletData(direction, Damage, exploding_Data.Force, exploding_Data.AreaDamage,
-                                                    exploding_Data.AreaRange);
+        current.SetBulletData(direction, Damage, flt_force, flt_AreaDamage,
+                                                    flt_AreaRange);
     }
 
 

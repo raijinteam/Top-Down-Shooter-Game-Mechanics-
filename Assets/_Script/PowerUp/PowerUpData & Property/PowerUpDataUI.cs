@@ -49,8 +49,8 @@ public class PowerUpDataUI : MonoBehaviour {
             txt_Level.text = "Level " + powerUpData.PowerUpLevel();
             for (int i = 0; i < all_txt_Header.Length; i++) {
                 all_txt_Header[i].text = powerUpData.all_MyDataDisplay[i].headerName;
-                all_Txt_Value[i].text = powerUpData.all_MyDataDisplay[i].OldValue;
-                all_Txt_Diff[i].text = powerUpData.all_MyDataDisplay[i].newValue;
+                all_Txt_Value[i].text = powerUpData.all_MyDataDisplay[i].CurrentValue;
+                all_Txt_Diff[i].text = powerUpData.all_MyDataDisplay[i].UpdateValue;
             }
 
         }

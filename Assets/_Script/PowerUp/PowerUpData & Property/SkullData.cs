@@ -20,22 +20,22 @@ public class SkullData : PowerUpData
 
         Firerate = this_Properites.flt_FireRate[Level];
         all_MyDataDisplay[0].headerName = "FireRate";
-        all_MyDataDisplay[0].OldValue = "-" + Firerate;
+        all_MyDataDisplay[0].CurrentValue = "-" + Firerate;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "-" + this_Properites.flt_FireRate[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "-" + this_Properites.flt_FireRate[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = " Upgrade";
+            all_MyDataDisplay[0].UpdateValue = " Upgrade";
         }
 
         Damage = this_Properites.flt_Damage[Level];
         all_MyDataDisplay[1].headerName = "Damage";
-        all_MyDataDisplay[1].OldValue = "-" + Damage;
+        all_MyDataDisplay[1].CurrentValue = "-" + Damage;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[1].newValue = "-" + this_Properites.flt_Damage[Level + 1];
+            all_MyDataDisplay[1].UpdateValue = "-" + this_Properites.flt_Damage[Level + 1];
         }
         else {
-            all_MyDataDisplay[1].newValue = " Upgrade";
+            all_MyDataDisplay[1].UpdateValue = " Upgrade";
         }
 
     }

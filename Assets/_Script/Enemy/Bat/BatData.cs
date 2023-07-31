@@ -13,6 +13,7 @@ public class BatData : EnemyHandler
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private BatMovement batMovement;
     [SerializeField] private BatShootnig batShootnig;
+    [SerializeField] private Collider bodyCollider;
    
    
 
@@ -123,11 +124,12 @@ public class BatData : EnemyHandler
     }
    
 
-    public void SetData() {
+    private void SetData() {
+
         enemyHealth.enabled = true;
         batMovement.enabled = true;
         batShootnig.enabled = true;
-
+        bodyCollider.enabled = true;
 
     }
 }

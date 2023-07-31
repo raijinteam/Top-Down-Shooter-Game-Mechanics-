@@ -20,7 +20,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
     [Header("Ultimate")]
     [SerializeField] private float requiredPointToUnlockUltimate; //flt_PointsRequiredforUltimate
     public bool isPowerUpStart;
-   
+    [SerializeField] private float flt_ReuiredPersantageINcreased;
 
     [SerializeField] private float currenPointToForUltimate; // flt_CurrentPointsForUltimate
 
@@ -43,11 +43,7 @@ public class PlayerPowerUpHandler : MonoBehaviour
     }
 
 
-    public void UltimateCompleted() {
-        currenPointToForUltimate = 0;
-        isPowerUpStart = false;
-
-    }
+  
 
     public void IncreasingPlayerPoint(int point) {
         currentPlayerPoint += point;
@@ -74,5 +70,12 @@ public class PlayerPowerUpHandler : MonoBehaviour
 
        
 
+    }
+
+    public void IncresedPowerUpPoint() {
+
+        isPowerUpStart = false;
+        currenPointToForUltimate = 0;
+        requiredPointToUnlockUltimate += requiredLevelToIncreased +  requiredLevelToIncreased * 0.01f * flt_ReuiredPersantageINcreased;
     }
 }

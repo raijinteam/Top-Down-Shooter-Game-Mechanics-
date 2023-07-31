@@ -18,26 +18,26 @@ public class MolotoveData : PowerUpData
                                         GetComponent<MolotovProperites>();
         MolotovCounter = this_Properites.max_Counter[Level];
         all_MyDataDisplay[0].headerName = "Counter";
-        all_MyDataDisplay[0].OldValue = "+" + MolotovCounter;
+        all_MyDataDisplay[0].CurrentValue = "+" + MolotovCounter;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
 
-            all_MyDataDisplay[0].newValue = "+" + this_Properites.max_Counter[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Properites.max_Counter[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade" ;
+            all_MyDataDisplay[0].UpdateValue = "Upgrade" ;
         }
 
 
         Damage = this_Properites.flt_Damage[Level];
         all_MyDataDisplay[1].headerName = "Damage";
-        all_MyDataDisplay[1].OldValue = "+" + Damage;
+        all_MyDataDisplay[1].CurrentValue = "+" + Damage;
 
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
 
-            all_MyDataDisplay[0].newValue = "+" + this_Properites.flt_Damage[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Properites.flt_Damage[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
     }

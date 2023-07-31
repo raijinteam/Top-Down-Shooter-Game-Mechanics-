@@ -24,12 +24,12 @@ public class CriticalDamageChancessPowerUp : PowerUpData
 
         Percentage_CriticalDamage = this_Property.all_Critical_Damage_Chancess_Persantage[Level];
         all_MyDataDisplay[0].headerName = " % Critical Damage";
-        all_MyDataDisplay[0].OldValue = "+" + Percentage_CriticalDamage;
+        all_MyDataDisplay[0].CurrentValue = "+" + Percentage_CriticalDamage;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Property.all_Critical_Damage_Chancess_Persantage[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Property.all_Critical_Damage_Chancess_Persantage[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
         playerData.persantage_CriticalDamage = Percentage_CriticalDamage;

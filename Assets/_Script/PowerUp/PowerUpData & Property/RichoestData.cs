@@ -19,23 +19,23 @@ public class RichoestData : PowerUpData {
 
         playerData.RechoestCounter = this_Properity.max_Counter[Level];
         all_MyDataDisplay[0].headerName = "MaxCounter";
-        all_MyDataDisplay[0].OldValue = "+" + playerData.RechoestCounter;
+        all_MyDataDisplay[0].CurrentValue = "+" + playerData.RechoestCounter;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Properity.max_Counter[Level + 1].ToString();
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Properity.max_Counter[Level + 1].ToString();
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
 
         playerData.Rechoest_damagePersantage = this_Properity.damage_Persantage_Decreased[Level];
         all_MyDataDisplay[1].headerName = "damage";
-        all_MyDataDisplay[1].OldValue = "-" + playerData.RechoestCounter;
+        all_MyDataDisplay[1].CurrentValue = "-" + playerData.RechoestCounter;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[1].newValue = "-" + this_Properity.damage_Persantage_Decreased[Level + 1].ToString();
+            all_MyDataDisplay[1].UpdateValue = "-" + this_Properity.damage_Persantage_Decreased[Level + 1].ToString();
         }
         else {
-            all_MyDataDisplay[1].newValue = "Upgrade";
+            all_MyDataDisplay[1].UpdateValue = "Upgrade";
         }
 
     }

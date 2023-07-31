@@ -236,7 +236,7 @@ public class PlayerManager : MonoBehaviour
             Player.transform.localEulerAngles = Vector3.zero;
             Player.transform.localScale = obj_Player.transform.localScale;
             GameManager.instance.isPlayerLive = true;
-            GameManager.instance.IsKillStetch = true;
+            GameManager.instance.IsKillStreak = true;
         }
        
        

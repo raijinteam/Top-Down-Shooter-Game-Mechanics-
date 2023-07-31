@@ -25,12 +25,12 @@ public class CriticalDamageIncreasedPowerUp : PowerUpData
 
         CriticalDamage = this_Property.all_Level_Critical_Damage_Persantage[Level];
         all_MyDataDisplay[0].headerName = "Critical Damage";
-        all_MyDataDisplay[0].OldValue = "+" + criticalDamagePesantage;
+        all_MyDataDisplay[0].CurrentValue = "+" + criticalDamagePesantage;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Property.all_Level_Critical_Damage_Persantage[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Property.all_Level_Critical_Damage_Persantage[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
         playerData.persantage_CriticalDamage = CriticalDamage;

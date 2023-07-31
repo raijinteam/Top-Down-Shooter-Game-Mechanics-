@@ -28,12 +28,12 @@ public class DamageIncresedPowerUp : PowerUpData
 
         damagePesantage = this_Properity.damage_Increased_Persantage[Level];
         all_MyDataDisplay[0].headerName = "% Damage";
-        all_MyDataDisplay[0].OldValue = "+" + damagePesantage;
+        all_MyDataDisplay[0].CurrentValue = "+" + damagePesantage;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Properity.damage_Increased_Persantage[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Properity.damage_Increased_Persantage[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade" ;
+            all_MyDataDisplay[0].UpdateValue = "Upgrade" ;
         }
 
        PlayerManager.instance.Player.damageIncreasePercent = damagePesantage;

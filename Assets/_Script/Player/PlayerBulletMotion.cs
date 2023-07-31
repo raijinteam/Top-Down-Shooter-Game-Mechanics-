@@ -96,8 +96,10 @@ public class PlayerBulletMotion : MonoBehaviour
     private void EnemyyHandler(Collider other) {
        
         if (other.gameObject.TryGetComponent<EnemyTrigger>(out EnemyTrigger enemyTrigger)) {
-            Vector3 direction = (other.transform.position - transform.
-                position).normalized;
+            //Vector3 direction = (other.transform.position - transform.
+            //    position).normalized;
+
+            Vector3 direction = transform.forward;
             enemyTrigger.SethitByBullet(flt_Damage, flt_Force,
                 new Vector3(direction.x, 0, direction.z).normalized);
 

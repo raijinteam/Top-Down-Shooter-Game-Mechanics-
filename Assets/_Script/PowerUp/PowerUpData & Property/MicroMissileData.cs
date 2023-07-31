@@ -18,33 +18,33 @@ public class MicroMissileData : PowerUpData {
 
         playerData.MissileCounter = this_Properity.counter[Level];
         all_MyDataDisplay[0].headerName = "MissleCounter";
-        all_MyDataDisplay[0].OldValue = "+" + playerData.MissileCounter;
+        all_MyDataDisplay[0].CurrentValue = "+" + playerData.MissileCounter;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Properity.counter[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Properity.counter[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
 
         playerData.flt_MissileDamage = this_Properity.missle_Damage[Level];
         all_MyDataDisplay[1].headerName = "Damage";
-        all_MyDataDisplay[1].OldValue = "+" + playerData.flt_MissileDamage;
+        all_MyDataDisplay[1].CurrentValue = "+" + playerData.flt_MissileDamage;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[1].newValue = "+" + this_Properity.missle_Damage[Level + 1];
+            all_MyDataDisplay[1].UpdateValue = "+" + this_Properity.missle_Damage[Level + 1];
         }
         else {
-            all_MyDataDisplay[1].newValue = "Upgrade";
+            all_MyDataDisplay[1].UpdateValue = "Upgrade";
         }
 
         playerData.PersantageOfMissileSpawn = this_Properity.persantage_ToSpawn_MicroMissile[Level];
         all_MyDataDisplay[2].headerName = "%_Spawn";
-        all_MyDataDisplay[2].OldValue = "+" + playerData.PersantageOfMissileSpawn;
+        all_MyDataDisplay[2].CurrentValue = "+" + playerData.PersantageOfMissileSpawn;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[1].newValue = "+" + this_Properity.persantage_ToSpawn_MicroMissile[Level + 1];
+            all_MyDataDisplay[1].UpdateValue = "+" + this_Properity.persantage_ToSpawn_MicroMissile[Level + 1];
         }
         else {
-            all_MyDataDisplay[1].newValue = "Upgrade";
+            all_MyDataDisplay[1].UpdateValue = "Upgrade";
         }
 
     }

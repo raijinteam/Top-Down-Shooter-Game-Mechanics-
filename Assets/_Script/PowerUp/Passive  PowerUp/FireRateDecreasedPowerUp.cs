@@ -17,12 +17,12 @@ public class FireRateDecreasedPowerUp : PowerUpData
 
         persantage_Firerate = this_Properity.flt_FireRatePersantage[Level];
         all_MyDataDisplay[0].headerName = "FireRate";
-        all_MyDataDisplay[0].OldValue = "+" + persantage_Firerate;
+        all_MyDataDisplay[0].CurrentValue = "+" + persantage_Firerate;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Properity.flt_FireRatePersantage[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Properity.flt_FireRatePersantage[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
         PlayerManager.instance.Player.DecreasedPersentageFireRate = persantage_Firerate;

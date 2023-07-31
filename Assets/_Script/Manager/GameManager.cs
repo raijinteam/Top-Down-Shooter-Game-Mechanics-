@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour {
         set { isMissilePowerUpActive = value; }
     }
 
-    public bool IsKillStetch {
+    public bool IsKillStreak {
         get { return isKilltimeCalculation; }
         set { isKilltimeCalculation = value; }
     }

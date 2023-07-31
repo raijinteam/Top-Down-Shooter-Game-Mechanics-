@@ -19,34 +19,34 @@ public class MultyShotData : PowerUpData
 
         Max_Counter = this_Property.max_Counter[Level];
         all_MyDataDisplay[0].headerName = "Counter";
-        all_MyDataDisplay[0].OldValue = "+" + Max_Counter;
+        all_MyDataDisplay[0].CurrentValue = "+" + Max_Counter;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
 
-            all_MyDataDisplay[0].newValue = "+" +  this_Property.max_Counter[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" +  this_Property.max_Counter[Level + 1];
         }
 
         FireRate = this_Property.flt_FireRate[Level];
         all_MyDataDisplay[1].headerName = "FireRate";
-        all_MyDataDisplay[1].OldValue = "+" + FireRate;
+        all_MyDataDisplay[1].CurrentValue = "+" + FireRate;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
 
-            all_MyDataDisplay[1].newValue = "+" + this_Property.flt_FireRate[Level + 1];
+            all_MyDataDisplay[1].UpdateValue = "+" + this_Property.flt_FireRate[Level + 1];
         }
 
         Damage = this_Property.flt_Damage[Level];
         all_MyDataDisplay[2].headerName = "Damage";
-        all_MyDataDisplay[2].OldValue = "+" + Damage;
+        all_MyDataDisplay[2].CurrentValue = "+" + Damage;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
 
-            all_MyDataDisplay[2].newValue = "+" + this_Property.flt_Damage[Level + 1];
+            all_MyDataDisplay[2].UpdateValue = "+" + this_Property.flt_Damage[Level + 1];
         }
 
         Force  = this_Property.flt_Force[Level];
         all_MyDataDisplay[3].headerName = "Damage";
-        all_MyDataDisplay[3].OldValue = "+" + Force;
+        all_MyDataDisplay[3].CurrentValue = "+" + Force;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
 
-            all_MyDataDisplay[3].newValue = "+" + this_Property.flt_Force[Level + 1];
+            all_MyDataDisplay[3].UpdateValue = "+" + this_Property.flt_Force[Level + 1];
         }
 
     }
@@ -110,6 +110,6 @@ public class MultyShotData : PowerUpData
 public struct myDataDisplay {
 
     public string headerName;
-    public string OldValue;
-    public string newValue;
+    public string CurrentValue;
+    public string UpdateValue;
 }

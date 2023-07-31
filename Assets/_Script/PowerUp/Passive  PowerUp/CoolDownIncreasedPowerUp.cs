@@ -17,12 +17,12 @@ public class CoolDownIncreasedPowerUp : PowerUpData
 
         persentage_CoolDown = this_Properity.coolDownDecreasedPersantage[Level];
         all_MyDataDisplay[0].headerName = "CoolDown";
-        all_MyDataDisplay[0].OldValue = "+" + persentage_CoolDown;
+        all_MyDataDisplay[0].CurrentValue = "+" + persentage_CoolDown;
         if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].newValue = "+" + this_Properity.coolDownDecreasedPersantage[Level + 1];
+            all_MyDataDisplay[0].UpdateValue = "+" + this_Properity.coolDownDecreasedPersantage[Level + 1];
         }
         else {
-            all_MyDataDisplay[0].newValue = "Upgrade";
+            all_MyDataDisplay[0].UpdateValue = "Upgrade";
         }
 
         PlayerManager.instance.Player.DecreasedPersentageCoolDown = persentage_CoolDown;
