@@ -8,7 +8,7 @@ public class SkeletonCollisionHandler : EnemyTrigger
    
     [Header("Componant")]
     [SerializeField] private EnemyHealth enemyHealth;
-    [SerializeField] private EnemyMovement enemyMovement;
+    [SerializeField] private skeletonMovement skeletonMotion;
     [SerializeField] private Collider collider_Body;
     [SerializeField] private Rigidbody enemyRb;
     
@@ -28,7 +28,7 @@ public class SkeletonCollisionHandler : EnemyTrigger
 
     public override void SetHitOrbitBullet(float flt_Damage, float flt_Force, Vector3 direction) {
         enemyHealth.TakeDamage(flt_Damage);
-        enemyMovement.KnockBack(direction, flt_Force);
+        skeletonMotion.KnockBack(direction, flt_Force);
     }
     public override void SetHitByTerrorShot(float flt_Damage, float flt_Force) {
 
@@ -63,13 +63,14 @@ public class SkeletonCollisionHandler : EnemyTrigger
         enemyHealth.StopMolotovePowerUp();
     }
 
-    public override void SetHitTidalWave(Transform transform) {
-        enemyMovement.HitByTidal(transform);
+    public override void SetHitTidalWave(Transform transform , float Damage) {
+        skeletonMotion.HitByTidal(transform , Damage);
         collider_Body.enabled = false;
         enemyRb.useGravity = false;
     }
-    public override void StopHitTidalWave() {
-       
+    public override void StopHitTidalWave(float Damage) {
+
+        enemyHealth.TakeDamage(Damage);
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
@@ -77,28 +78,27 @@ public class SkeletonCollisionHandler : EnemyTrigger
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {
 
         enemyHealth.TakeDamage(flt_Damage);
-        enemyMovement.KnockBack(direction, flt_Force);
+        skeletonMotion.KnockBack(direction, flt_Force);
     }
     public override void SethitByBullet(float flt_Damage, float _flt_Force, Vector3 _Direction) {
 
         enemyHealth.TakeDamage(flt_Damage);
-        enemyMovement.KnockBack(_Direction, _flt_Force);
+        skeletonMotion.KnockBack(_Direction, _flt_Force);
         
         
     }
     public override void HitByBlackHole(Transform transform) {
-        enemyMovement.HitByBlackHole(transform);
+        skeletonMotion.HitByBlackHole(transform);
         collider_Body.enabled = false;
         enemyRb.useGravity = false;
     }
 
-    public override void BlackHoleBlast() {
-
+    public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
+        skeletonMotion.KnockBack(direction, knockBackForce);
     }
-
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag(tag_Water)) {

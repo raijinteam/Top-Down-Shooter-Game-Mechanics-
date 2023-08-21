@@ -18,33 +18,22 @@ public class OrcEnemyMovement : MonoBehaviour {
     [Header("OrcEnemyData")]
    
     [SerializeField] private float flt_ChargingTime;
-    [SerializeField] private Vector3 targetPostion;
-
-   
+    [SerializeField] private Vector3 targetPostion; 
 
     [SerializeField] private float flt_SpeedOfOrc;
     [SerializeField] private float flt_Distance;
-
-   
-
-    [SerializeField] private float flt_CurrentTime;
-    
+    [SerializeField] private float flt_CurrentTime;  
     [SerializeField] private float flt_MovemMentSpeed;
 
-   
-
-    private float currentAffectedGravityForce = 1;
     private float gravityForce = -0.75f;
-
     private bool isGrounded;
-    private float flt_ScaleAnimationTime = 0.2f;
-    private float flt_Reducescale = 0.3f;
+    private bool isAttacking = false;
+    private bool isHitByBlackhole = false;
+    private float groundCheckBufferTime = 0.2f;
+    private float currentGroundCheckTime = 0f;
 
-    
 
-   [SerializeField]private bool isSetTarget = false;
-
-   [SerializeField] private bool isVisible = true;
+    [SerializeField] private bool isVisible = true;
 
    
 
@@ -56,26 +45,42 @@ public class OrcEnemyMovement : MonoBehaviour {
 
     // Courotine
     private Coroutine coro_KnockBack;
-    private Coroutine coro_tagetmove;
-    private Rigidbody rb;
+    [SerializeField]private float flt_Offset = 2;
+    private float flt_TidalDamage;
 
     // Tag & Id
-
-
     private const string Id_Idle = "Idle";
     private const string Id_Run = "Run";
 
 
     private void OnEnable() {
-        enemyState = EnemyState.charge;
+        if (GameManager.instance.IsInVisblePowerUpActive) {
+            SetInVisible();
+        }
+        else {
+            SetVisible();
+        }
+
     }
 
     private void Update() {
-        if (!GameManager.instance.isPlayerLive) {
-
-           
+        if (!GameManager.instance.isPlayerLive) {     
             return;
         }
+
+        if (!isGrounded) {
+            currentGroundCheckTime += Time.deltaTime;
+            if (currentGroundCheckTime >= groundCheckBufferTime) {
+                enemyState = EnemyState.Not_Ground;
+            }
+        }
+
+        if (isVisible) {
+            OrcCharging();
+            FindPlayerPostion();
+        }
+
+
         OrcStateMotion();
 
     }
@@ -84,51 +89,71 @@ public class OrcEnemyMovement : MonoBehaviour {
         isGrounded = true;
     }
 
+    private void OnCollisionStay(Collision collision) {
+
+        isGrounded = true;
+    }
+
     private void OnCollisionExit(Collision collision) {
 
         if (enemyState == EnemyState.BlackHole) {
             return;
         }
-        if (enemyState == EnemyState.Run) {
-            return;
-        }
         if (enemyState == EnemyState.Wave) {
-            oRCTrigger.StopHitTidalWave();
+            //oRCTrigger.StopHitTidalWave();
+            StartCoroutine(WaitAndLeaveTidalWave());
         }
+
+        currentGroundCheckTime = 0f;
         isGrounded = false;
-        enemyState = EnemyState.Not_Ground;
+        //enemyState = EnemyState.Not_Ground;
+    }
+    private IEnumerator WaitAndLeaveTidalWave() {
+        yield return new WaitForSeconds(0.3f);
+        if (!isGrounded) {
+            oRCTrigger.StopHitTidalWave(flt_TidalDamage);
+        }
+
+    }
+
+    public void CheckIfGrounded() {
+
+        if (isGrounded) {
+            enemyState = EnemyState.Idle;
+        }
     }
 
     public void SetInVisible() {
         isVisible = false;
         lineRenderer.gameObject.SetActive(false);
+        flt_CurrentTime = 0f;
     }
 
     public void SetVisible() {
-        isVisible = true;
-        lineRenderer.gameObject.SetActive(true);
+        isVisible = true;   
     }
-    public void SethitByTidal(Transform transform) {
+    public void SethitByTidal(Transform transform , float Damage) {
+
+        flt_TidalDamage = Damage;
         enemyState = EnemyState.Wave;
         lineRenderer.gameObject.SetActive(false);
         this.transform.SetParent(transform);
-        if (coro_tagetmove != null) {
-            isSetTarget = false;
-            StopCoroutine(coro_tagetmove);
 
-        }
+        StopAllCoroutines();
+        flt_CurrentTime = 0f;
+        isAttacking = false;
+
+        orc_Animator.SetTrigger(Id_Idle);
+        orc_Weapon.SetAllColider(false);
+
     }
 
 
     public void orbitKnockBack( float flt_Force, Vector3 direction) {
        
-       
-        if (coro_tagetmove != null) {
-            isSetTarget = false;
-            StopCoroutine(coro_tagetmove);
-
-        }
-    
+      
+        enemyState = EnemyState.knockBack;
+        
         OrcKnockBack(direction, flt_Force);
     }
 
@@ -136,13 +161,15 @@ public class OrcEnemyMovement : MonoBehaviour {
         enemyState = EnemyState.BlackHole;
         lineRenderer.gameObject.SetActive(false);
         transform.SetParent(_Target);
-        if (coro_tagetmove != null) {
-            isSetTarget = false;
-            StopCoroutine(coro_tagetmove);
-            
-        }
 
-       
+        StopAllCoroutines();
+        flt_CurrentTime = 0f;
+        isAttacking = false;
+
+        orc_Animator.SetTrigger(Id_Idle);
+        orc_Weapon.SetAllColider(false);
+        isHitByBlackhole = true;
+
     }
 
   
@@ -150,80 +177,95 @@ public class OrcEnemyMovement : MonoBehaviour {
     private void OrcStateMotion() {
 
         if (enemyState == EnemyState.BlackHole) {
-            orc_Animator.SetTrigger(Id_Idle);
+       
             return;
         }
         else if (enemyState == EnemyState.knockBack) {
-
-            orc_Animator.SetTrigger(Id_Idle);
+         
             orcKnockBackMotion();
         }
         else if (enemyState == EnemyState.Not_Ground) {
-
-            orc_Animator.SetTrigger(Id_Idle);
-            currentAffectedGravityForce = gravityForce;
+   
             orcKnockBackMotion();
         }
-        else if (enemyState == EnemyState.charge) {
+        //else if (enemyState == EnemyState.charge) {
 
-            if (isVisible) {
-                orc_Animator.SetTrigger(Id_Idle);
-                OrcCharging();
-                FindPlayerPostion();
-            }
+        //    if (isVisible) {
+        //        orc_Animator.SetTrigger(Id_Idle);
+        //        OrcCharging();
+        //        FindPlayerPostion();
+        //    }
            
            
-        }
-        else if (enemyState == EnemyState.Run) {
+        //}
+        //else if (enemyState == EnemyState.Run) {
 
-            if (isVisible) {
-                orc_Animator.SetTrigger(Id_Run);
-                ChargeTowardsPlayer();
-            }
+        //    if (isVisible) {
+        //        orc_Animator.SetTrigger(Id_Run);
+        //        ChargeTowardsPlayer();
+        //    }
          
            
-        }
+        //}
     }
 
     private void OrcCharging() {
 
-       
+        if (!isGrounded) {
+            if (lineRenderer.gameObject.activeSelf) {
+                lineRenderer.gameObject.SetActive(false);
+            }
+            return;
+        }
+
+        if (isHitByBlackhole) {
+            return;
+        }
+        else if (enemyState == EnemyState.Wave) {
+            return;
+        }
+        else if (isAttacking) {
+            return;
+        }
+
+        if (!lineRenderer.gameObject.activeSelf) {
+            lineRenderer.gameObject.SetActive(true);
+        }
+
         flt_CurrentTime += Time.deltaTime;
 
         if (flt_CurrentTime > flt_ChargingTime) {
-
-           
+         
             flt_CurrentTime = 0;
-            targetPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, 
-                1.5f, PlayerManager.instance
-                .Player.transform.position.z);
+            targetPostion = SetTargetPostion();
             lineRenderer.gameObject.SetActive(false);
             orc_Weapon.SetAllColider(true);
-            enemyState = EnemyState.Run;
-            isSetTarget = false;
-           
+            isAttacking = true;
 
+            StartCoroutine(ChargeOnPlayer());
         }
     }
 
+    private Vector3 SetTargetPostion() {
 
-    private void ChargeTowardsPlayer() {
+        Vector3 Direction = ( GameManager.instance.Player.transform.position - transform.position).normalized;
+        float flt_Distance = Mathf.Abs(Vector3.Distance(transform.position, GameManager.instance.Player.transform.position));
 
-        if (!isSetTarget) {
-           coro_tagetmove =  StartCoroutine(ChargeOnPlayer());
-            isSetTarget = true;
-        }
-        
+        Vector3 postion = transform.position + Direction*(flt_Distance - flt_Offset);
+
+        return postion;
+
     }
 
     private IEnumerator ChargeOnPlayer() {
 
         Debug.Log("Cour   + Runniing");
-
+        orc_Animator.SetTrigger(Id_Run);
         yield return new WaitForSeconds(0.2f);
 
         float currentTime = 0f;
-        float maxTimeToReachDestination = 1.2f;
+        //float maxTimeToReachDestination = CalCulateMaxTime(targetPostion);
+        float maxTimeToReachDestination = 1f;
 
         Vector3 startPosition = transform.position;
 
@@ -235,25 +277,35 @@ public class OrcEnemyMovement : MonoBehaviour {
         }
 
         yield return new WaitForSeconds(0.5f);
+        orc_Animator.SetTrigger(Id_Idle);
 
-
-       
-        lineRenderer.gameObject.SetActive(true);
         orc_Weapon.SetAllColider(false);
-        enemyState = EnemyState.charge;
-        isSetTarget = false;
+        isAttacking = false;
        
-
     }
+
+  
 
     private void FindPlayerPostion() {
 
-       
+        if (isHitByBlackhole) {
+            return;
+        }
+        else if (enemyState == EnemyState.Wave) {
+            return;
+        }
+        else if (isAttacking) {
+            return;
+        }
+
+        Vector3 position = GameManager.instance.Player.transform.position;
+
+
         lineRenderer.SetPosition(0, new Vector3(transform.position.x, 1, transform.position.z));
-        lineRenderer.SetPosition(1, PlayerManager.instance.Player.transform.position);
+        lineRenderer.SetPosition(1, new Vector3(position.x,0,position.z));
 
        // transform.LookAt(PlayerManager.instance.Player.transform);
-        Vector3 direction = (PlayerManager.instance.Player.transform.position - transform.position).normalized;
+        Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
         float flt_TargetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
 
         float flt_RotationSpeed = 10f;
@@ -272,7 +324,7 @@ public class OrcEnemyMovement : MonoBehaviour {
 
 
         if (!isGrounded) {
-            knockBackDirection.y = MathF.Abs(transform.position.y) * currentAffectedGravityForce;
+            knockBackDirection.y = MathF.Abs(transform.position.y) * gravityForce;
         }
 
         lineRenderer.SetPosition(0, transform.position);
@@ -282,11 +334,7 @@ public class OrcEnemyMovement : MonoBehaviour {
     public void SethitByAura(Vector3 direction, float flt_Force) {
        
        
-        if (coro_tagetmove != null) {
-            isSetTarget = false;
-            StopCoroutine(coro_tagetmove);
-
-        }
+  
         enemyState = EnemyState.knockBack;
         OrcKnockBack(direction, flt_Force);
     }
@@ -294,7 +342,7 @@ public class OrcEnemyMovement : MonoBehaviour {
     public void OrcKnockBack(Vector3 _KnockBackDirection, float _KnockBackSpeed) {
 
         //  ScaleAnimation();
-        if (enemyState == EnemyState.Run) {
+        if (isAttacking) {
             return;
         }
 
@@ -310,16 +358,10 @@ public class OrcEnemyMovement : MonoBehaviour {
         }
 
         coro_KnockBack = StartCoroutine(StopKnockbackOverTime());
+
+   
     }
 
-    private void ScaleAnimation() {
-       float flt_CurrntScale = transform.localScale.x;
-        float flt_AnimateScale = flt_CurrntScale - flt_Reducescale;
-
-        Sequence seq = DOTween.Sequence();
-        seq.Append(transform.DOScaleX(flt_AnimateScale, flt_ScaleAnimationTime).SetEase(Ease.InSine)).
-            Append(transform.DOScaleX(flt_CurrntScale, flt_ScaleAnimationTime).SetEase(Ease.OutSine));
-    }
 
     private IEnumerator StopKnockbackOverTime() {
 
@@ -337,7 +379,9 @@ public class OrcEnemyMovement : MonoBehaviour {
             yield return null;
         }
 
-        enemyState = EnemyState.charge;
+        if (isHitByBlackhole) {
+            isHitByBlackhole = false;
+        }
 
     }
 

@@ -23,17 +23,17 @@ public class UiStageCompletedScreen : MonoBehaviour
     //}
 
 
-    public void PlayVictoryAnimation() {
+    public void PlayVictoryAnimation(float animationTime) {
         if (!isStartAnimation) {
             isStartAnimation = true;
             //StartAnimation();
             txt_Victory.gameObject.SetActive(true);
-            StartCoroutine(DelayWithStopAnimation());
+            StartCoroutine(DelayWithStopAnimation(animationTime));
         }
     }
 
-    private IEnumerator DelayWithStopAnimation() {
-        yield return new WaitForSeconds(2);
+    private IEnumerator DelayWithStopAnimation(float animationTime) {
+        yield return new WaitForSeconds(animationTime);
         txt_Victory.gameObject.SetActive(false);
         isStartAnimation = false;
     }

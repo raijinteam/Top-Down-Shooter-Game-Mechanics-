@@ -26,49 +26,21 @@ public class PowerUpDataUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI[] all_txt_Header;
     [SerializeField] private TextMeshProUGUI[] all_Txt_Value;
 
-   
-
     [SerializeField] private TextMeshProUGUI[] all_Txt_Diff;
 
     public void ShowItsProperty() {
         button.gameObject.SetActive(true);
         bg.gameObject.SetActive(false);
     }
-    public void SetMyPanel(PowerUpData powerUpData) {
-
-        UIManager.instance.uIGamePlayScreen.PowerUpScreen(true);
-        button.gameObject.SetActive(false);
-        ShowPanel.sprite = powerUpData.powerupSprite;
-        bg.gameObject.SetActive(true);
-        img_Symbole.sprite = powerUpData.powerupSprite;
-        SetRandomPowerUp();
-        txt_PowerUpName.text = powerUpData.gameObject.name;
-        if (powerUpData.IsUnlocked()) {
-            panel_Unlocked.gameObject.SetActive(true);
-            panel_Lock.gameObject.SetActive(false);
-            txt_Level.text = "Level " + powerUpData.PowerUpLevel();
-            for (int i = 0; i < all_txt_Header.Length; i++) {
-                all_txt_Header[i].text = powerUpData.all_MyDataDisplay[i].headerName;
-                all_Txt_Value[i].text = powerUpData.all_MyDataDisplay[i].CurrentValue;
-                all_Txt_Diff[i].text = powerUpData.all_MyDataDisplay[i].UpdateValue;
-            }
-
-        }
-        else {
-            panel_Unlocked.gameObject.SetActive(false);
-            panel_Lock.gameObject.SetActive(true);
-        }
-
-      
-    }
+   
 
     private void SetRandomPowerUp() {
-        PowerUpHandler powerup = PlayerManager.instance.Player.GetComponent<PowerUpHandler>();
+        PowerUpHandler powerup = GameManager.instance.Player.GetComponent<PowerUpHandler>();
 
         for (int i = 1; i < all_Img.Length; i++) {
 
             int index = Random.Range(0, powerup.all_PowerUp.Length);
-            all_Img[i].sprite = powerup.all_PowerUp[index].powerupSprite;
+            // all_Img[i].sprite = powerup.all_PowerUp[index].powerupSprite;
         }
     }
 
@@ -76,8 +48,43 @@ public class PowerUpDataUI : MonoBehaviour {
 
         Time.timeScale = 1;
         UIManager.instance.uIGamePlayScreen.PowerUpScreen(false);
-        PlayerManager.instance.Player.GetComponent<PowerUpHandler>().SetPlayerPowerUpSelected(myIndex);
+        GameManager.instance.Player.GetComponent<PowerUpHandler>().SetPlayerPowerUpSelected(myIndex);
     }
 
+    public void SetMyPowerUpPanel(Sprite image, int currenrLevel, PowerUpProperty myProperty, bool status) {
 
+
+        UIManager.instance.uIGamePlayScreen.PowerUpScreen(true);
+        button.gameObject.SetActive(false);
+        ShowPanel.sprite = image;
+        bg.gameObject.SetActive(true);
+        img_Symbole.sprite = image;
+        SetRandomPowerUp();
+        txt_PowerUpName.text = myProperty.gameObject.name;
+        if (status) {
+            panel_Unlocked.gameObject.SetActive(true);
+            panel_Lock.gameObject.SetActive(false);
+            txt_Level.text = "Level " + currenrLevel;
+
+
+        }
+        else {
+            panel_Unlocked.gameObject.SetActive(false);
+            panel_Lock.gameObject.SetActive(true);
+        }
+
+        for (int i = 0; i < all_txt_Header.Length; i++) {
+            all_txt_Header[i].text = null;
+            all_Txt_Value[i].text = null;
+            all_Txt_Diff[i].text = null;
+        }
+
+        for (int i = 0; i < myProperty.this_WaveProperty.Length; i++) {
+
+            all_txt_Header[i].text = myProperty.this_WaveProperty[i].prpoertyName;
+            all_Txt_Value[i].text = myProperty.this_WaveProperty[i].CurrentPoerprtyValue;
+            all_Txt_Diff[i].text = myProperty.this_WaveProperty[i].NextPrpoertyValue;
+        }
+
+    }
 }

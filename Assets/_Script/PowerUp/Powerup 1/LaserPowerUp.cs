@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class LaserPowerUp : MonoBehaviour
     [SerializeField] private float flt_Force;
     [SerializeField] private float flt_Damage;
     [SerializeField] private int laserCount;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
 
     [Header("Laser")]
     [SerializeField] private Transform[] startParent;
@@ -25,13 +27,22 @@ public class LaserPowerUp : MonoBehaviour
 
 
     private void OnEnable() {
+
+
+        damageIncreased.setDamageIncreased += SetDamage;
         all_Targets = new Transform[laserCount];
         SetLaserPowerup();
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_PowerUpTime);
         //StartCoroutine(UIManager.instance.uIGamePlayScreen.SetImgPowerUp(flt_PowerUpTime));
 
     }
-    
+    private void OnDisable() {
+        damageIncreased.setDamageIncreased -= SetDamage;
+    }
+
+    private void SetDamage() {
+        flt_Damage = flt_Damage + flt_Damage * PowerUpData.insatnce.damageIncreased.GetDamage * 0.01f;
+    }
 
     private void Update() {
         
@@ -84,7 +95,7 @@ public class LaserPowerUp : MonoBehaviour
         if (_target.gameObject.TryGetComponent<EnemyHandler>(out EnemyHandler _movement)) {
 
             // _movement.KnockBack(_direction, 10f);
-            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+           
            
             _movement.SetHitByLaser(_direction, flt_Force, flt_Damage);
         }

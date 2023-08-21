@@ -9,12 +9,15 @@ public class InvisblePowerup : MonoBehaviour
     [SerializeField] private Collider body_Collider;
     [SerializeField] private PlayerData playerData;
     [SerializeField] private PlayerShooting playerShooting;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
 
 
     [Header("Invisble Data")]
     [SerializeField] private int flt_DamagePercentage;
     [SerializeField] private int flt_ForcePercentage;
     [SerializeField] private int flt_FireratePercentage;
+
 
     [Header("PowerUp Cantroller")]
     [SerializeField] private float flt_MaxTimeInVisible;
@@ -37,7 +40,7 @@ public class InvisblePowerup : MonoBehaviour
 
     private void InvisblePowerUpHandler() {
       
-        MakeAllEnemyInVisible();
+      
         flt_CurrentTimeInvisible += Time.deltaTime;
         if (flt_CurrentTimeInvisible > flt_MaxTimeInVisible) {
     
@@ -48,6 +51,8 @@ public class InvisblePowerup : MonoBehaviour
     }
 
     private void MakeAllEnemyInVisible() {
+
+        GameManager.instance.IsInVisblePowerUpActive = true;
         for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
             if (GameManager.instance.list_ActiveEnemies[i].
                 TryGetComponent<EnemyHandler>(out EnemyHandler enemyHandler)) {
@@ -57,11 +62,13 @@ public class InvisblePowerup : MonoBehaviour
     }
 
     private void All_EnemyVisible() {
+
+        GameManager.instance.IsInVisblePowerUpActive = false;
         for (int i = 0; i < GameManager.instance.list_ActiveEnemies.Count; i++) {
             if (GameManager.instance.list_ActiveEnemies[i].
                 TryGetComponent<EnemyHandler>(out EnemyHandler enemyHandler)) {
                 enemyHandler.SetVisible();
-                body_Collider.enabled = true;
+                //body_Collider.enabled = true;
                 playerShooting.DefaultBulletData();
             }
         }
@@ -72,7 +79,8 @@ public class InvisblePowerup : MonoBehaviour
     public void SetInvisiblePowerup() {
         
         flt_CurrentTimeInvisible = 0;
-        body_Collider.enabled = false;
+        MakeAllEnemyInVisible();
+       // body_Collider.enabled = false;
         obj_PowerUp.SetActive(true);
         IncreasePersantage();
     }
@@ -87,9 +95,15 @@ public class InvisblePowerup : MonoBehaviour
         Debug.Log("Damage" + damage);
         Debug.Log(flt_DamagePercentage);
         Debug.Log(playerData.flt_Damage +  " playerData.flt_Damage");
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(damage);
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(firerate);
-        playerShooting.SetPowerupTime(Damage, force, CoolDown);
+
+        if (damageIncreased.gameObject.activeSelf) {
+            damage += damage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+        }
+        if (coolDown.gameObject.activeSelf) {
+            firerate -= firerate * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+        }
+       
+        playerShooting.SetPowerupTime(damage, force, firerate);
 
        
     }

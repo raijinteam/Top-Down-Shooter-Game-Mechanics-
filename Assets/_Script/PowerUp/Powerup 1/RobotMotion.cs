@@ -23,7 +23,7 @@ public class RobotMotion : MonoBehaviour
   
 
     private void Start() {
-        player = PlayerManager.instance.Player.transform;
+        player = GameManager.instance.Player.transform;
         offset = new Vector3(player.position.x - transform.position.x, player.position.y -
                 transform.position.y, player.position.z - transform.position.z);
     }

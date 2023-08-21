@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
-
+    [Header("Player Components")]
+    public Rigidbody rb_Player;
     [SerializeField] private PlayerShooting playerShooting;
+    public PlayerVFX playerVFX;
     public Transform body;
+
+    [Header("Player Current Stats")]
     public float flt_Damage;
     public float flt_Force;
     public float flt_Firerate;
@@ -17,19 +21,14 @@ public class PlayerData : MonoBehaviour
     public float persantage_CriticalDamageChance;
     public float persantage_CriticalDamage;
 
-    [Header("DamageIncreased")]
-    public float damageIncreasePercent;
-
-    [Header("FireRateDecreased")]
-    public float DecreasedPersentageFireRate;
-
-    [Header("CoolDownPercentage")]
-    public float DecreasedPersentageCoolDown;
-
+   
     [Header("MicroMissile Data")]
     public int MissileCounter;
     public float flt_MissileDamage;
-    public int PersantageOfMissileSpawn;
+
+    [Header("MultyShot")]
+    public float multyShotDamage;
+   
 
     [Header("Rechoest Data")]
     public int RechoestCounter;
@@ -39,33 +38,24 @@ public class PlayerData : MonoBehaviour
     public int persantageOfDelathBow;
 
 
-    public float DecreasedCoolDown(float flt_FireRate) {
-        float flt_CurrentFireRate = flt_FireRate + ((DecreasedPersentageCoolDown / 100) *
-                          flt_FireRate);
-        return flt_CurrentFireRate;
-    }
-   public float GetDecreasedFirerate(float fireRate) {
-        float flt_CurrentFireRate = fireRate + ((DecreasedPersentageFireRate / 100) *
-                            fireRate);
-        return flt_CurrentFireRate;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+
+    private void OnEnable() {
+        damageIncreased.setDamageIncreased += SetDamage;
     }
 
-   public float GetIncreasedDamage(float currentDamage) {
+    private void OnDisable() {
+        damageIncreased.setDamageIncreased -= SetDamage;
+    }
 
-        // DamageIncreased
-        currentDamage = currentDamage + ((damageIncreasePercent / 100) *
-                             currentDamage);
+    public void PlayerJumpAnimationCompleted() {
+        playerVFX.PlayJumpLandEffect();
+        rb_Player.useGravity = true;
+    }
 
-       
+    private void SetDamage() {
 
-       
-
-        return currentDamage;
-   }
-
-    public void RemoveShootingTarget(Transform enemy) {
-        //if (playerShooting.target == enemy.gameObject) {
-        //    playerShooting.target = transform.gameObject;
-        //}
+        flt_Damage += flt_Damage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+      
     }
 }

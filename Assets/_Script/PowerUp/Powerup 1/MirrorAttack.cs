@@ -12,6 +12,8 @@ public class MirrorAttack : MonoBehaviour
     [SerializeField] private CloneMirrorAttackPlayer2 obj_MirrorAttackPlayer2;
     [SerializeField] private Transform[] all_MirrorPostion;
     [SerializeField] private int IndexOfMirrorAttack; // cloneCount
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDownIncresed;
     
     [SerializeField] private float flt_CurrentPowerTime;
     [SerializeField] private float flt_MaxPowerUpTime;
@@ -61,9 +63,20 @@ public class MirrorAttack : MonoBehaviour
            CloneMirrorAttackPlayer Current =  Instantiate(obj_MirrorAttackPlayer, all_MirrorPostion[i].transform.position
                , transform.rotation);
 
+            float flt_Damage = playerData.flt_Damage;
+            float flt_FireRate = playerData.flt_Firerate;
 
-            Current.SetMirrorPlayerData(flt_MaxPowerUpTime,playerData.flt_Damage,playerData.flt_Force,
-                playerData.flt_Firerate);
+            if (damageIncreased.gameObject.activeSelf) {
+
+                flt_Damage += 0.01f * flt_Damage * PowerUpData.insatnce.damageIncreased.GetDamage;
+            }
+            if (coolDownIncresed.gameObject.activeSelf) {
+
+                flt_FireRate -= 0.01f * flt_FireRate * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+            }
+
+            Current.SetMirrorPlayerData(flt_MaxPowerUpTime,flt_Damage,playerData.flt_Force,
+                flt_FireRate);
         }
     }
 }

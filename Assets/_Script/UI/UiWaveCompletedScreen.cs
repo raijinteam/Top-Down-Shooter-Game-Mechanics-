@@ -10,8 +10,9 @@ public class UiWaveCompletedScreen : MonoBehaviour
     [SerializeField] private Image img_BG;
     [SerializeField] private TextMeshProUGUI rectTransform_Txt;
     [SerializeField] private bool isStartAnimation;
-    [SerializeField] private float flt_AnimationTime;
+    private float  flt_AnimationTime;
     [SerializeField] private float flt_ScaleUp;
+    private float animationDuration = 2f;
 
     private void Start() {
         img_BG.rectTransform.localPosition = new Vector3(-2500, img_BG.rectTransform.localPosition.y,
@@ -30,6 +31,8 @@ public class UiWaveCompletedScreen : MonoBehaviour
     }
 
     private void StartAnimation() {
+
+       flt_AnimationTime  = animationDuration / 6;
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(PanelCenterAnimation).AppendInterval(flt_AnimationTime).
             Append(transform.DOScale(flt_ScaleUp, flt_AnimationTime).
@@ -52,7 +55,7 @@ public class UiWaveCompletedScreen : MonoBehaviour
                     img_BG.rectTransform.localPosition.z);
         img_BG.rectTransform.DOScaleY(1, 0.1f);
         rectTransform_Txt.DOFade(1, 0.01f); transform.DOScale(1, 0.01f);
-        UIManager.instance.waveStartingScreen.PlayUiWaveStartAnimation(GameManager.instance.currentWaveIndex + 1);
+       
 
     }
 

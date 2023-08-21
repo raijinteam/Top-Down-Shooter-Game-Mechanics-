@@ -8,7 +8,7 @@ public class EvileMageTrigger : EnemyTrigger
     [SerializeField]private Rigidbody enemyRb;
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private EvileMageMovement evileMageMovement;
-    [SerializeField] private EivileMageShooting eivileMageShooting;
+   
 
        
     [SerializeField] private GameObject obj_WaterParicle;
@@ -60,19 +60,20 @@ public class EvileMageTrigger : EnemyTrigger
     public override void StopMolotovePowerUp() {
         enemyHealth.StopMolotovePowerUp();
     }
-    public override void SetHitTidalWave(Transform transform) {
+    public override void SetHitTidalWave(Transform transform  , float Damage) {
 
-        evileMageMovement.HitByTidal(transform);
+        evileMageMovement.HitByTidal(transform, Damage);
         collider_Body.enabled = false;
         enemyRb.useGravity = false;
-        eivileMageShooting.enabled = false;
+     
     }
-    public override void StopHitTidalWave() {
+    public override void StopHitTidalWave(float Damage) {
 
+        enemyHealth.TakeDamage(Damage);
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
-        eivileMageShooting.enabled = true;
+        evileMageMovement.CheckIfGrounded();
     }
     public override void SethitByBullet(float flt_Damage, float _flt_Force, Vector3 _Direction) {
         enemyHealth.TakeDamage(flt_Damage);
@@ -84,14 +85,15 @@ public class EvileMageTrigger : EnemyTrigger
         evileMageMovement.HitByBlackHole(transform);
         collider_Body.enabled = false;
         enemyRb.useGravity = false;
-        eivileMageShooting.enabled = false;
+        
     }
-    public override void BlackHoleBlast() {
+    public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
 
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
-        eivileMageShooting.enabled = true;
+       
+        evileMageMovement.EveileKnockback(direction, knockBackForce);
     }
 
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {

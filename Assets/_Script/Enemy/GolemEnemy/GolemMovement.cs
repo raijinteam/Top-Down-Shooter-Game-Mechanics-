@@ -31,7 +31,6 @@ public class GolemMovement : MonoBehaviour
 
     [SerializeField]private float flt_MaxJumpTime;
     [SerializeField]private float flt_JumpAccerletion; // jump acceleration
-    [SerializeField] private bool isGetDirection = false; // hasFoundTarget
     [SerializeField]private float flt_KnockBackForce;
     [SerializeField]private float flt_MinKnockBackForce;
     [SerializeField]private float flt_MaxKnockBackForce;
@@ -41,12 +40,15 @@ public class GolemMovement : MonoBehaviour
     [SerializeField]private float flt_RangeOfSpheareCast;
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_Force;
-    private float currentAffectedGravityForce = 1;
     private float gravityForce = -0.75f;
     public bool isGrounded = true;
+    private float groundCheckBufferTime = 0.2f;
+    private float currentGroundCheckTime = 0f;
 
     public GameObject Obj_current_Target;
     [SerializeField]private bool isVisible = true;
+    private bool isAttacking = false;
+    private bool isAttackInMotion = false;
   
     [Header("KnockBackData")]
     [SerializeField] private Vector3 knockBackDirection;
@@ -70,28 +72,53 @@ public class GolemMovement : MonoBehaviour
 
     // tag & id
     private string tag_Player = "Player";
+    [SerializeField]private LayerMask layerMask;
+    private float flt_TidalDamage;
     private const string Id_Idle = "Idle";
     private const string Id_Jump = "Jump";
+    private const string Id_Charge = "Charge";
 
 
+
+    private void OnEnable() {
+        if (GameManager.instance.IsInVisblePowerUpActive) {
+            SetInVisible();
+        }
+        else {
+            SetVisible();
+        }
+    }
 
 
     private void Start() {
         flt_Damage = enemyData.GetDamage();
         flt_MaxKnockBackForce = enemyData.GetKnockBackForce();
         flt_MinKnockBackForce = 0;
+       
 
     }
 
     private void Update() {
 
-
         if (!GameManager.instance.isPlayerLive) {
-            enemy_Animator.SetTrigger(Id_Idle);
+           
             return;
         }
 
-     
+        if (!isGrounded) {
+            currentGroundCheckTime += Time.deltaTime;
+            if (currentGroundCheckTime >= groundCheckBufferTime) {
+                enemyState = EnemyState.Not_Ground;
+            }
+        }
+
+        if (isVisible) {
+            
+            ChargeJump();
+            FindTarget();
+        }
+
+
         GolemStateMotion();
     }
 
@@ -102,28 +129,61 @@ public class GolemMovement : MonoBehaviour
 
     }
 
+    private void OnCollisionStay(Collision collision) {
+        isGrounded = true;
+    }
+
     private void OnCollisionExit(Collision collision) {
 
         if (enemyState == EnemyState.BlackHole) {
             return;
         }
-        if (enemyState == EnemyState.Run) {
+        if (isAttackInMotion) {
             return;
         }
 
         if (enemyState == EnemyState.Wave) {
-            golemTrigger.StopHitTidalWave();
+            StartCoroutine(WaitHitByTidalWave());
         }
        
 
         isGrounded = false;
-        enemyState = EnemyState.Not_Ground;
+        currentGroundCheckTime = 0f;
+        //enemyState = EnemyState.Not_Ground;
+    }
+
+    public void checktargetActive() {
+        if (Obj_current_Target != null) {
+            Destroy(Obj_current_Target);
+        }
+    }
+
+    private IEnumerator WaitHitByTidalWave() {
+        yield return new WaitForSeconds(0.3f);
+        if (!isGrounded) {
+            golemTrigger.StopHitTidalWave(flt_TidalDamage);
+        }
+     
+    }
+
+    public void CheckIfGrounded() {
+        if (isGrounded) {
+            enemyState = EnemyState.Idle;
+        }
     }
 
 
     public void SetInVisible() {
         isVisible = false;
-      
+        flt_Currenttime = 0f;
+
+        if (!isAttacking) {
+            enemy_Animator.SetBool(Id_Idle, true);
+            enemy_Animator.SetBool(Id_Charge, false);
+            enemy_Animator.SetBool(Id_Jump, false);
+        }
+       
+
     }
 
     public void SetVisible() {
@@ -142,32 +202,10 @@ public class GolemMovement : MonoBehaviour
         else if (enemyState == EnemyState.knockBack) {
             GolemKnockBackMotion();
         }
-        else if (enemyState == EnemyState.Not_Ground ) {
-
-            if (isGrounded) {
-                enemyState = EnemyState.charge;
-            }
-
-            currentAffectedGravityForce = gravityForce;
+        else if (enemyState == EnemyState.Not_Ground) {
+         
             GolemKnockBackMotion();
         }
-        else if (enemyState == EnemyState.charge) {
-
-            if (isVisible) {
-                ChargeJump();
-                FindTarget();
-            }
-           
-        }
-        else if (enemyState == EnemyState.Run) {
-
-            if (isVisible) {
-                GolemMotion();
-                
-            }
-            
-        }
-        
     }
 
     public void SethitByAura(Vector3 direction, float flt_Force) {
@@ -175,25 +213,31 @@ public class GolemMovement : MonoBehaviour
             Destroy(Obj_current_Target);
         }
         if (Cour_Jump != null) {
-            isGetDirection = false;
+          
             StopCoroutine(Cour_Jump);
-            enemy_Animator.SetTrigger(Id_Idle);
+            enemy_Animator.SetBool(Id_Idle, true);
+            enemy_Animator.SetBool(Id_Charge, false);
+            enemy_Animator.SetBool(Id_Jump, false);
         }
         enemyState = EnemyState.knockBack;
         GolemKnockBack(direction, flt_Force);
     }
-    public void HitByTidal(Transform transform) {
+    public void HitByTidal(Transform transform , float Damage) {
 
+        flt_TidalDamage = Damage;
         enemyState = EnemyState.Wave;
         this.transform.SetParent(transform);
         if (Obj_current_Target != null) {
             Destroy(Obj_current_Target);
         }
-        if (Cour_Jump != null) {
-            isGetDirection = false;
-            StopCoroutine(Cour_Jump);
-            enemy_Animator.SetTrigger(Id_Idle);
-        }
+
+        StopAllCoroutines();
+        enemy_Animator.SetBool(Id_Idle, true);
+        enemy_Animator.SetBool(Id_Charge, false);
+        enemy_Animator.SetBool(Id_Jump, false);
+        isAttacking = false;
+        isAttackInMotion = false;
+        flt_Currenttime = 0f;
 
     }
     public void OrbitKnockBack(float flt_Force, Vector3 direction) {
@@ -203,7 +247,7 @@ public class GolemMovement : MonoBehaviour
             Destroy(Obj_current_Target);
         }
         if (Cour_Jump != null) {
-            isGetDirection = false;
+    
             StopCoroutine(Cour_Jump);
             enemy_Animator.SetTrigger(Id_Idle);
         }
@@ -217,44 +261,58 @@ public class GolemMovement : MonoBehaviour
         if (Obj_current_Target != null) {
             Destroy(Obj_current_Target);
         }
-        if (Cour_Jump != null) {
-            isGetDirection = false;
-            StopCoroutine(Cour_Jump);
-            enemy_Animator.SetTrigger(Id_Idle);
-        }
+
+        StopAllCoroutines();
+        enemy_Animator.SetBool(Id_Idle, true);
+        enemy_Animator.SetBool(Id_Charge, false);
+        enemy_Animator.SetBool(Id_Jump, false);
+        isAttacking = false;
+        isAttackInMotion = false;
+        flt_Currenttime = 0f;
     }
    
 
-    private void GolemMotion() {
+    //private void GolemMotion() {
 
-        if (!isGetDirection) {
+    //    if (!isGetDirection) {
 
-            Transform player = PlayerManager.instance.Player.transform;
+    //        Transform player = GameManager.instance.Player.transform;
         
-            Vector3 direction = (player.transform.position - transform.position).normalized;
-            Vector3 endPosition = player.transform.position - direction * 7f;
+    //        Vector3 direction = (player.transform.position - transform.position).normalized;
+    //        Vector3 endPosition = player.transform.position - direction * 2f;
          
-            targetPostion = endPosition;
+    //        targetPostion = endPosition;
            
-            Vector3 postion = new Vector3(player.position.x, 0, player.position.z);
-            castPosition = postion;
-            Obj_current_Target =  Instantiate(obj_tagret, postion, obj_tagret.transform.rotation);
-            Cour_Jump = StartCoroutine(GolemJump());
-            isGetDirection = true;
+    //        Vector3 postion = new Vector3(player.position.x, -0.95f
+    //            , player.position.z);
+    //        castPosition = postion;
+    //        Obj_current_Target =  Instantiate(obj_tagret, postion, obj_tagret.transform.rotation);
+    //        Cour_Jump = StartCoroutine(GolemJump());
+    //        isGetDirection = true;
 
-        }      
-    }
+    //    }      
+    //}
 
+  
     private void FindTarget() {
+        if (enemyState == EnemyState.BlackHole) {
+            return;
+        }
+        else if (enemyState == EnemyState.Wave) {
+            return;
+        }
+        else if(isAttacking) {
+            return;
+        }
 
-        float flt_Distance = Mathf.Abs(Vector3.Distance(transform.position, PlayerManager.instance.Player.transform.
+        float flt_Distance = Mathf.Abs(Vector3.Distance(transform.position, GameManager.instance.Player.transform.
             position));
         if (flt_Distance<0.5f) {
             return;
         }
 
-        Vector3 targetDirection = (new Vector3(PlayerManager.instance.Player.transform.position.x, 0,
-                                            PlayerManager.instance.Player.transform.position.z) - transform.position).normalized;
+        Vector3 targetDirection = (new Vector3(GameManager.instance.Player.transform.position.x, 0,
+                                            GameManager.instance.Player.transform.position.z) - transform.position).normalized;
         //transform.LookAt(targetDirection);
 
        
@@ -268,15 +326,36 @@ public class GolemMovement : MonoBehaviour
 
     }
 
-    private IEnumerator GolemJump() {
+    private void SetTargetLocation() {
+        Transform player = GameManager.instance.Player.transform;
 
+        Vector3 direction = (player.transform.position - transform.position).normalized;
+        Vector3 endPosition = player.transform.position - direction * 2f;
+
+        targetPostion = endPosition;
+
+        Vector3 postion = new Vector3(player.position.x, -0.95f
+            , player.position.z);
+        castPosition = postion;
+        Obj_current_Target = Instantiate(obj_tagret, postion, obj_tagret.transform.rotation);
+        Cour_Jump = StartCoroutine(JumpTowardsPlayer());
+    }
+
+
+    private IEnumerator JumpTowardsPlayer() {
+
+        enemy_Animator.SetBool(Id_Idle, false);
+        enemy_Animator.SetBool(Id_Charge, true);
+        //enemy_Animator.SetBool(Id_Jump, false);
         Debug.Log("GolemJump");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
+        isAttackInMotion = true;
 
         jumpStart.PlayFeedbacks();
-        yield return new WaitForSeconds(0.25f);
-        enemy_Animator.SetTrigger(Id_Jump);
+        yield return new WaitForSeconds(0.25f);    
+        enemy_Animator.SetBool(Id_Charge, false);
+        enemy_Animator.SetBool(Id_Jump, true);
         Debug.Log("Trigger JUmp");
         Instantiate(jump_Start, transform.position, transform.rotation);
         enemySound.Play_Attack();
@@ -308,17 +387,18 @@ public class GolemMovement : MonoBehaviour
         enemySound.Play_Attack();
         Destroy(Obj_current_Target);
         yield return new WaitForSeconds(1);
-        
-        isGetDirection = false;
-        enemyState = EnemyState.charge;
+
+        enemy_Animator.SetBool(Id_Idle, true);
+        enemy_Animator.SetBool(Id_Jump, false);
+
+        isAttacking = false;
+        isAttackInMotion = false;
 
     }
 
-   
-
-
+  
     private void Sphercast() {
-        Collider[] all_Collider = Physics.OverlapSphere(castPosition, flt_RangeOfSpheareCast);
+        Collider[] all_Collider = Physics.OverlapSphere(castPosition, flt_RangeOfSpheareCast,layerMask);
 
         for (int i = 0; i < all_Collider.Length; i++) {
             if (all_Collider[i].gameObject.CompareTag(tag_Player)) {
@@ -355,10 +435,10 @@ public class GolemMovement : MonoBehaviour
     }
 
     private void GolemKnockBackMotion() {
-        enemy_Animator.SetTrigger(Id_Idle);
+       
 
         if (!isGrounded) {
-            knockBackDirection.y = MathF.Abs(transform.position.y) * currentAffectedGravityForce;
+            knockBackDirection.y = MathF.Abs(transform.position.y) * gravityForce;
         }
 
         transform.Translate(knockBackDirection * flt_KnockBackSpeed * Time.deltaTime,Space.World);
@@ -367,21 +447,35 @@ public class GolemMovement : MonoBehaviour
 
     private void ChargeJump() {
 
+        if(enemyState == EnemyState.BlackHole) {
+            return;
+        }
+        else if (enemyState == EnemyState.Wave) {
+            return;
+        }
+        else if (isAttacking) {
+            return;
+        }
       
         flt_Currenttime += Time.deltaTime;
         if (flt_Currenttime>flt_EnemyChargeTime) {
           
             flt_Currenttime = 0;
-            enemyState = EnemyState.Run;
+            // enemyState = EnemyState.Run;
+            isAttacking = true;
+            SetTargetLocation();
         }
     }
 
    
 
     public void GolemKnockBack(Vector3 _knockBackDirection ,float _flt_Force) {
-        if (enemyState == EnemyState.Run) {
+
+        if (isAttackInMotion) {
             return;
         }
+
+       
         //ScaleAnimation();
         enemyState = EnemyState.knockBack;
         flt_KnockBackSpeed = _flt_Force - (_flt_Force * perasantageOfBlock / 100);
@@ -414,8 +508,6 @@ public class GolemMovement : MonoBehaviour
 
     private IEnumerator StopKnockbackOverTime() {
 
-        Debug.Log("StopKnockbackOverTime 1");
-
         float currentKnockbackTime = 0f;
         float maxTime = flt_KnockBackTime;
 
@@ -429,9 +521,6 @@ public class GolemMovement : MonoBehaviour
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
             yield return null;
         }
-
-        enemyState = EnemyState.charge;
-        Debug.Log("StopKnockbackOverTime 2");
 
     }
 

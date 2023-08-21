@@ -40,13 +40,13 @@ public class SwordMovement : MonoBehaviour
             }
         }
         else {
-            Vector3 _CurrentDirection = (PlayerManager.instance.Player.transform.position - transform.position)
+            Vector3 _CurrentDirection = (GameManager.instance.Player.transform.position - transform.position)
                                     .normalized;
 
             transform.Translate(_CurrentDirection * flt_MovementSpeed * Time.deltaTime, Space.World);
 
             float flt_Distance = Mathf.Abs(Vector3.Distance(transform.position,
-                                        PlayerManager.instance.Player.transform.position));
+                                        GameManager.instance.Player.transform.position));
 
             if (flt_Distance < 0.5f) {
 

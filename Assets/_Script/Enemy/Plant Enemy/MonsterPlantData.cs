@@ -16,6 +16,7 @@ public class MonsterPlantData : EnemyHandler
     [Header("All Script Campaotant")]
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private MonsterPlantShootine monsterPlantShootine;
+    [SerializeField] private Collider Body_Collider;
     
     
     public GameObject body;
@@ -38,12 +39,12 @@ public class MonsterPlantData : EnemyHandler
 
     public override void SpawnEnemy() {
         float flt_YTopPostion = 100;
-        float flt_YDownPostion = 2;
+      
         bool isSpawn = false;
         while (!isSpawn) {
-            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
-                LevelManager.instance.flt_BoundryX), flt_YTopPostion,
-                Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
+            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_BoundryX_,
+                 LevelManager.instance.flt_BoundryX), flt_YTopPostion,
+                 Random.Range(LevelManager.instance.flt_BoundryZ_, LevelManager.instance.flt_BoundryZ));
 
             if (!Physics.Raycast(postion, Vector3.down, 1000, obstckle_Layer)) {
                 GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
@@ -52,13 +53,13 @@ public class MonsterPlantData : EnemyHandler
                 current = Instantiate(plant, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
-                Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
-                                    PlayerManager.instance.Player.transform.position.z);
+                Vector3 PlayerPostion = new Vector3(GameManager.instance.Player.transform.position.x, flt_YTopPostion,
+                                    GameManager.instance.Player.transform.position.z);
 
                 current.transform.LookAt(PlayerPostion);
                 Sequence seq = DOTween.Sequence();
 
-                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5f)).
+                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_DownPostion, 0.5f)).
                     AppendCallback(current.DestroyIndicator);
                 isSpawn = true;
             }
@@ -133,8 +134,9 @@ public class MonsterPlantData : EnemyHandler
     public void SetData() {
         enemyHealth.enabled = true;
         monsterPlantShootine.enabled = true;
-      
-        
+        Body_Collider.enabled = true;
+
+
 
     }
 

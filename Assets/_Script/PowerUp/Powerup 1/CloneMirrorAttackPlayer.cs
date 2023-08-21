@@ -7,9 +7,10 @@ public class CloneMirrorAttackPlayer : MonoBehaviour
 {
     [SerializeField] private Transform playerToFollow;
     [SerializeField]private Vector3 offset;
-    private float boundry;
+    private float boundryX_;
     private float boundryX;
     private float boundryZ;
+    private float boundryZ_;
 
     [Header("Bullet Instantiate")]
     [SerializeField] private GameObject obj_Bullet;
@@ -35,9 +36,10 @@ public class CloneMirrorAttackPlayer : MonoBehaviour
 
 
     private void Start() {
-        boundry = LevelManager.instance.flt_Boundry;
+        boundryX_ = LevelManager.instance.flt_BoundryX_;
         boundryX = LevelManager.instance.flt_BoundryX;
         boundryZ = LevelManager.instance.flt_BoundryZ;
+        boundryZ_ = LevelManager.instance.flt_BoundryZ_;
     }
 
 
@@ -48,7 +50,7 @@ public class CloneMirrorAttackPlayer : MonoBehaviour
         //Vector3 mypostion = transform.localPosition;
        
 
-        playerToFollow = PlayerManager.instance.Player.transform;
+        playerToFollow = GameManager.instance.Player.transform;
 
         Vector3 mypostion = transform.localPosition;
 
@@ -77,9 +79,9 @@ public class CloneMirrorAttackPlayer : MonoBehaviour
        
         FindTarget();
 
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_CurrentFirerate);
+       
         flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > CoolDown) {
+        if (flt_CurrentTimeForFireRate > flt_CurrentFirerate) {
             flt_CurrentTimeForFireRate = 0;
             SpawnBullet();
         }
@@ -129,9 +131,9 @@ public class CloneMirrorAttackPlayer : MonoBehaviour
 
         GameObject spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_CurrentDamage);
+      
         spawnedBullet.GetComponent<PlayerBulletMotion>().
-            SetBulletData(spawnPosition_Bullet.forward, Damage, flt_CurrentBulletForce, target.transform,
+            SetBulletData(spawnPosition_Bullet.forward, flt_CurrentDamage, flt_CurrentBulletForce, target.transform,
             0,0,0);
 
 
@@ -147,8 +149,8 @@ public class CloneMirrorAttackPlayer : MonoBehaviour
         //Vector3 targetPostion  = PlayerManager.instance.Player.transform.position + offset;
         Vector3 targetPostion  = playerToFollow.position + offset;
 
-        float x = Mathf.Clamp(targetPostion.x, boundryX, boundry);
-        float z = Mathf.Clamp(targetPostion.z, boundryZ, boundry);
+        float x = Mathf.Clamp(targetPostion.x, boundryX, boundryX_);
+        float z = Mathf.Clamp(targetPostion.z, boundryZ, boundryZ_);
 
         transform.position = new Vector3(x, targetPostion.y, z);
 

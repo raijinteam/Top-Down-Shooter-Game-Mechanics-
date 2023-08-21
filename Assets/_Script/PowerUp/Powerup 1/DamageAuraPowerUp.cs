@@ -16,6 +16,9 @@ public class DamageAuraPowerUp : MonoBehaviour
     [SerializeField] private float flt_MaxTimeForThisPowerUpTime;
     [SerializeField] private float flt_CurrentTimeForThisPowerUpTime;
     [SerializeField] private float flt_CurrentTimeForSphereCast;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
+
    
 
     [Header("Vfx")]
@@ -24,7 +27,23 @@ public class DamageAuraPowerUp : MonoBehaviour
 
     private void OnEnable() {
         SetPowerUp();
+        damageIncreased.setDamageIncreased += SetDamage;
+        coolDown.SetCoolDown += SetCoolDown;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimeForThisPowerUpTime);
+    }
+
+    private void SetCoolDown() {
+        flt_DelayOfTweSpherCast += 0.01f * flt_DelayOfTweSpherCast * PowerUpData.insatnce.damageIncreased.GetDamage;
+    }
+
+    private void OnDisable() {
+        damageIncreased.setDamageIncreased -= SetDamage;
+        coolDown.SetCoolDown -= SetCoolDown;
+    }
+
+    private void SetDamage() {
+
+        flt_Damage += 0.01f * flt_Damage * PowerUpData.insatnce.damageIncreased.GetDamage;
     }
 
     private void Update() {
@@ -37,8 +56,8 @@ public class DamageAuraPowerUp : MonoBehaviour
 
     private void ChargeAura() {
         flt_CurrentTimeForSphereCast += Time.deltaTime;
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_DelayOfTweSpherCast);
-        if (flt_CurrentTimeForSphereCast > CoolDown) {
+       
+        if (flt_CurrentTimeForSphereCast > flt_DelayOfTweSpherCast) {
             SetSphereCast();
             flt_CurrentTimeForSphereCast = 0;
         }
@@ -51,8 +70,8 @@ public class DamageAuraPowerUp : MonoBehaviour
            
                 Vector3 direction = (all_Collider[i].transform.position - transform.position).normalized;
                 direction = new Vector3(direction.x, 0, direction.z).normalized;
-            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
-            all_Collider[i].GetComponent<EnemyTrigger>().SethitByAura(Damage,flt_Force,direction);
+          
+            all_Collider[i].GetComponent<EnemyTrigger>().SethitByAura(flt_Damage,flt_Force,direction);
            
         }
     }

@@ -77,8 +77,8 @@ public class BlackHoleBulletMotion : MonoBehaviour {
                 Vector3 direction = (List_balckHoleAffectedEnemey[i].transform.position -
                     transform.position).normalized;
                 direction = new Vector3(direction.x, 0, direction.z).normalized;
-                List_balckHoleAffectedEnemey[i].SethitByBullet(0, this.flt_Force, direction);
-                List_balckHoleAffectedEnemey[i].BlackHoleBlast();
+               
+                List_balckHoleAffectedEnemey[i].BlackHoleBlast(this.flt_Force, direction);
                 
             }
            
@@ -105,7 +105,8 @@ public class BlackHoleBulletMotion : MonoBehaviour {
 
                 
                 if (!List_balckHoleAffectedEnemey.Contains(enemyTrigger)) {
-                List_balckHoleAffectedEnemey.Add(enemyTrigger);
+
+                    List_balckHoleAffectedEnemey.Add(enemyTrigger);
                     enemyTrigger.HitByBlackHole(transform);
                 }
                 

@@ -18,12 +18,31 @@ public class TerrorShort : MonoBehaviour
     [SerializeField] private Transform spawnPostion;
     [SerializeField] private float flt_CurrentTimeSpawnBullet;
     [SerializeField] private float flt_FireRate;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp CoolDown;
 
 
     private void OnEnable() {
         SetTerrorShot();
+        CoolDown.SetCoolDown += SetCoolDown;
+        damageIncreased.setDamageIncreased += SetDamage;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxPowerUpTime);
     }
+
+    private void OnDisable() {
+        CoolDown.SetCoolDown -= SetCoolDown;
+        damageIncreased.setDamageIncreased -= SetDamage;
+    }
+
+    private void SetDamage() {
+        flt_Damage += flt_Damage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+        
+    }
+
+    private void SetCoolDown() {
+        flt_FireRate -= flt_FireRate * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
+
     private void Update() {
       
         PowerUpHandler();
@@ -33,8 +52,8 @@ public class TerrorShort : MonoBehaviour
     private void BulletHandler() {
       
         flt_CurrentTimeSpawnBullet += Time.deltaTime;
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
-        if (flt_CurrentTimeSpawnBullet > CoolDown) {
+       
+        if (flt_CurrentTimeSpawnBullet > flt_FireRate) {
             SpawnBullet();
             flt_CurrentTimeSpawnBullet = 0;
         }
@@ -49,10 +68,10 @@ public class TerrorShort : MonoBehaviour
 
         int index = Random.Range(0, GameManager.instance.list_ActiveEnemies.Count);
         spawnPostion.LookAt(GameManager.instance.list_ActiveEnemies[index]);
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
+      
         TerrorShotBullet currentBullet = Instantiate(terroShotBullet,
                                      spawnPostion.position, spawnPostion.rotation);
-        currentBullet.SetBulletData(spawnPostion.forward,Damage, flt_force);
+        currentBullet.SetBulletData(spawnPostion.forward,flt_Damage, flt_force);
     }
 
     private void PowerUpHandler() {

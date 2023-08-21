@@ -12,10 +12,13 @@ public class BlackHolePowerUp : MonoBehaviour
     [SerializeField] private int bulletCounter;
     [SerializeField] private int maxBullet;
     [SerializeField] private float flt_FireRate;
+    [SerializeField] private float flt_CurrentCoolDown;
     private float flt_CurrentTime;
    
     [SerializeField] private Transform bulletSpawnPostion;
     private Transform target;
+    [SerializeField] private DamageIncreasedPowerUp damageIncresed;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
     
 
     [Header("vfx")]
@@ -24,9 +27,28 @@ public class BlackHolePowerUp : MonoBehaviour
 
     private void OnEnable() {
         SetBulletBlackHole();
+        flt_CurrentCoolDown = flt_FireRate;
+        damageIncresed.setDamageIncreased += SetDamage;
+        coolDown.SetCoolDown += SetCoolDown;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_FireRate * maxBullet);
        
     }
+
+    private void OnDisable() {
+
+        damageIncresed.setDamageIncreased -= SetDamage;
+        coolDown.SetCoolDown -= SetCoolDown;
+    }
+
+    private void SetCoolDown() {
+
+        flt_CurrentCoolDown -= flt_CurrentCoolDown * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
+
+    private void SetDamage() {
+        flt_Damage += flt_Damage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+    }
+
     public void SetBulletBlackHole() {
         bulletCounter = 0;
         flt_CurrentTime = 0;
@@ -38,16 +60,19 @@ public class BlackHolePowerUp : MonoBehaviour
 
     private void Update() {
 
-        PowerUpHandler();
-       
+        // PowerUpHandler();
+
+        if (Input.GetKeyDown(KeyCode.X)) {
+            SpawnBlackHole();
+        }
     }
 
   
     private void PowerUpHandler() {
   
         flt_CurrentTime += Time.deltaTime;
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
-        if (flt_CurrentTime > CoolDown) {
+       
+        if (flt_CurrentTime > flt_CurrentCoolDown) {
             
             flt_CurrentTime = 0;
             SpawnBlackHole();
@@ -60,8 +85,8 @@ public class BlackHolePowerUp : MonoBehaviour
         Instantiate(Obj_Muzzle, bulletSpawnPostion.position, bulletSpawnPostion.rotation);
         BlackHoleBulletMotion current = Instantiate(Obj_Bullet, bulletSpawnPostion.position, 
                                             bulletSpawnPostion.rotation);
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
-        current.setBulletData(bulletSpawnPostion.forward, this.flt_force, Damage, this.
+       
+        current.setBulletData(bulletSpawnPostion.forward, this.flt_force, flt_Damage, this.
                                                             flt_BlackHoleExpltionTime) ;
 
         bulletCounter++;

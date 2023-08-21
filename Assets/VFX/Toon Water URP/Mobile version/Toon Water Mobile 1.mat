@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Toon Water Mobile 1
   m_Shader: {fileID: -6465566751694194690, guid: 550017bf155e702489e4eee4d320ebeb, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - BOOLEAN_A060AF44_ON
   - BOOLEAN_EC1EAD31_ON
@@ -19,6 +21,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -81,15 +84,15 @@ Material:
     - BOOLEAN_A060AF44: 1
     - BOOLEAN_EC1EAD31: 1
     - Boolean_2918AA79: 0
-    - Vector1_20DB7652: 0.157
+    - Vector1_20DB7652: 0.207
     - Vector1_301E02E2: 217
     - Vector1_31894ABB: 0.0485
     - Vector1_45F25267: 50
-    - Vector1_7AF1AC78: 0.97
+    - Vector1_7AF1AC78: 0.102
     - Vector1_854A7D8C: 1
     - Vector1_9C73072A: 0.04
     - Vector1_A524D234: 0.288
-    - Vector1_B9CC1720: 0.0319
+    - Vector1_B9CC1720: 0
     - Vector1_E71BB35E: 0.43
     - _AlphaClip: 0
     - _Blend: 0
@@ -139,4 +142,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 7

@@ -9,12 +9,12 @@ public class PowerUpHandler : MonoBehaviour
 
     public static PowerUpHandler instance;
     
-    public PowerUpData[] all_PowerUp;
+    public PowerUpProperty[] all_PowerUp;
 
-    [SerializeField] private List<PowerUpData> list_AllPowerUpsInGame = new List<PowerUpData>();
-    [SerializeField] private List<PowerUpData> list_powerUpSelected = new List<PowerUpData>();
-    [SerializeField] private List<PowerUpData> list_Of_Player_ActivePowerUpInGame;
-    [SerializeField] private List<PowerUpData> list_Of_Player_PassivePowerUpInGame;
+    [SerializeField] private List<PowerUpProperty> list_AllPowerUpsInGame = new List<PowerUpProperty>();
+    [SerializeField] private List<PowerUpProperty> list_powerUpSelected = new List<PowerUpProperty>();
+    [SerializeField] private List<PowerUpProperty> list_Of_Player_ActivePowerUpInGame;
+    [SerializeField] private List<PowerUpProperty> list_Of_Player_PassivePowerUpInGame;
     
 
     [SerializeField] private int max_ActivePowerUp;
@@ -38,26 +38,26 @@ public class PowerUpHandler : MonoBehaviour
 
     public void SetPlayerPowerUpSelected(int index) {
 
-       
-        if (!list_powerUpSelected[index].IsUnlocked()) {
-            list_powerUpSelected[index].gameObject.SetActive(true);
-            list_powerUpSelected[index].SetUnLockedStatus();
-            if (list_powerUpSelected[index].IsActivePowerUp()) {
-                list_Of_Player_ActivePowerUpInGame.Add(list_powerUpSelected[index]);
-            }
-            else {
-                list_Of_Player_PassivePowerUpInGame.Add(list_powerUpSelected[index]);
-            }
-            Debug.Log(list_powerUpSelected[index].transform.name);
-            list_powerUpSelected[index].FatchMyUpdateData();
+
+
+        list_powerUpSelected[index].setPowerUpInPlayer();
+
+        if (list_Of_Player_ActivePowerUpInGame.Contains(list_powerUpSelected[index]) ) {
+            return;
+        }
+        if (list_Of_Player_PassivePowerUpInGame.Contains(list_powerUpSelected[index])) {
+            return;
+        }
+
+        if (list_powerUpSelected[index].isActivePowerUp) {
+            list_Of_Player_ActivePowerUpInGame.Add(list_powerUpSelected[index]);
         }
         else {
-            list_powerUpSelected[index].SetLevelOfPowerUp();
-            list_powerUpSelected[index].FatchMyUpdateData();
-        
+            list_Of_Player_PassivePowerUpInGame.Add(list_powerUpSelected[index]);
         }
-        
-       
+
+
+
     }
 
    
@@ -89,7 +89,7 @@ public class PowerUpHandler : MonoBehaviour
         if (list_Of_Player_ActivePowerUpInGame.Count >= max_ActivePowerUp) {
 
             for (int i = 0; i < list_Of_Player_ActivePowerUpInGame.Count; i++) {
-                if (list_Of_Player_ActivePowerUpInGame[i].PowerUpLevel() == MaxLevelUp) {
+                if (list_Of_Player_ActivePowerUpInGame[i].Getlevel() == MaxLevelUp) {
                     continue;
                 }
 
@@ -99,7 +99,7 @@ public class PowerUpHandler : MonoBehaviour
         else {
             for (int i = 0; i < all_PowerUp.Length; i++) {
 
-                if (all_PowerUp[i].IsActivePowerUp() && all_PowerUp[i].PowerUpLevel() != MaxLevelUp) {
+                if (all_PowerUp[i].isActivePowerUp && all_PowerUp[i].Getlevel() != MaxLevelUp) {
 
                     list_AllPowerUpsInGame.Add(all_PowerUp[i]);
                 }
@@ -112,7 +112,7 @@ public class PowerUpHandler : MonoBehaviour
         if (list_Of_Player_PassivePowerUpInGame.Count >= max_PassivePowerUP) {
 
             for (int i = 0; i < list_Of_Player_PassivePowerUpInGame.Count; i++) {
-                if (list_Of_Player_PassivePowerUpInGame[i].PowerUpLevel() == MaxLevelUp) {
+                if (list_Of_Player_PassivePowerUpInGame[i].Getlevel() == MaxLevelUp) {
                     continue;
                 }
 
@@ -122,7 +122,7 @@ public class PowerUpHandler : MonoBehaviour
         else {
             for (int i = 0; i < all_PowerUp.Length; i++) {
 
-                if (!all_PowerUp[i].IsActivePowerUp() && all_PowerUp[i].PowerUpLevel() != MaxLevelUp) {
+                if (!all_PowerUp[i].isActivePowerUp && all_PowerUp[i].Getlevel() != MaxLevelUp) {
 
                     list_AllPowerUpsInGame.Add(all_PowerUp[i]);
                 }
@@ -160,18 +160,19 @@ public class PowerUpHandler : MonoBehaviour
             for (int i = 0; i < 3; i++) {
                 int randomIndex = Random.Range(0, list_AllPowerUpsInGame.Count);
                 list_powerUpSelected.Add(list_AllPowerUpsInGame[randomIndex]);
-                UIManager.instance.uIGamePlayScreen.all_PowerUpData[i].SetMyPanel(list_AllPowerUpsInGame[randomIndex]);
+                list_AllPowerUpsInGame[randomIndex].SetUI(i);
                 list_AllPowerUpsInGame.RemoveAt(randomIndex);
             }
         }
         else {
 
-            
-            
+
+
             for (int i = 0; i < list_AllPowerUpsInGame.Count; i++) {
 
                 list_powerUpSelected.Add(list_AllPowerUpsInGame[i]);
-                UIManager.instance.uIGamePlayScreen.all_PowerUpData[i].SetMyPanel(list_AllPowerUpsInGame[i]);
+              
+                list_AllPowerUpsInGame[i].SetUI(i);
             }
 
             for (int i = list_AllPowerUpsInGame.Count; i < 3; i++) {
@@ -180,7 +181,7 @@ public class PowerUpHandler : MonoBehaviour
             }
 
         }
-     
+
     }
 
    

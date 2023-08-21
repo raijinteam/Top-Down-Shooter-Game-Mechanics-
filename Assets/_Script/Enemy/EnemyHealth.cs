@@ -54,6 +54,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnEnable() {
 
+
         enemyData = GetComponent<EnemyData>();
         flt_MaxHealth = enemyData.GetmaxHealth();
         flt_CurrrentHealth = flt_MaxHealth;
@@ -138,9 +139,9 @@ public class EnemyHealth : MonoBehaviour
         
         //// CRITICAL DAMAGE 
         int index = Random.Range(0, 100);
-        if (index < PlayerManager.instance.Player.persantage_CriticalDamageChance) {
+        if (index < GameManager.instance.Player.persantage_CriticalDamageChance) {
 
-            damage = (damage + ((PlayerManager.instance.Player.persantage_CriticalDamage / 100) * damage));
+            damage = (damage + ((GameManager.instance.Player.persantage_CriticalDamage / 100) * damage));
             isCrtical = true;
         }
 
@@ -148,7 +149,7 @@ public class EnemyHealth : MonoBehaviour
 
        
         if (GameManager.instance.IsLifeSteal) {
-            PlayerManager.instance.Player.GetComponent<PlayerHealth>().IncreasedHealthLifeStealTime(damage);
+            GameManager.instance.Player.GetComponent<PlayerHealth>().IncreasedHealthLifeStealTime(damage);
         }
 
 
@@ -173,7 +174,7 @@ public class EnemyHealth : MonoBehaviour
             Instantiate(particleVFX, transform.position, transform.rotation);
 
             EnemySound.Play_DieSFX();
-            PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>()
+            GameManager.instance.Player.GetComponent<PlayerPowerUpHandler>()
                 .IncreasingPlayerPoint(enemyData.GetEnemyPoint());
             GameManager.instance.EnemyKilled(transform);
             if (transform.TryGetComponent<GolemMovement>(out GolemMovement golem)) {

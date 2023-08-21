@@ -9,7 +9,7 @@ using MoreMountains.Feedbacks;
 
 public class PlayerManager : MonoBehaviour
 {
-    public static PlayerManager instance;
+  //  public static PlayerManager instance;
    
 
     [Header("Player Start & End Data")]
@@ -17,9 +17,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Transform levelEndPostion;
     [SerializeField] private MMF_Player gameStartBoat;
     [SerializeField] private Transform GameEndBoat;
+    private Vector3 endBoatPostion;
+ 
+    private Vector3 startBoatPostion;
     [SerializeField] private Transform spawnPostion;
     [SerializeField] private Transform BoatEndPostion;
-
     [SerializeField] private PlayerData obj_Player;
 
     [Header("Componenet")]
@@ -31,20 +33,23 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]private float flt_JumpAccerletion;
 
     private void Awake() {
-        instance = this;
+       // instance = this;
     }
 
-    private void Start() {
-        SpawnPLayer();
-       
-    }
+    //private void Start() {
+    //    SpawnPLayer();
+
+    //    startBoatPostion = gameStartBoat.transform.position;
+    //    endBoatPostion = GameEndBoat.transform.position;     
+    //}
+
     private void SpawnPLayer() {
         PlayerData player = Instantiate(obj_Player, spawnPostion.position, spawnPostion.rotation, gameStartBoat.transform);
         this.Player = player;
 
-       
 
 
+        cinemachine.Follow = player.transform;
         StartAnimation();
        
        
@@ -67,8 +72,8 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator PlayerGoesToEndPostion(Vector3 targetpostion) {
 
-
-        yield return new WaitForSeconds(2); // VictoryANimation
+     
+       
         float flt_fltcurrenttime = 0;
         Vector3 dirction = (targetpostion - Player.transform.position).normalized;
         float targetAngle = Mathf.Atan2(dirction.z, -dirction.x) * Mathf.Rad2Deg;
@@ -78,56 +83,62 @@ public class PlayerManager : MonoBehaviour
 
         Vector3 startPostion = Player.transform.position;
 
-
+        Player.GetComponent<PlayerMovement>().SetAnimater(1);
 
         float CurrentMaxTime = 2;
         while (flt_fltcurrenttime < 1) {
 
             flt_fltcurrenttime += Time.deltaTime / CurrentMaxTime;
-            Player.transform.LookAt(targetpostion);
+           
             Player.transform.position = Vector3.Lerp(startPostion, targetpostion, flt_fltcurrenttime);
             yield return null;
         }
                
         Player.transform.position = targetpostion;
 
-        
-       
+
+        GameEndBoat.gameObject.SetActive(true);
 
 
         LevelEndAnimation();
-        
+
     }
 
     private void LevelEndAnimation() {
         Sequence seq = DOTween.Sequence();
         GameEndBoat.gameObject.SetActive(true);
-        GameEndBoat.transform.position = new Vector3(GameEndBoat.position.x, GameEndBoat.position.y, 39);
-  
+       
+        
         seq.AppendCallback(JumpEndAnimation).AppendInterval(flt_JumpTime).
             AppendCallback(GameEndProcdure).AppendInterval(2.5f).AppendCallback(ResetPlayer);
     }
 
-    private void ResetPlayer() {
+    public void ResetPlayer() {
 
-
+        CinemachineBasicMultiChannelPerlin camera = cinemachine.
+               GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        camera.m_AmplitudeGain = 0;
+        camera.m_FrequencyGain = 0;
         GameEndBoat.gameObject.SetActive(false);
         Player.transform.position = spawnPostion.position;
         Player.transform.rotation = spawnPostion.rotation;
         Player.transform.localScale = obj_Player.transform.localScale;
         Player.transform.SetParent(gameStartBoat.transform);
         GameEndBoat.transform.position = new Vector3(GameEndBoat.position.x, GameEndBoat.position.y, 39);
-        cinemachine.Follow = levelStartPostion;
-        GameEndBoat.transform.localPosition = new Vector3(GameEndBoat.localPosition.x, GameEndBoat.localPosition.y, 40);
+        // cinemachine.Follow = levelStartPostion;
+        GameEndBoat.transform.position = endBoatPostion;
+        gameStartBoat.transform.position = startBoatPostion;
         UIManager.instance.uIGamePlayScreen.img_BG.DOFade(0, 1);
-          StartAnimation();
+        BoatEndPostion.GetComponent<Collider>().enabled = false;
+        StartAnimation();
         
      
 
        
     }
 
-    private void GameEndProcdure() {
+    public void GameEndProcdure() {
+        Player.transform.SetParent(GameEndBoat);
         GameEndBoat.DOMoveZ(100, 2);
         UIManager.instance.uIGamePlayScreen.img_BG.DOFade(1, 2);
     }
@@ -141,11 +152,11 @@ public class PlayerManager : MonoBehaviour
         Player.GetComponent<Rigidbody>().useGravity = false;
         Sequence seq = DOTween.Sequence();
 
-        UIManager.instance.uilevelScreen.PlayLevelAnimation(GameManager.instance.currentStageIndex + 1 , 2);
-       
-        gameStartBoat.transform.position = new Vector3(gameStartBoat.transform.position.x,gameStartBoat.transform.position.y, -60);
+        // GameManager.instance.PlayLlevelAnimation();
+
+        UIManager.instance.uilevelScreen.PlayLevelAnimation(GameManager.instance.currentStageIndex + 1);
         gameStartBoat.PlayFeedbacks();
-        seq.Append(gameStartBoat.transform.DOMoveZ(-40, 4)).AppendCallback(JumpStartAnimation);
+        seq.Append(gameStartBoat.transform.DOMoveZ(-40, 2));/*.AppendCallback(JumpStartAnimation);*/
            
     }
 
@@ -218,8 +229,8 @@ public class PlayerManager : MonoBehaviour
 
         if (!isEndPostion) {
             GameManager.instance.isPlayerLive = true;
-            GameManager.instance.StartSpawningEnemyForCurrentWave();
-            cinemachine.Follow = Player.transform;
+            GameManager.instance.StartSpawnCurrentLevel();
+            //cinemachine.Follow = Player.transform;
             CinemachineBasicMultiChannelPerlin camera = cinemachine.
                 GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
             camera.m_AmplitudeGain = 0;
@@ -230,13 +241,13 @@ public class PlayerManager : MonoBehaviour
             Player.transform.SetParent(GameEndBoat);
            
             rb.useGravity = false;
-            cinemachine.Follow = levelEndPostion;
+           // cinemachine.Follow = levelEndPostion;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             Player.transform.localEulerAngles = Vector3.zero;
             Player.transform.localScale = obj_Player.transform.localScale;
-            GameManager.instance.isPlayerLive = true;
-            GameManager.instance.IsKillStreak = true;
+            GameManager.instance.isPlayerLive = false;
+            GameManager.instance.IsKillStreak = false;
         }
        
        

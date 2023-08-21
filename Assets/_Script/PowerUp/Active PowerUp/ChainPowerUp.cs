@@ -4,16 +4,74 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ChainPowerUp : MonoBehaviour
+public class ChainPowerUp : PowerUpProperty
 {
 
-    [SerializeField] private ChainData chainData;
+
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private List<GameObject> list_ChainAffected;
     [SerializeField] private bool isSetTarget;
 
+    private float flt_ChainTime;
+    private int Counter;
+
+
+   
+    public override void setPowerUpInPlayer() {
+
+      
+        if (!PowerUpData.insatnce.Chain.isUnlocked) {
+            PowerUpData.insatnce.Chain.isUnlocked = true;
+        }
+        else {
+            PowerUpData.insatnce.Chain.CurrentLevel++;
+        }
+
+        Counter = PowerUpData.insatnce.Chain.GetCurrentCouneter;
+        flt_ChainTime = PowerUpData.insatnce.Chain.GetCurrentChainTime;
+        this.gameObject.SetActive(true);
+
+
+
+    }
+
+    public override int Getlevel() {
+        return PowerUpData.insatnce.microMissielData.currenrLevel;
+    }
+
+    public override void SetUI(int index) {
+
+        Chain Chain = PowerUpData.insatnce.Chain;       
+        UnlockedInformation = Chain.str_Description;
+
+        int WaveIndex = 0;
+        if (Chain.GetCurrentChainTime - Chain.all_ChainTime[Chain.CurrentLevel + 1] != 0) {
+
+            this_WaveProperty[WaveIndex].prpoertyName = all_Property[0].prpoertyName;
+            this_WaveProperty[WaveIndex].CurrentPoerprtyValue = Chain.GetCurrentChainTime.ToString();
+            this_WaveProperty[WaveIndex].NextPrpoertyValue = " + " + (Chain.GetCurrentChainTime - Chain.all_ChainTime[Chain.CurrentLevel + 1]);
+
+            WaveIndex++;
+        }
+        if (Chain.GetCurrentCouneter - Chain.all_Counter[Chain.CurrentLevel + 1] != 0) {
+
+            this_WaveProperty[WaveIndex].prpoertyName = all_Property[1].prpoertyName;
+            this_WaveProperty[WaveIndex].CurrentPoerprtyValue = Chain.GetCurrentCouneter.ToString();
+            this_WaveProperty[WaveIndex].NextPrpoertyValue = " + " + MathF.Abs(Chain.GetCurrentCouneter - Chain.all_Counter[Chain.CurrentLevel + 1]);
+        
+        }
+
+      
+
+
+
+        UIManager.instance.all_PowerUpUi[index].SetMyPowerUpPanel(Chain.powerUpImage,
+            Chain.CurrentLevel, this, this.gameObject.activeSelf);
+    }
+
+
     private void Update() {
-       
+
         ChainHanadler();
     }
 
@@ -22,8 +80,8 @@ public class ChainPowerUp : MonoBehaviour
             return;
         }
         flt_CurrentTime += Time.deltaTime;
-        
-        if (flt_CurrentTime > chainData.ChainTime) {
+
+        if (flt_CurrentTime > flt_ChainTime) {
             isSetTarget = true;
             ChainEnemy();
             flt_CurrentTime = 0;
@@ -37,15 +95,18 @@ public class ChainPowerUp : MonoBehaviour
             return;
         }
         for (int i = 0; i < list_ChainAffected.Count; i++) {
+            if (list_ChainAffected[i] == null) {
+                continue;
+            }
             if (list_ChainAffected[i].TryGetComponent<EnemyHandler>(out EnemyHandler enemyHandler)) {
 
                 enemyHandler.StopChainPowerUp();
             }
         }
         list_ChainAffected.Clear();
-        if (total_Enemy > chainData.ChainCounter) {
+        if (total_Enemy > Counter) {
 
-            for (int i = 0; i < chainData.ChainCounter; i++) {
+            for (int i = 0; i < Counter; i++) {
 
                 bool isSetTarget = false;
 
@@ -61,7 +122,7 @@ public class ChainPowerUp : MonoBehaviour
                         isSetTarget = true;
                     }
                 }
-                
+
             }
         }
         else {
@@ -80,12 +141,12 @@ public class ChainPowerUp : MonoBehaviour
             }
         }
         isSetTarget = false;
-      
-       
+
+
     }
 
     private void SetChainVfxPowerUp() {
-       
+
         flt_CurrentTime = 0;
         isSetTarget = true;
         ChainEnemy();

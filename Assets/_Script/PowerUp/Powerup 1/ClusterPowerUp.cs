@@ -18,6 +18,8 @@ public class ClusterPowerUp : MonoBehaviour
     [SerializeField] private float flt_Force;
     [SerializeField] private float flt_BulletFireRate;
     [SerializeField] private int counter;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
 
     [Header("ClusterBombHandler")]
     [SerializeField] private float flt_CurrentTimeForSpwnBomb;
@@ -25,8 +27,24 @@ public class ClusterPowerUp : MonoBehaviour
 
     private void OnEnable() {
         SetPowerUp();
+        damageIncreased.setDamageIncreased += SetDamage;
+        coolDown.SetCoolDown += SetCoolDown;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimeForPowerUp);
     }
+    private void OnDisable() {
+        damageIncreased.setDamageIncreased -= SetDamage;
+        coolDown.SetCoolDown -= SetCoolDown;
+    }
+
+    private void SetCoolDown() {
+        flt_BulletFireRate -= flt_BulletFireRate * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+        flt_BombFireRate -= flt_BombFireRate * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
+
+    private void SetDamage() {
+        flt_Damage += flt_Damage * 0.01F * PowerUpData.insatnce.damageIncreased.GetDamage;
+    }
+
     private void Update() {
         
         PowerUpHandler();
@@ -37,8 +55,8 @@ public class ClusterPowerUp : MonoBehaviour
        
         flt_CurrentTimeForSpwnBomb += Time.deltaTime;
 
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_BombFireRate);
-        if (flt_CurrentTimeForSpwnBomb > CoolDown) {
+       
+        if (flt_CurrentTimeForSpwnBomb > flt_BombFireRate) {
             flt_CurrentTimeForSpwnBomb = 0;
             SpawnClusterBomb();
         }
@@ -48,8 +66,8 @@ public class ClusterPowerUp : MonoBehaviour
         ClusterBombMotion currentCluster = Instantiate(clusterBomb, spawnPostion.position, transform.rotation);
 
         Vector3 randomDiection = new Vector3(Random.Range(-100, 100), 0, Random.Range(-100, 100)).normalized;
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
-        currentCluster.SetBombData(randomDiection, flt_BulletFireRate, Damage, flt_Force,
+      
+        currentCluster.SetBombData(randomDiection, flt_BulletFireRate, flt_Damage, flt_Force,
             counter);
     }
 

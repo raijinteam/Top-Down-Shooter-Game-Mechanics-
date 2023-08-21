@@ -75,7 +75,7 @@ public class ClusterBulletMotion : MonoBehaviour
     private void EnemyyHandler(Collider other) {
 
         if (other.gameObject.TryGetComponent<EnemyTrigger>(out EnemyTrigger enemyTrigger)) {
-            Vector3 direction = (other.gameObject.transform.position - PlayerManager.instance.Player.transform.
+            Vector3 direction = (other.gameObject.transform.position - GameManager.instance.Player.transform.
                 position).normalized;
             enemyTrigger.SethitByBullet(flt_Damage, flt_Force,
                 new Vector3(direction.x, 0, direction.z).normalized);

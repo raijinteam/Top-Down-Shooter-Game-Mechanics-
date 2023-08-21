@@ -56,16 +56,18 @@ public class ORCTrigger : EnemyTrigger
     public override void StopMolotovePowerUp() {
         enemyHealth.StopMolotovePowerUp();
     }
-    public override void SetHitTidalWave(Transform transform) {
-        orcEnemyMotion.SethitByTidal(transform);
+    public override void SetHitTidalWave(Transform transform , float  Damage) {
+        orcEnemyMotion.SethitByTidal(transform , Damage);
         collider_Body.enabled = false;
         enemyRb.useGravity = false;
     }
-    public override void StopHitTidalWave() {
+    public override void StopHitTidalWave(float Damage) {
 
+        enemyHealth.TakeDamage(Damage);
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
+        orcEnemyMotion.CheckIfGrounded();
     }
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {
 
@@ -88,11 +90,13 @@ public class ORCTrigger : EnemyTrigger
 
     }
 
-    public override void BlackHoleBlast() {
+   
 
+    public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
+        orcEnemyMotion.OrcKnockBack(direction, knockBackForce);
     }
 
 

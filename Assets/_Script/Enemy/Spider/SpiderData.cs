@@ -15,8 +15,8 @@ public class SpiderData : EnemyHandler {
 
     [Header("All Script Campaotant")]
     [SerializeField] private EnemyHealth enemyHealth;
-    [SerializeField] private SlimeMovement slimeMovement;
-    [SerializeField] private SlimeAttacking slimeAttacking;
+    [SerializeField] private SlimeMotion spiderMotion;
+    
     [SerializeField] private Collider body;
     [SerializeField] private MMF_Player spawn_MMFPlayer;
 
@@ -39,12 +39,13 @@ public class SpiderData : EnemyHandler {
 
     public override void SpawnEnemy() {
         float flt_YTopPostion = 100;
-        float flt_YDownPostion = 2;
+      
         bool isSpawn = false;
         while (!isSpawn) {
-            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
-                LevelManager.instance.flt_BoundryX), flt_YTopPostion,
-                Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
+            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_BoundryX_,
+                 LevelManager.instance.flt_BoundryX), flt_YTopPostion,
+                 Random.Range(LevelManager.instance.flt_BoundryZ_, LevelManager.instance.flt_BoundryZ));
+
 
             if (!Physics.Raycast(postion, Vector3.down, 1000, obstckle_Layer)) {
                 GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
@@ -54,13 +55,13 @@ public class SpiderData : EnemyHandler {
 
                 current.SetSpawnIndicator(indicator);
               
-                Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
-                                    PlayerManager.instance.Player.transform.position.z);
+                Vector3 PlayerPostion = new Vector3(GameManager.instance.Player.transform.position.x, flt_YTopPostion,
+                                    GameManager.instance.Player.transform.position.z);
 
                 current.transform.LookAt(PlayerPostion);
                 Sequence seq = DOTween.Sequence();
 
-                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5f)).
+                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_DownPostion, 0.5f)).
                     AppendCallback(current.DestroyIndicator);
                 isSpawn = true;
             }
@@ -88,27 +89,25 @@ public class SpiderData : EnemyHandler {
 
     public override void SetHitByLaser(Vector3 _Direction, float force, float damage) {
         enemyHealth.SetLaserAffacted(damage);
-        slimeMovement.KnockBack(_Direction, force);
+        spiderMotion.KnockBack(_Direction, force);
     }
 
     public override void StartChainPowerUp() {
-        slimeMovement.SetInVisible();
-        slimeAttacking.isvisible = false;
+        spiderMotion.SetInVisible();
         Obj_ChainVfx.gameObject.SetActive(true);
     }
     public override void StopChainPowerUp() {
-        slimeMovement.SetVisible();
-        slimeAttacking.isvisible = true;
+        spiderMotion.SetVisible();
         Obj_ChainVfx.gameObject.SetActive(false);
     }
 
     public override void SetInVisible() {
-        slimeMovement.SetInVisible();
-        slimeAttacking.isvisible = false;
+        spiderMotion.SetInVisible();
+       
     }
     public override void SetVisible() {
-        slimeMovement.SetVisible();
-        slimeAttacking.isvisible = true;
+        spiderMotion.SetVisible();
+        
     }
 
     public void SetAllScriptData() {
@@ -139,8 +138,7 @@ public class SpiderData : EnemyHandler {
     }
     public void SetData() {
         enemyHealth.enabled = true;
-        slimeMovement.enabled = true;
-        slimeAttacking.enabled = true;
+        spiderMotion.enabled = true;
         body.enabled = true;
        
 

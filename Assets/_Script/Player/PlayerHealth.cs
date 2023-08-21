@@ -16,7 +16,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private TextMeshProUGUI txt_Health;
     [SerializeField] private PlayerData PlayerData;
     [SerializeField] private Transform body;
-    [SerializeField] private GameObject player_UI;
+    public GameObject player_UI;
 
     [Header("Health Slider")]
     [SerializeField] private Slider slider_Health; // normal slider
@@ -48,8 +48,9 @@ public class PlayerHealth : MonoBehaviour
         flt_CurrentSliderHealth = flt_MaxHealth;
     }
 
-
-
+    internal void TakeDamage(object flt_Damage) {
+        throw new NotImplementedException();
+    }
 
     private void LateUpdate() {
         UiSetup();
@@ -147,7 +148,7 @@ public class PlayerHealth : MonoBehaviour
             FeelManager.instance.SpawnDamagePopUp(transform.position, damage, obj_txtDamageSpawnPostion, true);
 
 
-            FeelManager.instance.PlayerDamageTimeCameraShake(body.transform);
+            FeelManager.instance.PlayerDamageTimeCameraShake(body.transform,damage);
 
             slider_Health.value = flt_CurrrentHealth;
             txt_Health.text = flt_CurrrentHealth.ToString();

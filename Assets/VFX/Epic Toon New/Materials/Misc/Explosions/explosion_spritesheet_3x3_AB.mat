@@ -22,6 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: explosion_spritesheet_3x3_AB
   m_Shader: {fileID: 4800000, guid: 65f8982ee37c28d45a36fa523f1d4950, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _MK_ALBEDO_MAP
   - _MK_COLOR_GRADING_ALBEDO
@@ -42,6 +44,7 @@ Material:
   - ALWAYS
   - SHADOWCASTER
   - DepthOnly
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:

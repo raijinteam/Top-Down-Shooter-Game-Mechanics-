@@ -60,9 +60,13 @@ public class SlimeMovement : MonoBehaviour
 
     //Coroutine
     private Coroutine cour_KncokBack;
+    private float flt_TidalDamage;
 
-
-   
+    private void OnEnable() {
+        if (GameManager.instance.IsInVisblePowerUpActive) {
+            SetVisible();
+        }
+    }
     private void Update() {
         if (!GameManager.instance.isPlayerLive) {
 
@@ -86,7 +90,7 @@ public class SlimeMovement : MonoBehaviour
             return;
         }
         if (enemyState == EnemyState.Wave) {
-            slimeTrigger.StopHitTidalWave();
+            slimeTrigger.StopHitTidalWave(flt_TidalDamage);
         }
         isGrounded = false;
         enemyState = EnemyState.Not_Ground;
@@ -169,11 +173,11 @@ public class SlimeMovement : MonoBehaviour
 
 
         // NORMAL MOTION
-        Vector3 direction = (PlayerManager.instance.Player.transform.position - transform.position).normalized;
+        Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
         float currentAngle = MathF.Atan2(dirction.x, dirction.z) * Mathf.Rad2Deg;
         transform.eulerAngles = new Vector3(0, currentAngle, 0);
 
-        float flt_Distance = MathF.Abs(Vector3.Distance(transform.position, PlayerManager.instance.Player.transform.position));
+        float flt_Distance = MathF.Abs(Vector3.Distance(transform.position, GameManager.instance.Player.transform.position));
 
         
         if (flt_Distance < flt_Range) {
@@ -208,16 +212,11 @@ public class SlimeMovement : MonoBehaviour
         transform.rotation = KnockBackRotation;
     }
 
-    private void ScaleAnimation() {
-        float flt_CurrntScale = transform.localScale.x;
-        float flt_AnimateScale = flt_CurrntScale - flt_Reducescale;
+   
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(transform.DOScaleX(flt_AnimateScale, flt_ScaleAnimationTime).SetEase(Ease.InSine)).
-            Append(transform.DOScaleX(flt_CurrntScale, flt_ScaleAnimationTime).SetEase(Ease.OutSine));
-    }
+    public void SetHitByTidal(Transform transform , float Damage) {
 
-    public void SetHitByTidal(Transform transform) {
+        flt_TidalDamage = Damage;
         enemyState = EnemyState.Wave;
         this.transform.SetParent(transform);
     }

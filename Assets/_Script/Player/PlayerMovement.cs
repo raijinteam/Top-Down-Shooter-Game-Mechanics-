@@ -34,13 +34,12 @@ public class PlayerMovement : MonoBehaviour
     private float flt_HorizontalInput;
     private bool isJump;
     private int jumpCount;
-    
+
 
     // tag & Id
-  
-    private string tag_Ground = "Ground";
-    private string id_Idle = "idle";
-    private string id_Running = "Run";
+    private string Blend = "Blend";
+    private string Layer = "Aimming";
+
 
     //Coroutine
 
@@ -67,9 +66,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void RotatePlayer() {
         if (playerShooting.isEnemyAcive) {
+
+            player_Animator.SetLayerWeight(player_Animator.GetLayerIndex(Layer), 0);
             return;
         }
-
+        player_Animator.SetLayerWeight(player_Animator.GetLayerIndex(Layer), 1);
         targetAngle = Mathf.Atan2(flt_HorizontalInput, flt_VerticalInput) * Mathf.Rad2Deg;
 
         Quaternion Qua_Target = Quaternion.Euler(0, targetAngle, 0);
@@ -120,16 +121,20 @@ public class PlayerMovement : MonoBehaviour
     
     }
 
+    public void SetAnimater(int i) {
+        player_Animator.SetFloat(Blend, i);
+    }
+
     private void PlayerNormalMotion() {
 
         if (flt_HorizontalInput == 0 && flt_VerticalInput == 0) {
 
-            player_Animator.SetTrigger(id_Idle);
+            player_Animator.SetFloat(Blend,0,0.01f,Time.deltaTime);
             return;
         }
 
         RotatePlayer();
-        player_Animator.SetTrigger(id_Running);
+        player_Animator.SetFloat(Blend, 1, 0.01f, Time.deltaTime);
 
         Vector3 inputVector = new Vector3(flt_HorizontalInput, 0, flt_VerticalInput);
         transform.Translate(inputVector * flt_MovementSpeed * Time.deltaTime,Space.World);
@@ -138,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void PlayerKnockbackMotion() {
 
-        player_Animator.SetTrigger(id_Idle);
+        player_Animator.SetFloat(Blend, 0, 0.01f, Time.deltaTime);
         transform.Translate( knockBackDirection* flt_KnockBackSpeed * Time.deltaTime, Space.World);
     }
 

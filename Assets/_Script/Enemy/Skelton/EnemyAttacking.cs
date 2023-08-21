@@ -16,7 +16,13 @@ public class EnemyAttacking : MonoBehaviour
 
 
     private void OnEnable() {
-        IsVisible = true;
+
+        if (GameManager.instance.IsInVisblePowerUpActive) {
+            IsVisible = false; 
+        }
+        else {
+            IsVisible = true;
+        }
     }
 
     private void Start() {
@@ -31,44 +37,15 @@ public class EnemyAttacking : MonoBehaviour
         if (!IsVisible) {
             return; // player invisible powerup.
         }
-        AttackBySword();
-        HandlingAttack();
+       
     }
 
     private void AttackBySword() {
 
-        if (isAttckinInRange) {
-
-            enemyMovement.enemyState = EnemyState.isbulletSpawn;
-            if (!isattack) {
-              
-                enemyMovement.SetAttackAnimation(true);
-                isattack = true;
-                wepon.Sword.enabled = true;
-                flt_CurrentTime = 0;
-            }
-            
-        }
-        else {
-
-            if (enemyMovement.enemyState == EnemyState.isbulletSpawn) {
-                enemyMovement.enemyState = EnemyState.Run;
-            }
-
-           
-            enemyMovement.SetAttackAnimation(false);
-        }
+      
     }
     private void HandlingAttack() {
-        if (!isattack) {
-            return;
-        }
-        enemyMovement.SetAttackAnimation(false);
-        flt_CurrentTime += Time.deltaTime;
-        if (flt_CurrentTime>flt_DealyBetweenTwoAttack) {
-            isattack = false;
-            wepon.Sword.enabled = false;
-        }
+      
     }
    
 }

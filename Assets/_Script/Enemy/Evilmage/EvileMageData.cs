@@ -16,7 +16,6 @@ public class EvileMageData : EnemyHandler
 
     [Header("All Script Campaotant")]
     [SerializeField] private EnemyHealth enemyHealth;
-    [SerializeField] private EivileMageShooting evileMageShooting;
     [SerializeField] private EvileMageTrigger evileMageTrigger;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private EvileMageMovement evileMageMovement;
@@ -40,12 +39,12 @@ public class EvileMageData : EnemyHandler
 
     public override void SpawnEnemy() {
         float flt_YTopPostion = 100;
-        float flt_YDownPostion = 2;
+    
         bool isSpawn = false;
         while (!isSpawn) {
-            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
-                LevelManager.instance.flt_BoundryX), flt_YTopPostion,
-                Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
+            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_BoundryX_,
+                  LevelManager.instance.flt_BoundryX), flt_YTopPostion,
+                  Random.Range(LevelManager.instance.flt_BoundryZ_, LevelManager.instance.flt_BoundryZ));
 
             if (!Physics.Raycast(postion, Vector3.down, 1000, obstckle_Layer)) {
                 GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
@@ -54,13 +53,13 @@ public class EvileMageData : EnemyHandler
                  current = Instantiate(evileMage, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
-                Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
-                                    PlayerManager.instance.Player.transform.position.z);
+                Vector3 PlayerPostion = new Vector3(GameManager.instance.Player.transform.position.x, flt_YTopPostion,
+                                    GameManager.instance.Player.transform.position.z);
 
                 current.transform.LookAt(PlayerPostion);
                 Sequence seq = DOTween.Sequence();
 
-                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5f)).
+                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_DownPostion, 0.5f)).
                     AppendCallback(current.DestroyIndicator);
 
                 
@@ -96,22 +95,22 @@ public class EvileMageData : EnemyHandler
 
     public override void StartChainPowerUp() {
         evileMageMovement.SetInVisible();
-        evileMageShooting.SetInVisible();
+       
         obj_ChainVfx.gameObject.SetActive(true);
     }
     public override void StopChainPowerUp() {
         evileMageMovement.SetVisible();
-        evileMageShooting.SetVisible();
+        
         obj_ChainVfx.gameObject.SetActive(true);
     }
 
     public override void SetInVisible() {
         evileMageMovement.SetInVisible();
-        evileMageShooting.SetInVisible();
+       
     }
     public override void SetVisible() {
         evileMageMovement.SetVisible();
-        evileMageShooting.SetVisible();
+        
     }
 
    
@@ -136,7 +135,7 @@ public class EvileMageData : EnemyHandler
     }
     public void SetData() {
         enemyHealth.enabled = true;
-        evileMageShooting.enabled = true;
+     
         evileMageTrigger.enabled = true;
         evileMageMovement.enabled = true;
         body.enabled = true;

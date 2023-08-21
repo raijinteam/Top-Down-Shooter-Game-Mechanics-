@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Toon Water Mobile Fast
   m_Shader: {fileID: -6465566751694194690, guid: 550017bf155e702489e4eee4d320ebeb, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -17,6 +19,7 @@ Material:
   m_CustomRenderQueue: 2950
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -83,11 +86,11 @@ Material:
     - Vector1_301E02E2: 200
     - Vector1_31894ABB: 0.0523
     - Vector1_45F25267: 0
-    - Vector1_7AF1AC78: 0.964
+    - Vector1_7AF1AC78: 0.74
     - Vector1_854A7D8C: 0.9
     - Vector1_9C73072A: 0
     - Vector1_A524D234: 0.288
-    - Vector1_B9CC1720: 0.0319
+    - Vector1_B9CC1720: 0.231
     - Vector1_E71BB35E: 0.63
     - _AlphaClip: 0
     - _Blend: 0
@@ -117,7 +120,7 @@ Material:
     - Color_626750DD: {r: 2, g: 2, b: 2, a: 1}
     - Color_77A2EDE9: {r: 0.8947124, g: 0.8947124, b: 0.8947124, a: 1}
     - Vector2_1E1B6943: {r: 0.1, g: 0.5, b: 0, a: 0}
-    - Vector2_D06E76BC: {r: 0.1, g: 0.05, b: 0, a: 0}
+    - Vector2_D06E76BC: {r: 0, g: 0, b: 0, a: 0}
     - Vector2_D26C9C89: {r: 0.03, g: 0, b: 0, a: 0}
     - Vector2_F678228C: {r: 0.2, g: 0.2, b: 0, a: 0}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -137,4 +140,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 7

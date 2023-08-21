@@ -27,10 +27,12 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] private int baseMaxEnemyCount;
 
     [Header("Ground - Boundry")]
-    public float flt_Boundry;
+
     public float flt_BoundryX;
     public float flt_BoundryZ;
-    
+    public float flt_BoundryX_;
+    public float flt_BoundryZ_;
+
     public bool isStartWave;
 
 
@@ -38,8 +40,9 @@ public class LevelManager : MonoBehaviour {
         instance = this;
     }
 
-
-
+    public Vector3 GetRandomPostion(float y) {
+        return new Vector3(Random.Range(flt_BoundryX, flt_BoundryX_), y, Random.Range(flt_BoundryZ_, flt_BoundryZ));
+    }
 
     public void StartLevel() {
         for (int i = 0; i < all_EnemyAndItsPersantage.Length; i++) {

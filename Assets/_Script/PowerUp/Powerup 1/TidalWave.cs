@@ -76,8 +76,8 @@ public class TidalWave : MonoBehaviour
                 Vector3 direction = (List_WaveAffectedEnemey[i].transform.position -
                     transform.position).normalized;
                 direction = new Vector3(direction.x, 0, direction.z).normalized;
-                List_WaveAffectedEnemey[i].SethitByBullet(this.flt_Damage, this.flt_Force, direction);
-                List_WaveAffectedEnemey[i].StopHitTidalWave();
+               
+                List_WaveAffectedEnemey[i].StopHitTidalWave(this.flt_Damage);
 
             }
 
@@ -104,8 +104,8 @@ public class TidalWave : MonoBehaviour
 
             if (!List_WaveAffectedEnemey.Contains(enemyTrigger)) {
                 List_WaveAffectedEnemey.Add(enemyTrigger);
-               
-                enemyTrigger.SetHitTidalWave(transform);
+
+                enemyTrigger.SetHitTidalWave(transform, flt_Damage); ;
             }
 
         }

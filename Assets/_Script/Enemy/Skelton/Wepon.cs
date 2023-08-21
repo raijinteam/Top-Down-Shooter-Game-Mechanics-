@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Wepon : MonoBehaviour
 {
+    public bool isSwordSide;
     public Collider Sword;
     public Transform parent;
     public float damage;

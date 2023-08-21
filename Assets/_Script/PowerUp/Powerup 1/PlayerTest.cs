@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class PlayerTest : MonoBehaviour
 {
-    [SerializeField]private PlayerShooting playerShooting;
-
+    [SerializeField] private GameObject invisible;
     private void Update() {
 
-        if (Input.GetKeyDown(KeyCode.F1)) {
+        if (Input.GetKeyDown(KeyCode.Z)) {
+            invisible.gameObject.SetActive(true);
+        }
 
-            if (playerShooting.enabled == true) {
-                playerShooting.enabled = false;
-            }
-            else {
-                playerShooting.enabled = true;
-            }
-           
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            invisible.gameObject.SetActive(false);
         }
     }
 }

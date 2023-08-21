@@ -59,17 +59,19 @@ public class GolemTrigger : EnemyTrigger
     public override void StopMolotovePowerUp() {
         enemyHealth.StopMolotovePowerUp();
     }
-    public override void SetHitTidalWave(Transform transform) {
+    public override void SetHitTidalWave(Transform transform , float Damage) {
 
-        golemMovement.HitByTidal(transform);
+        golemMovement.HitByTidal(transform , Damage);
         collider_Body.enabled = false;
         enemyRb.useGravity = false;
     }
-    public override void StopHitTidalWave() {
+    public override void StopHitTidalWave(float Damage) {
 
+        enemyHealth.TakeDamage(Damage);
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
+        golemMovement.CheckIfGrounded();
     }
     public override void SethitByBullet(float flt_Damage, float _flt_Force, Vector3 _Direction) {
 
@@ -84,21 +86,27 @@ public class GolemTrigger : EnemyTrigger
         enemyRb.useGravity = false;
 
     }
-    public override void BlackHoleBlast() {
-
+  
+    public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
+        golemMovement.GolemKnockBack(direction, knockBackForce);
     }
 
-    
+
+    private bool isDie = false;
 
     private void OnTriggerEnter(Collider other) {
+        if (isDie) {
+            return;
+        }
         if (other.gameObject.CompareTag(tag_Water)) {
-
+            isDie = true;
             Instantiate(obj_WaterParicle, transform.position, transform.rotation);
             GameManager.instance.EnemyKilled(enemyHealth.transform);
             enemyHealth.EnemySound.Play_WaterDropSFX();
+            golemMovement.checktargetActive();
         }
        
     }

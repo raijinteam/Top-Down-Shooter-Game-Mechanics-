@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlimeRangeCheck : MonoBehaviour
 {
-    [SerializeField] private SlimeAttacking slimeAttcking;
+    [SerializeField] private SlimeMotion slimeAttcking;
     private string tag_Player = "Player";
 
     private void OnTriggerStay(Collider other) {

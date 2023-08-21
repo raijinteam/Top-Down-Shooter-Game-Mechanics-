@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class AttckHandler : MonoBehaviour
 {
-    [SerializeField] private EnemyAttacking enemyAttacking;
+    [SerializeField] private skeletonMovement skeleton;
     private string tag_Player = "Player";
 
     private void OnTriggerStay(Collider other) {
 
         if (other.gameObject.tag.Equals(tag_Player)) {
 
-           
-            enemyAttacking.isAttckinInRange = true;
+
+            skeleton.isAttckinInRange = true;
 
         }
     }
     private void OnTriggerExit(Collider other) {
         if (other.gameObject.tag.Equals(tag_Player)) {
-           
-                enemyAttacking.isAttckinInRange = false;
+
+            skeleton.isAttckinInRange = false;
            
 
 

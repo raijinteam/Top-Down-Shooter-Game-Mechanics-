@@ -7,9 +7,10 @@ using Random = UnityEngine.Random;
 public class CloneMirrorAttackPlayer2 : MonoBehaviour
 {
   
-    private float boundry;
+    private float boundryX_;
     private float boundryX;
     private float boundryZ;
+    private float boundryZ_;
 
     [Header("Bullet Instantiate")]
     [SerializeField] private GameObject obj_Bullet;
@@ -45,9 +46,10 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
    
 
     private void Start() {
-        boundry = LevelManager.instance.flt_Boundry;
+        boundryX_ = LevelManager.instance.flt_BoundryX_;
         boundryX = LevelManager.instance.flt_BoundryX;
         boundryZ = LevelManager.instance.flt_BoundryZ;
+        boundryZ_ = LevelManager.instance.flt_BoundryZ_;
     }
 
 
@@ -114,8 +116,8 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
     }
 
     private Vector3 GetRandomTargetPostion() {
-        Vector3 postion = new Vector3(Random.Range(boundry, boundryX), transform.position.y,
-                                               Random.Range(boundry, boundryZ));
+        Vector3 postion = new Vector3(Random.Range(boundryX_, boundryX), transform.position.y,
+                                               Random.Range(boundryZ_, boundryZ));
 
         return postion;
     }
@@ -129,9 +131,9 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
 
         FindTarget();
 
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_CurrentFirerate);
+      
         flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > CoolDown) {
+        if (flt_CurrentTimeForFireRate > flt_CurrentFirerate) {
             flt_CurrentTimeForFireRate = 0;
             SpawnBullet();
         }
@@ -181,9 +183,9 @@ public class CloneMirrorAttackPlayer2 : MonoBehaviour
 
         GameObject spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_CurrentDamage);
+      
         spawnedBullet.GetComponent<PlayerBulletMotion>().
-            SetBulletData(spawnPosition_Bullet.forward, Damage, flt_CurrentBulletForce,target.transform,0,0,0);
+            SetBulletData(spawnPosition_Bullet.forward, flt_CurrentDamage, flt_CurrentBulletForce,target.transform,0,0,0);
 
 
         bulletMuzzle.Play();

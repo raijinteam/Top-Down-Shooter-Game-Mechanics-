@@ -12,6 +12,7 @@ public class AtomBoat : MonoBehaviour
     [SerializeField] private float flt_Force;
     [SerializeField] private float flt_DetsroyTime;
     [SerializeField] private RobotMotion Robot;
+    [SerializeField] private DamageIncreasedPowerUp damageIncresed;
 
 
     private void OnEnable() {
@@ -26,8 +27,11 @@ public class AtomBoat : MonoBehaviour
                                 normalized;
             Vector3 targetPostion = transform.position + direction * flt_Range;
             RobotMotion rb = Instantiate(Robot, targetPostion, Quaternion.identity);
-            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
-            rb.SetRobotData(Damage , flt_Force,flt_DetsroyTime);
+
+            if (damageIncresed.gameObject.activeSelf) {
+                flt_Damage += PowerUpData.insatnce.damageIncreased.GetDamage*0.01f*flt_Damage;
+            }
+            rb.SetRobotData(flt_Damage , flt_Force,flt_DetsroyTime);
         }
 
         this.gameObject.SetActive(false);

@@ -32,9 +32,10 @@ public class MonsterPlantShootine : MonoBehaviour
     [SerializeField]private bool isvisible;
     private float flt_Reducescale = 0.3f;
 
-   
+    private float groundCheckBufferTime = 0.2f;
+    private float currentGroundCheckTime = 0f;
 
-   
+
 
     // Tag & Id
     private const string ID_Idle = "Idle";
@@ -48,71 +49,89 @@ public class MonsterPlantShootine : MonoBehaviour
     private float flt_KnockBackSpeed;
     private float flt_KnockBackTime = 0.2f;
     private bool isGrounded;
-    private float currentAffectedGravityForce;
     private float gravityForce = -0.75f;
 
     private bool isBulletSpawn;
-
+    private float flt_TidalDamage;
 
     private void OnEnable() {
+
+        if (GameManager.instance.IsInVisblePowerUpActive) {
+            SetInVisible();
+        }
+        else {
+            SetVisible();
+        }
         flt_BulletDamage = enemyData.GetDamage();
         flt_KnockbackForce = enemyData.GetKnockBackForce();
     }
 
     private void OnCollisionEnter(Collision collision) {
         isGrounded = true;
-        enemyState = EnemyState.Idle;
+       
     }
-   
+
+    private void OnCollisionStay(Collision collision) {
+
+        isGrounded = true;
+    }
+
     private void OnCollisionExit(Collision collision) {
 
         if (enemyState == EnemyState.BlackHole) {
             return;
         }
         if (enemyState == EnemyState.Wave) {
-            plantTrigger.StopHitTidalWave();
+            //plantTrigger.StopHitTidalWave();
+            StartCoroutine(WaitHitByTidalWave());
         }
 
         isGrounded = false;
-        enemyState = EnemyState.Not_Ground;
+        currentGroundCheckTime = 0;
+        //enemyState = EnemyState.Not_Ground;
     }
 
-    public bool shouldCalculateTime = false;
-    public float currentTime = 0f;
+    private IEnumerator WaitHitByTidalWave() {
+        yield return new WaitForSeconds(0.3f);
+        if (!isGrounded) {
+            plantTrigger.StopHitTidalWave(flt_TidalDamage);
+        }
+    }
 
-   
+    public void CheckIfGrounded() {
+        if (isGrounded) {
+            enemyState = EnemyState.Idle;
+        }
+    }
 
     private void Update() {
 
-       
-
+      
         if (!GameManager.instance.isPlayerLive) {
-            enemy_Animator.SetTrigger(ID_Idle);
+            
             return;
         }
 
-        if (enemyState == EnemyState.BlackHole) {
-            return;
+        if (!isGrounded) {
+            currentGroundCheckTime += Time.deltaTime;
+            if (currentGroundCheckTime >= groundCheckBufferTime) {
+                enemyState = EnemyState.Not_Ground;
+            }
         }
-        else if (enemyState == EnemyState.Not_Ground) {
 
-            currentAffectedGravityForce = gravityForce;
+        if (isvisible) {
+            FireBullet();
+            LookAtPLayer();
+        }
+
+        if (enemyState == EnemyState.Not_Ground) {
+
             PlantKnockBackMotion();
         }
         else if (enemyState == EnemyState.knockBack) {
             PlantKnockBackMotion();
         }
-        else if (enemyState == EnemyState.Idle) {
 
-            if (isvisible) {
-                FireBullet();
-                LookAtPLayer();
-            }
-            
-        }
-       
-      
-       
     }
 
     public void SetInVisible() {
@@ -123,18 +142,31 @@ public class MonsterPlantShootine : MonoBehaviour
         isvisible = true;
     }
 
-    public void SetTidal(Transform transform) {
+    public void SetTidal(Transform transform , float Damage) {
+
+        flt_TidalDamage = Damage;
         enemyState = EnemyState.Wave;
         this.transform.SetParent(transform);
+
+        StopAllCoroutines();
+        isBulletSpawn = false;
+        flt_CurrentTime = 0f;
+        enemy_Animator.SetTrigger(ID_Idle);
     }
+
     public void SetBlackHole(Transform _Target) {
         enemyState = EnemyState.BlackHole;
         transform.SetParent(_Target);
+
+        StopAllCoroutines();
+        isBulletSpawn = false;
+        flt_CurrentTime = 0f;
+        enemy_Animator.SetTrigger(ID_Idle);
     }
 
     private void LookAtPLayer() {
 
-        Vector3 direction = (PlayerManager.instance.Player.transform.position - transform.position).normalized;
+        Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
         float targetAngle = MathF.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
 
         transform.eulerAngles = new Vector3(0, targetAngle, 0);
@@ -142,11 +174,18 @@ public class MonsterPlantShootine : MonoBehaviour
 
     private void FireBullet() {
 
+        if (enemyState == EnemyState.BlackHole) {
+            return;
+        }
+        else if (enemyState == EnemyState.Wave) {
+            return;
+        }
+
         if (isBulletSpawn) {
             return;
         }
-        flt_CurrentTime += Time.deltaTime;
 
+        flt_CurrentTime += Time.deltaTime;
         if (flt_CurrentTime > flt_BulletFireRate) {
 
             isBulletSpawn = true;
@@ -159,8 +198,6 @@ public class MonsterPlantShootine : MonoBehaviour
     private IEnumerator SpawnBullet() {
 
 
-       
-
         for (int i = 0; i < noofBullet; i++) {
 
             enemy_Animator.SetTrigger(Id_Attack);
@@ -169,17 +206,19 @@ public class MonsterPlantShootine : MonoBehaviour
 
 
             GameObject currentBullet = Instantiate(obj_Bullet, transform_Spawnpostion.position,
-                        transform_Spawnpostion.rotation);
+                        transform_Spawnpostion.rotation, GameManager.instance.enemySpanwble);
 
             Instantiate(obj_Muzzle, transform_Spawnpostion.position, transform_Spawnpostion.rotation);
-            Vector3 playerPostion = PlayerManager.instance.Player.transform.position;
+            Vector3 playerPostion = GameManager.instance.Player.transform.position;
             Vector3 shootingPostion = new Vector3(Random.Range(playerPostion.x - flt_offsetTargetpostion,
-                playerPostion.x + flt_offsetTargetpostion), 0, Random.Range(playerPostion.z - flt_offsetTargetpostion,
+                playerPostion.x + flt_offsetTargetpostion), -0.95f, Random.Range(playerPostion.z - flt_offsetTargetpostion,
                                 playerPostion.z + flt_offsetTargetpostion));
           
             currentBullet.GetComponent<MonsterPlantBulletMotion>().SetBulletData(shootingPostion, flt_BulletDamage,
                 flt_KnockbackForce);
-            yield return new WaitForSeconds( 0.833f);
+            yield return new WaitForSeconds( 0.75f);
+
+            enemy_Animator.SetTrigger(ID_Idle);
 
 
         }
@@ -194,24 +233,14 @@ public class MonsterPlantShootine : MonoBehaviour
     private void PlantKnockBackMotion() {
 
         if (!isGrounded) {
-            knockBackDirection.y = MathF.Abs(transform.position.y) * currentAffectedGravityForce;
+            knockBackDirection.y = MathF.Abs(transform.position.y) * gravityForce;
         }
         transform.Translate(knockBackDirection * flt_KnockBackSpeed * Time.deltaTime, Space.World);
     }
 
-    private void ScaleAnimation() {
-        float flt_CurrntScale = transform.localScale.x;
-        float flt_AnimateScale = flt_CurrntScale - flt_Reducescale;
-
-        Sequence seq = DOTween.Sequence();
-        seq.Append(transform.DOScaleX(flt_AnimateScale, flt_ScaleAnimationTime).SetEase(Ease.InSine)).
-            Append(transform.DOScaleX(flt_CurrntScale, flt_ScaleAnimationTime).SetEase(Ease.OutSine));
-    }
-
     public void PlantKnockBack(Vector3 _KnockBackDirection, float _KnockBackSpeed) {
 
-        
-
+      
         enemyState = EnemyState.knockBack;
         flt_KnockBackSpeed = _KnockBackSpeed;
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;

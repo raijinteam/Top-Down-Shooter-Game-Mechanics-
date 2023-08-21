@@ -6,7 +6,7 @@ public class SlimeTrigger : EnemyTrigger
 {
     [Header("Componant")]
     [SerializeField] private EnemyHealth enemyHealth;
-    [SerializeField] private SlimeMovement slimeMovement;
+    [SerializeField] private SlimeMotion slimeMovement;
     [SerializeField] private Collider collider_Body;
     [SerializeField] private Rigidbody enemyRb;
 
@@ -62,12 +62,13 @@ public class SlimeTrigger : EnemyTrigger
     public override void StopMolotovePowerUp() {
         enemyHealth.StopMolotovePowerUp();
     }
-    public override void SetHitTidalWave(Transform transform) {
-        slimeMovement.SetHitByTidal(transform);
+    public override void SetHitTidalWave(Transform transform , float Damage) {
+        slimeMovement.HitByTidal(transform , Damage);
         collider_Body.enabled = false;
         enemyRb.useGravity = false;
     }
-    public override void StopHitTidalWave() {
+    public override void StopHitTidalWave(float Damage) {
+        enemyHealth.TakeDamage(Damage);
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
@@ -90,12 +91,14 @@ public class SlimeTrigger : EnemyTrigger
         enemyRb.useGravity = false;
     }
 
-    public override void BlackHoleBlast() {
+   
+
+    public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
 
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
-
+        slimeMovement.KnockBack(direction, knockBackForce);
     }
 
 

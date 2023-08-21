@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public class CollisionHandling : MonoBehaviour
 {
     [Header("Components")]
-    private Rigidbody rb;
-    [SerializeField]private PlayerHealth playerHealth;
+  
+    public PlayerHealth playerHealth;
     [SerializeField]private PlayerMovement playerMovement;
     [SerializeField] private GameObject obj_WaterParticle;
 
@@ -32,14 +32,28 @@ public class CollisionHandling : MonoBehaviour
 
 
     private void OnTriggerEnter(Collider other) {
-       
 
-        if (other.gameObject.CompareTag(tag_Weppon)) {
+        if (other.TryGetComponent<BossWepon>(out BossWepon boss)) {
+
+            Debug.Log("Triiger");
+            Vector3 direction = (boss.boss.transform.right);
+            Debug.Log(direction);
+            boss.EnableCollider(false);
+            boss.PLaySworVFx(transform.position);
+            playerMovement.KnockBack(direction, boss.boss.force);
+            playerHealth.TakeDamage(boss.boss.damage);
+
+        }
+        else if (other.gameObject.CompareTag(tag_Weppon)) {
+
 
             if (other.TryGetComponent<Wepon>(out Wepon wepon)) {
                 Vector3 direction = (wepon.parent.position - transform.position).normalized;
                 wepon.Sword.enabled = false;
                 wepon.PLaySworVFx();
+                if (wepon.isSwordSide) {
+                    direction = -wepon.parent.right;
+                }
                 playerMovement.KnockBack(-direction, wepon.flt_KnockBack);
                 playerHealth.TakeDamage(wepon.damage);
             }
@@ -50,19 +64,29 @@ public class CollisionHandling : MonoBehaviour
                 playerMovement.KnockBack(-direction, orcWepon.flt_Force);
                 playerHealth.TakeDamage(orcWepon.flt_Damage);
             }
-          
-
 
         }
-        if (other.gameObject.CompareTag(tag_Water)) {
+        else if (other.gameObject.CompareTag(tag_Water)) {
 
             Debug.Log("GameOver");
             GameManager.instance.isPlayerLive = false;
             Instantiate(obj_WaterParticle, transform.position, transform.rotation);
+            playerHealth.player_UI.gameObject.SetActive(false);
             StartCoroutine(delay_Destroy());
-          
-           
+
         }
+        else if (other.TryGetComponent<BossSpike>(out BossSpike bossSpike)) {
+
+            Vector3 direction = (bossSpike.transform.position - transform.position).normalized;
+
+
+            playerMovement.KnockBack(-direction, bossSpike.flt_Force);
+            playerHealth.TakeDamage(bossSpike.flt_Damage);
+
+        }
+
+       
+      
        
     }
 

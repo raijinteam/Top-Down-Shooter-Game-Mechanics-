@@ -35,7 +35,7 @@ public class UIGamePlayScreen : MonoBehaviour
 
 
     public void Onclick_PowerUpSelected(int Index) {
-        PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>().
+        GameManager.instance.Player.GetComponent<PlayerPowerUpHandler>().
                     setPowerUpIndex(Index);
     }
 
@@ -47,8 +47,8 @@ public class UIGamePlayScreen : MonoBehaviour
         img_PowerUp.gameObject.SetActive(true);
         img_Ultimate.fillAmount = 0;
         btn_PowerUp.interactable = false;
-        PlayerManager.instance.Player.GetComponent<PowerUpHandler>().SetPowerUpPanel();
-        PlayerManager.instance.Player.GetComponent<PlayerPowerUpHandler>().IncresedPowerUpPoint();
+        GameManager.instance.Player.GetComponent<PowerUpHandler>().SetPowerUpPanel();
+        GameManager.instance.Player.GetComponent<PlayerPowerUpHandler>().IncresedPowerUpPoint();
        
        
        

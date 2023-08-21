@@ -15,15 +15,20 @@ public class NukeBarragePowerUp : MonoBehaviour
    [SerializeField] private int bulletCounter;
    [SerializeField] private int max_Bullet;
    [SerializeField] private float flt_FireRate;
+    [SerializeField] private float flt_CoolDownTime;
    private float flt_CurrentTime;
    [SerializeField] private float flt_DelayBullwetSpawn;
     private bool isspawn;
 
     [Header("Script Data")]
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
     [SerializeField] private float flt_DownY_Postion;
-    [SerializeField] private float flt_Boundry;
+    [SerializeField] private float flt_BoundryX_;
     [SerializeField] private float flt_Boundry_X;
     [SerializeField] private float flt_Boundry_Z;
+    [SerializeField] private float flt_BoundryZ_;
+
 
     [Header("vfx")]
     [SerializeField] private GameObject Obj_Indicator;
@@ -37,18 +42,32 @@ public class NukeBarragePowerUp : MonoBehaviour
     public void SetNukePowerUp() {
         flt_CurrentTime = 0;
         bulletCounter = 0;
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
+        flt_CoolDownTime = flt_FireRate;
     }
 
     private void OnEnable() {
         SetNukePowerUp();
-        flt_Boundry = LevelManager.instance.flt_Boundry;
+        coolDown.SetCoolDown += SetCoolDown;
+        damageIncreased.setDamageIncreased += SetDamage;
+        flt_BoundryX_ = LevelManager.instance.flt_BoundryX_;
         flt_Boundry_X = LevelManager.instance.flt_BoundryX;
         flt_Boundry_Z = LevelManager.instance.flt_BoundryZ;
+        flt_BoundryZ_ = LevelManager.instance.flt_BoundryZ_;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_FireRate*max_Bullet*flt_DelayBullwetSpawn);
     }
+    private void OnDisable() {
 
-    
+        coolDown.SetCoolDown -= SetCoolDown;
+        damageIncreased.setDamageIncreased -= SetDamage;
+    }
+
+    private void SetDamage() {
+        flt_Damage = flt_Damage + flt_Damage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+    }
+
+    private void SetCoolDown() {
+        flt_CoolDownTime = flt_CoolDownTime - flt_CoolDownTime * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
 
     private void Update() {
         PowerUpHandler();
@@ -60,8 +79,8 @@ public class NukeBarragePowerUp : MonoBehaviour
         }
      
         flt_CurrentTime += Time.deltaTime;
-        float cooldown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
-        if (flt_CurrentTime > cooldown) {
+       
+        if (flt_CurrentTime > flt_CoolDownTime) {
            
             isspawn = true;
             SpawnBullet();
@@ -73,8 +92,8 @@ public class NukeBarragePowerUp : MonoBehaviour
 
     private void SpawnBullet() {
 
-        Vector3 spawnPostion = new Vector3(Random.Range(flt_Boundry, flt_Boundry_X), flt_DownY_Postion,
-                                            Random.Range(flt_Boundry, flt_Boundry_Z));
+        Vector3 spawnPostion = new Vector3(Random.Range(flt_BoundryX_, flt_Boundry_X), flt_DownY_Postion,
+                                            Random.Range(flt_BoundryZ_, flt_Boundry_Z));
         current_Indicator =  Instantiate(Obj_Indicator, spawnPostion,transform.rotation, transform_BulletIndeicater);
       my_Coroutine = StartCoroutine(SpawnNukeMissile(new Vector3(spawnPostion.x,20,spawnPostion.z),
             current_Indicator));
@@ -85,8 +104,8 @@ public class NukeBarragePowerUp : MonoBehaviour
         yield return new WaitForSeconds(flt_DelayBullwetSpawn);
          current_Bullet = Instantiate(Obj_Bullet, _spawnPostion, Quaternion.identity);
 
-        float damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
-        current_Bullet.SetBulletData(flt_range, flt_force, damage, _Indicator);
+        
+        current_Bullet.SetBulletData(flt_range, flt_force, flt_Damage, _Indicator);
         flt_CurrentTime = 0;
         isspawn = false;
         bulletCounter++;

@@ -13,8 +13,16 @@ public class SlimeAttacking : MonoBehaviour {
     public bool isAttckinInRange;
     public bool isvisible;
 
-   
 
+    private void OnEnable() {
+
+        if (GameManager.instance.IsInVisblePowerUpActive) {
+            isvisible = false;
+        }
+        else {
+            isvisible = true;
+        }
+    }
     private void Start() {
         slimeMovement = GetComponent<SlimeMovement>();
     }

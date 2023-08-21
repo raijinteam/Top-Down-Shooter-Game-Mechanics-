@@ -11,10 +11,16 @@ public class PlayerShooting : MonoBehaviour
 
 
     [Header("Bullet Instantiate")]
-    [SerializeField] private GameObject obj_Missile;
-    [SerializeField] private Transform[] all_SpawnPostion;
+   
     [SerializeField] private PlayerBulletMotion obj_Bullet;
     [SerializeField] private Transform spawnPosition_Bullet;
+    [Header("MicroMissile")]
+    [SerializeField] private MicroMissileMotion obj_MicroMissile;
+    [SerializeField] private Transform[] all_SpawnPostion;
+    [Header("MultyShot")]
+    [SerializeField] private MultyBulletMotion obj_MultyShot;
+    [SerializeField] private Transform[] all_MultySpawnPostion;
+    [SerializeField] private ParticleSystem[] all_MultyShotVFX;
     public GameObject target;
     private float MinDistnce = 0;
 
@@ -35,12 +41,23 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private float targetAngle;
     [SerializeField] private float currentAngle;
     [SerializeField] private float flt_SpeedOfTarget = 250;
+    [SerializeField] private FireRateDecreasedPowerUp fireRateDecreased;
+    [SerializeField] private bool isRagePowerUpStart;
 
+    private void OnEnable() {
+        DefaultBulletData();
+        fireRateDecreased.setFireRate += SetFireRate;
+    }
 
-   
+    private void SetFireRate() {
+        playerData.flt_Firerate -= playerData.flt_Firerate * 0.01f * PowerUpData.insatnce.fireRateDecreased.GetCurrentFirerate;
+        if (!isRagePowerUpStart) {
+            flt_CurrentFirerate = playerData.flt_Firerate;
+        }
+    }
 
     private void Start() {
-        DefaultBulletData();
+        
     }
 
 
@@ -50,11 +67,13 @@ public class PlayerShooting : MonoBehaviour
     }
 
     public void SetPowerupTime(float flt_Bulletdamage, float flt_BulletForce, float flt_BulletFirerate) {
+        isRagePowerUpStart = true;
         flt_CurrentDamage = flt_Bulletdamage;
         flt_CurrentBulletForce = flt_BulletForce;
         flt_CurrentFirerate = flt_BulletFirerate;
     }
     public void DefaultBulletData() {
+        isRagePowerUpStart = false;
         flt_CurrentFirerate = playerData.flt_Firerate;
         flt_CurrentDamage = playerData.flt_Damage;
         flt_CurrentBulletForce = playerData.flt_Force;
@@ -69,13 +88,17 @@ public class PlayerShooting : MonoBehaviour
         isEnemyAcive = true;
 
         FindTarget();
-      float  firrate = playerData.GetDecreasedFirerate(flt_CurrentFirerate);
-        flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > firrate) {
-            flt_CurrentTimeForFireRate = 0;
-           
+
+        if (Input.GetKeyDown(KeyCode.Mouse0)) {
             SpawnBullet();
         }
+
+        //flt_CurrentTimeForFireRate += Time.deltaTime;
+        //if (flt_CurrentTimeForFireRate > flt_CurrentFirerate) {
+        //    flt_CurrentTimeForFireRate = 0;
+
+        //    SpawnBullet();
+        //}
     }
 
     private void FindTarget() {
@@ -123,12 +146,8 @@ public class PlayerShooting : MonoBehaviour
         PlayerBulletMotion spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
 
-        float damage = playerData.GetIncreasedDamage(flt_CurrentDamage);
-
-
        
-       
-        spawnedBullet.SetBulletData(spawnPosition_Bullet.forward, damage, flt_CurrentBulletForce, target.transform
+        spawnedBullet.SetBulletData(spawnPosition_Bullet.forward, playerData.flt_Damage, flt_CurrentBulletForce, target.transform
 
             , playerData.RechoestCounter,playerData.Rechoest_damagePersantage,playerData.persantageOfDelathBow);
     
@@ -138,26 +157,35 @@ public class PlayerShooting : MonoBehaviour
         if (GameManager.instance.IsMicroMissile) {
             SpwnMisssle();
         }
+        if (GameManager.instance.IsMultyShot) {
+            SpawnMultyShot();
+        }
+    }
+
+    private void SpawnMultyShot() {
+        for (int i = 0; i < all_MultySpawnPostion.Length; i++) {
+
+            MultyBulletMotion currentMulty = Instantiate(obj_MultyShot, all_MultySpawnPostion[i].position, all_MultySpawnPostion[i].rotation);
+            currentMulty.SetBulletData(all_MultySpawnPostion[i].forward, playerData.multyShotDamage, playerData.flt_Force);
+
+            all_MultyShotVFX[i].Play();
+        }
     }
 
     private void SpwnMisssle() {
-        int Index = Random.Range(0, 100);
-        if (Index < playerData.PersantageOfMissileSpawn) {
 
-            for (int i = 0; i < playerData.MissileCounter; i++) {
+        for (int i = 0; i < playerData.MissileCounter; i++) {
 
-            
 
-                GameObject spawnedBullet = Instantiate(obj_Missile, all_SpawnPostion[i].position,
-                            spawnPosition_Bullet.rotation);
 
-                float damage = playerData.GetIncreasedDamage(playerData.flt_MissileDamage);
+            MicroMissileMotion spawnedBullet = Instantiate(obj_MicroMissile, all_SpawnPostion[i].position,
+                        spawnPosition_Bullet.rotation);
 
-                spawnedBullet.GetComponent<MicroMissileMotion>().
-                    SetBulletData(spawnPosition_Bullet.forward, damage);
-            }
-            
-                              
+
+
+            spawnedBullet.SetBulletData(spawnPosition_Bullet.forward, playerData.flt_MissileDamage);
+
         }
+        
     }
 }

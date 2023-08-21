@@ -16,9 +16,7 @@ public class SkeletonData : EnemyHandler {
     [Header("All Script Campaotant")]
     [SerializeField] private SkeletonData skeletonData;
     [SerializeField] private EnemyHealth enemyHealth;
-    [SerializeField] private EnemyMovement enemyMovement;
-    [SerializeField] private EnemyAttacking enemyAttacking;
-    [SerializeField] private AttckHandler attckHandler;
+    [SerializeField] private skeletonMovement SkeletonMotion;
     [SerializeField] private SkeletonCollisionHandler skeletonCollisionHandler;
     [SerializeField] private NavMeshAgent navMeshAgent;
     [SerializeField] private Collider body;
@@ -39,12 +37,12 @@ public class SkeletonData : EnemyHandler {
 
     public override void SpawnEnemy() {
         float flt_YTopPostion = 100;
-        float flt_YDownPostion = 2;
+     
         bool isSpawn = false;
         while (!isSpawn) {
-            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_Boundry,
-                LevelManager.instance.flt_BoundryX), flt_YTopPostion,
-                Random.Range(LevelManager.instance.flt_Boundry, LevelManager.instance.flt_BoundryZ));
+            Vector3 postion = new Vector3(Random.Range(LevelManager.instance.flt_BoundryX_,
+                 LevelManager.instance.flt_BoundryX), flt_YTopPostion,
+                 Random.Range(LevelManager.instance.flt_BoundryZ_, LevelManager.instance.flt_BoundryZ));
 
             if (!Physics.Raycast(postion, Vector3.down, 1000, obstckle_Layer)) {
                 GameObject indicator = Instantiate(obj_Indiacter, new Vector3(postion.x, 0, postion.z),
@@ -53,13 +51,13 @@ public class SkeletonData : EnemyHandler {
                  current = Instantiate(skeletonData, postion, transform.rotation);
 
                 current.SetSpawnIndicator(indicator);
-                Vector3 PlayerPostion = new Vector3(PlayerManager.instance.Player.transform.position.x, flt_YTopPostion,
-                                    PlayerManager.instance.Player.transform.position.z);
+                Vector3 PlayerPostion = new Vector3(GameManager.instance.Player.transform.position.x, flt_YTopPostion,
+                                    GameManager.instance.Player.transform.position.z);
 
                 current.transform.LookAt(PlayerPostion);
                 Sequence seq = DOTween.Sequence();
 
-                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_YDownPostion, 0.5f)).
+                seq.AppendInterval(1).Append(current.transform.DOMoveY(flt_DownPostion, 0.5f)).
                     AppendCallback(current.DestroyIndicator);
                 isSpawn = true;
             }
@@ -85,27 +83,27 @@ public class SkeletonData : EnemyHandler {
     
 
     public override void SetHitByLaser(Vector3 _Dircetion ,float _force, float _damage) {
-        enemyMovement.KnockBack(_Dircetion, _force);
+        SkeletonMotion.KnockBack(_Dircetion, _force);
         enemyHealth.SetLaserAffacted(_damage);
     }
 
     public override void StopChainPowerUp() {
-        enemyMovement.SetVisible();
-        enemyAttacking.IsVisible = true;
+        SkeletonMotion.SetVisible();
+       
         obj_ChainVfx.gameObject.SetActive(false);
     }
     public override void StartChainPowerUp() {
-        enemyMovement.SetInVisible();
-        enemyAttacking.IsVisible = false;
+        SkeletonMotion.SetInVisible();
+      
         obj_ChainVfx.gameObject.SetActive(true);
     }
     public override void SetInVisible() {
-        enemyMovement.SetInVisible(); 
-        enemyAttacking.IsVisible = false;
+        SkeletonMotion.SetInVisible(); 
+       
     }
     public override void SetVisible() {
-        enemyMovement.SetVisible();
-        enemyAttacking.IsVisible = true;
+        SkeletonMotion.SetVisible();
+       
     }
 
 
@@ -136,9 +134,8 @@ public class SkeletonData : EnemyHandler {
     }
     public void SetData() {
         enemyHealth.enabled = true;
-        enemyMovement.enabled = true;
-        enemyAttacking.enabled = true;
-        attckHandler.enabled = true;
+        SkeletonMotion.enabled = true;
+       
         skeletonCollisionHandler.enabled = true;
         body.enabled = true;
         //navMeshAgent.enabled = true;

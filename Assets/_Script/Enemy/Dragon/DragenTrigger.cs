@@ -7,9 +7,9 @@ public class DragenTrigger : EnemyTrigger
     [Header("Camponant")]
 
     [SerializeField] private EnemyHealth enemyHealth;
-    [SerializeField] private BatMovement batMovement;
+    [SerializeField] private DragonHandler drageMotion;
     [SerializeField]private Collider collider_Body;
-    [SerializeField] private DraganShooting draganShooting;
+   
     [SerializeField] private float flt_DelayOfTerrorShot;
     [SerializeField] private float flt_Range;
     [SerializeField] private GameObject obj_TerroVFx;
@@ -20,6 +20,7 @@ public class DragenTrigger : EnemyTrigger
 
     public override void SetHitOrbitBullet(float flt_Damage, float flt_Force, Vector3 direction) {
         enemyHealth.TakeDamage(flt_Damage);
+        drageMotion.BatKnockBack(direction, flt_Force);
     }
     public override void SetHitByTerrorShot(float flt_Damage, float flt_Force) {
 
@@ -53,38 +54,45 @@ public class DragenTrigger : EnemyTrigger
     public override void StopMolotovePowerUp() {
         enemyHealth.StopMolotovePowerUp();
     }
-    public override void SetHitTidalWave(Transform transform) {
-        batMovement.HitByBlackHole(transform);
+    public override void SetHitTidalWave(Transform transform , float  Damage) {
+        drageMotion.HitByTidal(transform);
         collider_Body.enabled = false;
-        draganShooting.enabled = false;
+       
     }
-    public override void StopHitTidalWave() {
+    public override void StopHitTidalWave(float Damage) {
+
+        enemyHealth.TakeDamage(Damage);
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
-        draganShooting.enabled = true;
+        drageMotion.StopTidalEffect();
+       
     }
     public override void SethitByBullet(float flt_Damage, float _flt_Force, Vector3 _Direction) {
 
         enemyHealth.TakeDamage(flt_Damage);
+        drageMotion.BatKnockBack(_Direction, _flt_Force);
 
     }
 
     public override void HitByBlackHole(Transform transform) {
 
-        batMovement.HitByBlackHole(transform);
+        drageMotion.HitByBlackHole(transform);
         collider_Body.enabled = false;
-        draganShooting.enabled = false;
+        
     }
-    public override void BlackHoleBlast() {
 
+    public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
-        draganShooting.enabled = true;
+        
+        drageMotion.BatKnockBack(direction, knockBackForce);
     }
+    
 
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {
 
         enemyHealth.TakeDamage(flt_Damage);
+        drageMotion.BatKnockBack(direction, flt_Force);
     }
 
   

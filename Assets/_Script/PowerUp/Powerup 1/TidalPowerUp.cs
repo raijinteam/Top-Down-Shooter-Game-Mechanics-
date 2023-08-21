@@ -16,26 +16,50 @@ public class TidalPowerUp : MonoBehaviour
     [SerializeField] private float flt_Force;
     [SerializeField] private float flt_Damage;
     [SerializeField] private float flt_DestryTime;
+    [SerializeField] private float flt_CoolDownTime;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
 
     private void OnEnable() {
         SetTidalPowerUp();
+        flt_CoolDownTime = flt_DelayBetweenTwoWave;
+        damageIncreased.setDamageIncreased += SetDamage;
+        coolDown.SetCoolDown += SetCoolDown;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimePowerUp);
+    }
+    private void OnDisable() {
+        damageIncreased.setDamageIncreased -= SetDamage;
+        coolDown.SetCoolDown -= SetCoolDown;
+    }
+
+
+    private void SetCoolDown() {
+
+        flt_CoolDownTime -= flt_CoolDownTime * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
+
+   
+
+    private void SetDamage() {
+        flt_Damage += flt_Damage * 0.01F * PowerUpData.insatnce.damageIncreased.GetDamage;
     }
 
     private void Update() {
-       
 
-        TidalPowerUpHandler();
-       
-         SpawnTidal();
+
+        //TidalPowerUpHandler();
+        // SpawnTidal();
+
+        if (Input.GetKeyDown(KeyCode.C)) {
+            SpawnTidalWave();
+        }
 
     }
 
     private void SpawnTidal() {
         flt_CurrentTimeForFireRate += Time.deltaTime;
 
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_DelayBetweenTwoWave);
-        if (flt_CurrentTimeForFireRate > CoolDown) {
+        if (flt_CurrentTimeForFireRate > flt_CoolDownTime) {
 
             SpawnTidalWave();
             flt_CurrentTimeForFireRate = 0;
@@ -45,9 +69,9 @@ public class TidalPowerUp : MonoBehaviour
 
     private void SpawnTidalWave() {
 
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(this.flt_Damage);
+      
         TidalWave current =   Instantiate(tidalWave, spawnPostion.position, transform.rotation);
-        current.setBulletData(spawnPostion.forward, 0,Damage, flt_DestryTime);
+        current.setBulletData(spawnPostion.forward, 0,flt_Damage, flt_DestryTime);
        
     }
 

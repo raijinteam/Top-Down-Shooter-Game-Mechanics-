@@ -17,11 +17,32 @@ public class SwordPowerUp : MonoBehaviour
     [Header("Sword - Handler")]
     [SerializeField] private float flt_SwordFireRate;
     [SerializeField] private float flt_CurrentSpawnSwordTime;
-
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
+ 
     private void OnEnable() {
+
+       
         SetSwordPowerUp();
+
+        coolDown.SetCoolDown += SetCoolDown;
+        damageIncreased.setDamageIncreased += SetDamage;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxTimeToThisPowerUp);
     }
+
+    private void OnDisable() {
+        
+    }
+
+    private void SetDamage() {
+
+        flt_Damage += 0.01f * flt_Damage * PowerUpData.insatnce.damageIncreased.GetDamage;
+    }
+
+    private void SetCoolDown() {
+        flt_SwordFireRate -= 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
+
     private void Update() {
         
         PowerUpHandler();
@@ -32,8 +53,8 @@ public class SwordPowerUp : MonoBehaviour
       
 
         flt_CurrentSpawnSwordTime += Time.deltaTime;
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_SwordFireRate);
-        if (flt_CurrentSpawnSwordTime > CoolDown) {
+        
+        if (flt_CurrentSpawnSwordTime > flt_SwordFireRate) {
             SpawnSoword();
             flt_CurrentSpawnSwordTime = 0;
         }
@@ -41,8 +62,8 @@ public class SwordPowerUp : MonoBehaviour
 
     private void SpawnSoword() {
       SwordMovement current =   Instantiate(swordMovement, transform.position, transform.rotation);
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
-        current.SetSwordData(flt_Force, Damage);
+       
+        current.SetSwordData(flt_Force, flt_Damage);
     }
 
     private void PowerUpHandler() {

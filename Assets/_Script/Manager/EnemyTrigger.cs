@@ -10,12 +10,12 @@ public abstract class EnemyTrigger : MonoBehaviour
 
     public abstract void HitByBlackHole(Transform transform); // Hit By Black Hole
    
-    public abstract void BlackHoleBlast(); // BlackHole Blast
+    public abstract void BlackHoleBlast(float knockBackForce,Vector3 direction); // BlackHole Blast
     public abstract void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction);
    
 
-    public abstract void SetHitTidalWave(Transform _Target);
-    public abstract void StopHitTidalWave();
+    public abstract void SetHitTidalWave(Transform _Target, float Damage);
+    public abstract void StopHitTidalWave(float damage);
 
     public abstract void SetHitbyMolotovePowerUp(float flt_Damage);
 

@@ -8,7 +8,7 @@ public class BatTrigger : EnemyTrigger
    
     [SerializeField] private EnemyHealth enemyHealth;
     [SerializeField] private BatMovement batMovement;
-    [SerializeField] private BatShootnig batshooting;
+ 
 
 
    
@@ -21,9 +21,11 @@ public class BatTrigger : EnemyTrigger
 
     public override void SetHitOrbitBullet(float flt_Damage, float flt_Force, Vector3 direction) {
         enemyHealth.TakeDamage(flt_Damage);
+        batMovement.BatKnockBack(direction, flt_Force);
     }
     public override void SetHitByTerrorShot(float flt_Damage, float flt_Force) {
 
+       
         obj_TerroVFx.gameObject.SetActive(true);
         this.flt_Damage = flt_Damage;
         this.flt_Force = flt_Force;
@@ -56,18 +58,21 @@ public class BatTrigger : EnemyTrigger
     }
     public override void SethitByBullet(float flt_Damage, float _flt_Force, Vector3 _Direction) {
         enemyHealth.TakeDamage(flt_Damage);
-       // batMovement.EveileKnockback(_Direction, _flt_Force);
+        Debug.Log("BatForce" + _flt_Force);
+        batMovement.BatKnockBack(_Direction, _flt_Force);
     }
 
-    public override void SetHitTidalWave(Transform transform) {
+    public override void SetHitTidalWave(Transform transform, float Damage) {
         batMovement.HitByBlackHole(transform);
         collider_Body.enabled = false;
-        batshooting.enabled = false;
+       
     }
-    public override void StopHitTidalWave() {
+    public override void StopHitTidalWave(float damage) {
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
-        batshooting.enabled = true;
+        enemyHealth.TakeDamage(damage);
+
+        batMovement.TidalWaveEnded();
 
     }
 
@@ -75,17 +80,18 @@ public class BatTrigger : EnemyTrigger
 
         batMovement.HitByBlackHole(transform);
         collider_Body.enabled = false;
-        batshooting.enabled = false;
+       
     }
-    public override void BlackHoleBlast() {
-
+   
+    public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
-        batshooting.enabled = true;
+        batMovement.BatKnockBack(direction, flt_Force);
     }
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {
 
         enemyHealth.TakeDamage(flt_Damage);
+        batMovement.BatKnockBack(direction, flt_Force);
     }
 
     

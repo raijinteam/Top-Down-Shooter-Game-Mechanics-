@@ -16,10 +16,13 @@ public class WaveShootPowerUp : MonoBehaviour
     [SerializeField]private int NoOfWave = 5 ;
     [SerializeField] private float flt_CurrentBulletForce;
     [SerializeField] private float flt_CurrentFirerate;
+    [SerializeField] private float flt_CoolDownTime;
     [SerializeField] private float flt_CurrentDamage;
     [SerializeField] private float flt_CurrentTimeForFireRate;
     private float flt_DealyOfTwoBullet = 0.2f;
     [SerializeField]private bool IsStartShootBullet;
+    [SerializeField] private DamageIncreasedPowerUp damageIncreased;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
 
     [Header("PowerUp")]
    
@@ -28,8 +31,25 @@ public class WaveShootPowerUp : MonoBehaviour
 
     private void OnEnable() {
         SetPowerUpData();
+        flt_CoolDownTime = flt_CurrentFirerate;
+        coolDown.SetCoolDown += setCoolDown;
+        damageIncreased.setDamageIncreased += SetDamage;
        UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_maxTimePowerUp);
     }
+    private void OnDisable() {
+        coolDown.SetCoolDown -= setCoolDown;
+        damageIncreased.setDamageIncreased -= SetDamage;
+    }
+
+    private void SetDamage() {
+
+        flt_CurrentDamage += flt_CurrentDamage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+    }
+
+    private void setCoolDown() {
+        flt_CoolDownTime -= flt_CoolDownTime * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
+
     private void Update() {
        
 
@@ -61,9 +81,9 @@ public class WaveShootPowerUp : MonoBehaviour
         if (IsStartShootBullet) {
             return;
         }
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_CurrentFirerate);
+      
         flt_CurrentTimeForFireRate += Time.deltaTime;
-        if (flt_CurrentTimeForFireRate > CoolDown) {
+        if (flt_CurrentTimeForFireRate > flt_CoolDownTime) {
             flt_CurrentTimeForFireRate = 0;
             IsStartShootBullet = true;
             StartCoroutine(SpawnBullet());
@@ -86,9 +106,9 @@ public class WaveShootPowerUp : MonoBehaviour
             FindTarget();
             GameObject spawnedBullet = Instantiate(obj_Bullet, spawnPosition_Bullet.position, spawnPosition_Bullet.rotation);
 
-            float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_CurrentDamage);
+        
             spawnedBullet.GetComponent<PlayerBulletMotion>().
-                SetBulletData(spawnPosition_Bullet.forward, Damage, flt_CurrentBulletForce,null,0,0,0);
+                SetBulletData(spawnPosition_Bullet.forward, flt_CurrentDamage, flt_CurrentBulletForce,null,0,0,0);
 
            
             yield return new WaitForSeconds(flt_DealyOfTwoBullet);

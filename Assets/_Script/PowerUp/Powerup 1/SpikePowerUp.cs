@@ -14,12 +14,33 @@ public class SpikePowerUp : MonoBehaviour
     [SerializeField] private float flt_Currentime;
     [SerializeField] private float flt_MaxPowerUpTime;
     [SerializeField] private float flt_CurrentPowerUptime;
+    [SerializeField] private DamageIncreasedPowerUp damageIncresed;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
 
 
     private void OnEnable() {
         SetSpikePowerUp();
+
+        damageIncresed.setDamageIncreased += SetDamage;
+        coolDown.SetCoolDown += SetCoolDown;
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_MaxPowerUpTime);
     }
+    private void OnDisable() {
+
+        damageIncresed.setDamageIncreased -= SetDamage;
+        coolDown.SetCoolDown -= SetCoolDown;
+    }
+
+    private void SetCoolDown() {
+
+        flt_FireRate -= flt_FireRate * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+    }
+
+    private void SetDamage() {
+        flt_Damage += flt_Damage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+    }
+
+
     private void Update() {
        
         SpikeHandler();
@@ -38,8 +59,8 @@ public class SpikePowerUp : MonoBehaviour
     private void SpikeHandler() {
        
         flt_Currentime += Time.deltaTime;
-        float CoolDown = PlayerManager.instance.Player.DecreasedCoolDown(flt_FireRate);
-        if (flt_Currentime > CoolDown) {
+       
+        if (flt_Currentime > flt_FireRate) {
             SpawnSpike();
             flt_Currentime = 0;
         }
@@ -48,8 +69,8 @@ public class SpikePowerUp : MonoBehaviour
     private void SpawnSpike() {
         SpikeData currentSpike = Instantiate(spikeData, spawnPostion.position, spawnPostion.rotation);
         Debug.Log("Spawn Spike");
-        float Damage = PlayerManager.instance.Player.GetIncreasedDamage(flt_Damage);
-        currentSpike.SetSpikeData(Damage, flt_Force);
+       
+        currentSpike.SetSpikeData(flt_Damage, flt_Force,false);
     }
 
     private void SetSpikePowerUp() {

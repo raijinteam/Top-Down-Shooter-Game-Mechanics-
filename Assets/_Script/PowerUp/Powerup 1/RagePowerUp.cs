@@ -18,6 +18,9 @@ public class RagePowerUp : MonoBehaviour
     [SerializeField] private float flt_ForcePercentage;
     [SerializeField] private float flt_FireratePercentage;
 
+    [SerializeField] private DamageIncreasedPowerUp damageIncresed;
+    [SerializeField] private CoolDownIncreasedPowerUp coolDown;
+
 
     private void OnEnable() {
        
@@ -27,6 +30,14 @@ public class RagePowerUp : MonoBehaviour
         float force = playerData.flt_Force + ((playerData.flt_Force * flt_ForcePercentage / 100));
         float firerate = playerData.flt_Firerate - ((playerData.flt_Firerate * flt_FireratePercentage / 100));
 
+        if (damageIncresed.gameObject.activeSelf) {
+            damage += damage * 0.01f * PowerUpData.insatnce.damageIncreased.GetDamage;
+        }
+        if (coolDown.gameObject.activeSelf) {
+            firerate -= firerate * 0.01f * PowerUpData.insatnce.cooldownIncreased.GetCurrentCoolDown;
+        }
+
+        playerShooting.SetPowerupTime(damage, force, firerate);
        
         UIManager.instance.uIGamePlayScreen.ShowPowerUpTimer(flt_PowerupTime);
        

@@ -2,84 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HpReagonPowerUp : PowerUpData
-{
+public class HpReagonPowerUp : PowerUpProperty {
+
     [SerializeField] private PlayerHealth playerHealth;
-    [SerializeField] private bool isUnlocked;
-    [SerializeField] private int Level;
-    [SerializeField] private float flt_HealthPersantage;
-    [SerializeField] private float flt_HealthIncreasedTime;
-    [SerializeField] private float flt_Curentime;
 
-    private void Update() {
+    public override void setPowerUpInPlayer() {
 
-
-        flt_Curentime += Time.deltaTime;
-        if (flt_Curentime > HealthIncreasedTime) {
-            playerHealth.IncresedHPReagon(HealthPersantage);
-        }
-        
-    }
-    public override void FatchMyUpdateData() {
-
-        HpReagonProperites this_Property = AbiltyManager.instance.all_Property[myPowerIndex].
-                        GetComponent<HpReagonProperites>();
-
-        HealthPersantage = this_Property.all_Level_HpReagon_Persantage[Level];
-        all_MyDataDisplay[0].headerName = "% HPReagon";
-        all_MyDataDisplay[0].CurrentValue = HealthPersantage.ToString();
-        if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].UpdateValue = "+" + this_Property.all_Level_HpReagon_Persantage[Level +1];
+        if (!PowerUpData.insatnce.HpReagon.isUnlocked) {
+            PowerUpData.insatnce.HpReagon.isUnlocked = true;
         }
         else {
-            all_MyDataDisplay[0].UpdateValue = "Upgrade";
+            PowerUpData.insatnce.HpReagon.currentLevel++;
         }
-
-        HealthIncreasedTime = this_Property.all_Level_HpReagon_Time[Level];
-        all_MyDataDisplay[0].headerName = " HPReagon Time";
-        all_MyDataDisplay[0].CurrentValue = HealthIncreasedTime.ToString();
-        if (Level != PowerUpHandler.instance.MaxLevelUp) {
-            all_MyDataDisplay[0].UpdateValue = "+" + this_Property.all_Level_HpReagon_Time[Level + 1];
-        }
-        else {
-            all_MyDataDisplay[0].UpdateValue = "Upgrade";
-        }
-
-
+        playerHealth.IncresedHPReagon(PowerUpData.insatnce.HpReagon.GetCurrenrHPReagonPersantage);
+        this.gameObject.SetActive(true);
 
     }
-    public float HealthPersantage {
-        get {
-            return flt_HealthPersantage;
-        }private set {
-            flt_HealthPersantage = value;
-        }
+    public override int Getlevel() {
+        return PowerUpData.insatnce.criticaDamagePersantage.currentLevel;
     }
 
-    public float HealthIncreasedTime {
-        get {
-            return flt_HealthIncreasedTime;
-        } 
-        private set {
-            flt_HealthIncreasedTime = value;
-        }
-    }
+    public override void SetUI(int index) {
+        criticaDamagePersantage criticalDamageChance = PowerUpData.insatnce.criticaDamagePersantage;
+        UnlockedInformation = criticalDamageChance.str_Description;
+        all_Property[0].CurrentPoerprtyValue = criticalDamageChance.GetCurrentCrticalDamagePersantage.ToString();
 
-   
-    public override bool IsUnlocked() {
-        return isUnlocked;
-    }
-    public override void SetUnLockedStatus() {
-        isUnlocked = true;
-    }
-    public override int PowerUpLevel() {
-        return Level;
-    }
+        all_Property[0].NextPrpoertyValue = "+" + criticalDamageChance.GetCurrentCrticalDamagePersantage + criticalDamageChance.all_CriticalDamagePersantage
+                                        [criticalDamageChance.currentLevel + 1];
 
-    public override void SetLevelOfPowerUp() {
-        Level++;
-    }
-    public override bool IsActivePowerUp() {
-        return false;
+
+        UIManager.instance.all_PowerUpUi[index].SetMyPowerUpPanel(criticalDamageChance.powerUpImage,
+            criticalDamageChance.currentLevel, this, this.gameObject.activeSelf);
     }
 }
