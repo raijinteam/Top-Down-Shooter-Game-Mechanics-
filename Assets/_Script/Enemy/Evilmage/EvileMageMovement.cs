@@ -48,6 +48,7 @@ public class EvileMageMovement : MonoBehaviour
 
 
     [Header("KnockBackMotion")]
+    private float persantageOfBlock = 0;
     private float flt_KnockBackTime = 0.5f;
     private float flt_KnockBackSpeed;
     private Vector3 knockBackDirection;
@@ -61,6 +62,7 @@ public class EvileMageMovement : MonoBehaviour
     // Courotine
     private Coroutine coro_KnockBack;
     private float flt_TidalDamage;
+   
 
     private void OnEnable() {
         if (GameManager.instance.IsInVisblePowerUpActive) {
@@ -332,7 +334,7 @@ public class EvileMageMovement : MonoBehaviour
     public void EveileKnockback(Vector3 _KnockBackDirection,float _KnockBackSpeed) {
         //ScaleAnimation();
         enemyState = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (_KnockBackSpeed*0.01f*persantageOfBlock);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
         if (coro_KnockBack != null) {
             StopCoroutine(coro_KnockBack);

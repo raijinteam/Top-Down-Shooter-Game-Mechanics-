@@ -36,6 +36,7 @@ public class FishermanMotion : MonoBehaviour
     [SerializeField] private bool isVisible = true;
 
     [Header("KnockBackData")]
+    [SerializeField] private float persantageOfBlock = 0;
     [SerializeField] private float flt_KnockBackTime = 0.5f;
     [SerializeField] private bool isKnockBackStart;
     [SerializeField] private float flt_KnockBackSpeed;
@@ -400,7 +401,7 @@ public class FishermanMotion : MonoBehaviour
         //}
 
         enemyState = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (_KnockBackSpeed * persantageOfBlock*0.01f);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
 
         if (coro_KnockBack != null) {
@@ -415,14 +416,14 @@ public class FishermanMotion : MonoBehaviour
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
+        
 
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
             yield return null;

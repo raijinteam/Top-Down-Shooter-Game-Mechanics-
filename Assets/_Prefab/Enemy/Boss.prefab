@@ -11241,7 +11241,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 1.1
   m_Height: 4.84
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 1.57}
@@ -11451,8 +11451,8 @@ MonoBehaviour:
     Attack2: Attack2
     Run: Run
     joom: Zoom
-  myBoss: 0
   boss_Animator: {fileID: 1575517210916411922}
+  spike: {fileID: 6590379838542422566, guid: 622662b152147f5439c370e6a4b44cb0, type: 3}
   flt_CurrentTime: 0
   flt_FireRate: 2
   isAttack2Work: 0
@@ -11581,9 +11581,13 @@ MonoBehaviour:
   totalAttack: 3
   spikeSpawnPostion: {fileID: 7410785141394403141}
   targetPostion: {x: 0, y: 0, z: 0}
-  flt_offest: 2
+  flt_offest: 0.8
   flt_DistancebetweenTwoSpike: 1
   PlaySwordTuchVfx: {fileID: 7477494831192093689, guid: b4e44898cd89206409ecc40479016f6e, type: 3}
+  flt_Range: 2
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &3509546209912955133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11600,7 +11604,7 @@ MonoBehaviour:
   flt_Speed: 10
   targetPostion: {x: 0, y: 0, z: 0}
   line: {fileID: 7709432392806526350}
-  flt_Offset: 2
+  flt_Offset: 3
   flt_CurrentTime: 0
   flt_ChargingTime: 2
   bossWepon: {fileID: 2969240692686259053}

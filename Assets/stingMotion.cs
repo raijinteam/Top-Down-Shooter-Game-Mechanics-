@@ -30,19 +30,17 @@ public class stingMotion : MonoBehaviour
     [SerializeField] private float flt_currentTimePassedForIdle = 0f;
 
     //Id
-    private const string Id_Idle = "Idle";
     private const string Id_Attack = "Attack";
 
     // KnockBackData
-
-    [SerializeField] private float flt_KnockBackTime = 2;
+    private float persanatgeOfBlock = 0;
+    private float flt_KnockBackTime = 0.5f;
     [SerializeField] private float flt_KnockBackSpeed;
     private Vector3 knockBackDirection;
 
     // Courotine
     private Coroutine coro_KnockBack;
-
-
+    
 
     private void OnEnable() {
 
@@ -58,7 +56,6 @@ public class stingMotion : MonoBehaviour
 
     public void setInvisible() {
         isVisible = false;
-
     }
 
 
@@ -101,12 +98,10 @@ public class stingMotion : MonoBehaviour
         else if (enemyState == EnemyState.Wave) {
             return;
         }
-
-        if (GameManager.instance.IsInVisblePowerUpActive) {
+        else if (!isVisible) {
             return;
         }
-
-        if (isAttackInMotion) {
+        else if(isAttackInMotion) {
             return;
         }
 
@@ -122,7 +117,7 @@ public class stingMotion : MonoBehaviour
                 // attack
                 isAttackInMotion = true;
 
-                animator.SetTrigger(Id_Attack);
+                animator.SetBool(Id_Attack, true);
                 StartCoroutine(WaitAndShootBullet());
             }
         }
@@ -139,6 +134,7 @@ public class stingMotion : MonoBehaviour
                 yield return new WaitForSeconds(0.34f);
             }
 
+            transform_SpawnPostion.LookAt(GameManager.instance.Player.transform);
             SinWaveBullet current = Instantiate(bullet, transform_SpawnPostion.position,
                transform_SpawnPostion.rotation);
 
@@ -150,7 +146,7 @@ public class stingMotion : MonoBehaviour
 
         yield return new WaitForSeconds(0.9f);
 
-        animator.SetTrigger(Id_Idle);
+        animator.SetBool(Id_Attack, false);
         isAttacking = false;
         isAttackInMotion = false;
         flt_currentTimePassedForFireRate = 0f;
@@ -168,7 +164,7 @@ public class stingMotion : MonoBehaviour
 
         //ScaleAnimation();
         enemyState = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (_KnockBackSpeed*0.01f*persanatgeOfBlock);
         Debug.Log("Perameter" + _KnockBackSpeed);
         Debug.Log("Varible" + flt_KnockBackSpeed);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
@@ -182,14 +178,13 @@ public class stingMotion : MonoBehaviour
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
 
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
 
@@ -207,7 +202,7 @@ public class stingMotion : MonoBehaviour
         transform.SetParent(_target);
 
         StopAllCoroutines();
-        animator.SetTrigger(Id_Idle);
+        animator.SetBool(Id_Attack, false);
         isAttacking = false;
         isAttackInMotion = false;
         flt_currentTimePassedForFireRate = 0f;
@@ -219,7 +214,7 @@ public class stingMotion : MonoBehaviour
         this.transform.SetParent(transform);
 
         StopAllCoroutines();
-        animator.SetTrigger(Id_Idle);
+        animator.SetBool(Id_Attack, false);
         isAttacking = false;
         isAttackInMotion = false;
         flt_currentTimePassedForFireRate = 0f;
@@ -228,8 +223,11 @@ public class stingMotion : MonoBehaviour
 
 
     private void BatNormalMotion() {
-
-        if (isAttacking) {
+      
+        if (!isVisible) {
+            return;
+        }
+        else if (isAttacking) {
             return;
         }
 
@@ -246,7 +244,7 @@ public class stingMotion : MonoBehaviour
 
     private void LookAtPlayer() {
 
-        if (GameManager.instance.IsInVisblePowerUpActive) {
+        if (!isVisible) {
             return;
         }
 

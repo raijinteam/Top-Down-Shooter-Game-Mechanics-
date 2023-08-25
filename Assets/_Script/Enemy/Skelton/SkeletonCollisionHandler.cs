@@ -74,6 +74,7 @@ public class SkeletonCollisionHandler : EnemyTrigger
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
         enemyRb.useGravity = true;
+        skeletonMotion.CheckIfGrounded();
     }
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {
 

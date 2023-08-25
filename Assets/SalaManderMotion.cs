@@ -47,6 +47,7 @@ public class SalaManderMotion : MonoBehaviour {
 
 
     [Header("KnockBackMotion")]
+    private float persantageOfBlock;
     private float flt_KnockBackTime = 0.5f;
     private float flt_KnockBackSpeed;
     private Vector3 knockBackDirection;
@@ -347,7 +348,7 @@ public class SalaManderMotion : MonoBehaviour {
     public void KnockBack(Vector3 _KnockBackDirection, float _KnockBackSpeed) {
        
         enemyState = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (_KnockBackSpeed*0.01f*persantageOfBlock);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
         if (coro_KnockBack != null) {
             StopCoroutine(coro_KnockBack);
@@ -359,14 +360,13 @@ public class SalaManderMotion : MonoBehaviour {
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
-
+        
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
             yield return null;

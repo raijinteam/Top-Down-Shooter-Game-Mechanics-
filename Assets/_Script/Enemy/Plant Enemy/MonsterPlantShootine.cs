@@ -44,8 +44,8 @@ public class MonsterPlantShootine : MonoBehaviour
     // Coroutine
     private Coroutine coro_KnockBack;
 
+    private float persantage_OfBlock = 0;
     private Vector3 knockBackDirection;
-    private bool isKnockBackStart = false;
     private float flt_KnockBackSpeed;
     private float flt_KnockBackTime = 0.2f;
     private bool isGrounded;
@@ -242,7 +242,7 @@ public class MonsterPlantShootine : MonoBehaviour
 
       
         enemyState = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (flt_KnockBackSpeed*0.01f*persantage_OfBlock);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
 
         if (coro_KnockBack != null) {
@@ -255,14 +255,13 @@ public class MonsterPlantShootine : MonoBehaviour
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
 
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
             yield return null;

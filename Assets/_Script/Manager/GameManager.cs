@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour {
     public int numberOfEnemiesInCurrentWave;
     [SerializeField] private int  newwaveStartSpawn = 5;
     [SerializeField] private int noOfEnemyKilled;
-    [SerializeField] private SpikePooler spikePooler;
+  
     [SerializeField] private GameObject bossCamera;
 
     [Header("BossLevel")]
@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         Physics.gravity = new Vector3(0, -15f, 0f);
-        Instantiate(spikePooler, transform.position, transform.rotation,transform);
+       
 
         StartGame();
     }

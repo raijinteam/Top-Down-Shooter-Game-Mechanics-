@@ -70,17 +70,11 @@ public class SinWaveBullet : MonoBehaviour
 
             if (other.TryGetComponent<CollisionHandling>(out CollisionHandling collisionHandling)) {
                 Vector3 direction = (other.gameObject.transform.position - transform.position).normalized;
-                collisionHandling.SetHitByNormalBullet(damage, force, new Vector3(direction.x, 0, direction.z).normalized);
-                BulletDestroy();
+                collisionHandling.SetHitByNormalBullet(damage, force, new Vector3(direction.x, 0, direction.z).normalized);   
             }
-
         }
-
-
-    }
-
-    private void OnCollisionEnter(Collision collision) {
         BulletDestroy();
+
     }
 
     private void BulletDestroy() {

@@ -509,14 +509,13 @@ public class GolemMovement : MonoBehaviour
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
 
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
             yield return null;

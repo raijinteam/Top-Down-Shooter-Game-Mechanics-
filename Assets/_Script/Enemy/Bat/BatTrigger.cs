@@ -86,7 +86,8 @@ public class BatTrigger : EnemyTrigger
     public override void BlackHoleBlast(float knockBackForce, Vector3 direction) {
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
-        batMovement.BatKnockBack(direction, flt_Force);
+
+        batMovement.BatKnockBack(direction, knockBackForce);
     }
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {
 

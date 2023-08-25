@@ -37925,7 +37925,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 7, y: 1, z: 7}
+  m_Size: {x: 5, y: 1, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4381770160515763618
 MonoBehaviour:
@@ -38210,6 +38210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy_Animator: {fileID: 8429775942187871865}
   skeletonCollisionHandler: {fileID: 2696201781034637207}
+  enemyState: 2
   flt_MovementSpeed: 5
   perasantageOfBlock: 0
   flt_KnockBackSpeed: 0

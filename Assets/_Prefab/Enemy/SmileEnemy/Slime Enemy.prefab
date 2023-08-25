@@ -10959,7 +10959,7 @@ MonoBehaviour:
   enemyHealth: {fileID: 628761662592776203}
   slimeMovement: {fileID: 1389913077113462830}
   navMeshAgent: {fileID: 4507405766774495717}
-  body: {fileID: 5798991519202165829}
+  body: {fileID: 500646138457535670}
   spawn_MMFPlayer: {fileID: 264664596604400441}
   obj_ChainVfx: {fileID: 5151975740483125948}
   slimeData: {fileID: 8810466365759824049}
@@ -11004,6 +11004,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy_Animator: {fileID: 5448375094627381898}
   skeletonCollisionHandler: {fileID: 7599366432627317761}
+  enemyState: 2
   flt_MovementSpeed: 5
   perasantageOfBlock: 0
   flt_KnockBackSpeed: 0
@@ -16027,7 +16028,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8, y: 1, z: 8}
+  m_Size: {x: 4, y: 1, z: 4}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8130024284542060084
 MonoBehaviour:
@@ -21060,8 +21061,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9111461459626699781}
-  - component: {fileID: 5798991519202165829}
   - component: {fileID: 7599366432627317761}
+  - component: {fileID: 500646138457535670}
   m_Layer: 12
   m_Name: Body Collider
   m_TagString: Enemy
@@ -21084,8 +21085,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8794560003803154396}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &5798991519202165829
-SphereCollider:
+--- !u!114 &7599366432627317761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5143868835388840937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dce058af872edb45910fd229ec71776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyHealth: {fileID: 628761662592776203}
+  slimeMovement: {fileID: 1389913077113462830}
+  collider_Body: {fileID: 500646138457535670}
+  enemyRb: {fileID: 628761662592776202}
+  obj_WaterParticle: {fileID: 3292347836818154548, guid: f07dc91d896547544affd41905c88ad9, type: 3}
+  flt_DelayOfTerrorShot: 2
+  flt_Range: 5
+  obj_TerroVFx: {fileID: 4326839430441228934}
+  flt_Damage: 0
+  flt_Force: 0
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
+--- !u!136 &500646138457535670
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -21102,34 +21128,11 @@ SphereCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 0
-  serializedVersion: 3
+  serializedVersion: 2
   m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7599366432627317761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5143868835388840937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dce058af872edb45910fd229ec71776, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyHealth: {fileID: 628761662592776203}
-  slimeMovement: {fileID: 1389913077113462830}
-  collider_Body: {fileID: 5798991519202165829}
-  enemyRb: {fileID: 628761662592776202}
-  obj_WaterParticle: {fileID: 3292347836818154548, guid: f07dc91d896547544affd41905c88ad9, type: 3}
-  flt_DelayOfTerrorShot: 2
-  flt_Range: 5
-  obj_TerroVFx: {fileID: 4326839430441228934}
-  flt_Damage: 0
-  flt_Force: 0
-  LayerMask:
-    serializedVersion: 2
-    m_Bits: 4096
+  m_Height: 1.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.22, z: 0}
 --- !u!1 &5151975740483125948
 GameObject:
   m_ObjectHideFlags: 0
@@ -26173,7 +26176,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5386824120769753688}

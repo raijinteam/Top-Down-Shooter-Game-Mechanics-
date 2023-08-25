@@ -7,10 +7,10 @@ using Random = UnityEngine.Random;
 public  class BossMovement : MonoBehaviour {
 
     public BossAnimationName bossAnimationName;
-    [SerializeField] private BossState myBoss = new BossState();
+   
   
     public Animator boss_Animator;
-  
+    [SerializeField] private SpikePooler spike;
     [SerializeField] private float flt_CurrentTime;
     [SerializeField] private float flt_FireRate;
     public bool isAttack2Work;
@@ -31,47 +31,101 @@ public  class BossMovement : MonoBehaviour {
     [SerializeField] private float perasantageOfBlock;
     private Coroutine cour_KncokBack;
     private bool isGrounded = true;
-    private float currentAffectedGravityForce = 1;
     private float gravityForce = -0.75f;
     private float flt_KnockBackTime = 0.5f;
+    private bool isAttacking = false;
+    private bool isBossRotate;
+
+    public bool isVisible;
+
+    //private float groundCheckBufferTime = 0.2f;
+    //private float currentGroundCheckTime = 0f;
 
 
     private void OnCollisionEnter(Collision collision) {
         isGrounded = true;
-        myBoss = BossState.idle;
+      
+    }
+
+    private void OnCollisionStay(Collision collision) {
+        isGrounded = true;
     }
 
     private void OnCollisionExit(Collision collision) {
 
-      
-        isGrounded = false;
-        myBoss = BossState.Not_Ground;
+       // currentGroundCheckTime = 0f;
+        isGrounded = false; 
     }
+
     private void OnEnable() {
-        myBoss = BossState.idle;
+
+        Instantiate(spike, transform.position, transform.rotation);
         boss_Animator.SetBool(bossAnimationName.joom, true);
-        this.isRotate = true;
-        SetRotate += SetRotation;
-        IdleCallBack += IdleCallback;
-        AttackCallBack += AttackCallback;
+        isBossRotate = true;
+        SetRotate += RoationCalbback;
+        isVisible = true;
+
     }
-
-    private void SetRotation(bool isRotate) {
-
-        this.isRotate = isRotate;
-    }
-
     private void OnDisable() {
-        IdleCallBack -= IdleCallback;
-        AttackCallBack -= AttackCallback;
-        SetRotate -= SetRotation;
+        SetRotate -= RoationCalbback;
     }
 
-    private void AttackCallback() {
+    private void RoationCalbback(bool isRotate) {
+        isBossRotate = isRotate;
+    }
+
+   
+
+
+
+    private void Update() {
+
+        //if (isRotate) {
+        //    Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
+        //    float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        //     transform.eulerAngles = new Vector3(0, angle, 0);
+
+        //}
+
+        //if (!isGrounded) {
+        //    currentGroundCheckTime += Time.deltaTime;
+        //    if (currentGroundCheckTime >= groundCheckBufferTime) {
+        //        enemyState = EnemyState.Not_Ground;
+        //    }
+        //}
+
+        //BossMotion();
+
+        AttackHandler();
+        EnemyKnockBackMotion();
+
+        BossRotation();
+       
+       
+
+    }
+
+    private void AttackHandler() {
+
+        if (!isVisible) {
+            return;
+        }
+        else if (isAttacking) {
+            return;
+        }
+
+        flt_CurrentTime += Time.deltaTime;
+        if (flt_CurrentTime > flt_FireRate) {
+            isAttacking = true;
+            ChooseAndDoRandomAttack();
+        }
+    }
+
+    private void ChooseAndDoRandomAttack() {
 
         boss_Animator.SetFloat(bossAnimationName.IdleBattel, 1, 0.01f, Time.deltaTime);
-       Attack2CallBack?.Invoke();
 
+        Attack2CallBack?.Invoke();
         //int index = Random.Range(0, 100);
         //if (index < 50) {
         //    Attack1CallBack?.Invoke();
@@ -81,98 +135,65 @@ public  class BossMovement : MonoBehaviour {
         //}
     }
 
-    private void IdleCallback() {
+    private void BossRotation() {
 
+        if (!isVisible) {
+            return;
+        }
+        else if (!isBossRotate) {
+            return;
+        }
+
+        Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
+        float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        transform.eulerAngles = new Vector3(0, angle, 0);
+    }
+
+
+
+    public void SetIdleAnimation() {
+        boss_Animator.SetBool(bossAnimationName.Attack1, false);
+        //boss_Animator.SetFloat(bossAnimationName.IdleBattel, 0, 0.01f, Time.deltaTime);
         
+    }
+
+    public void AttackEnded() {
+        isAttacking = false;
         flt_CurrentTime = 0;
-        boss_Animator.SetFloat(bossAnimationName.IdleBattel, 0, 0.01f, Time.deltaTime);
+
+        flt_CurrentTime = 0;
+        boss_Animator.SetBool(bossAnimationName.Attack1, false);
+        boss_Animator.SetBool(bossAnimationName.Attack2, false);
        
+
     }
 
-    private void Update() {
-
-        if (isRotate) {
-            Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
-            float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-             transform.eulerAngles = new Vector3(0, angle, 0);
-
-        }
-
-       
-        BossMotion();
+    public void ChangeAnimation(string MyAnimation) {    
+        boss_Animator.SetBool(MyAnimation,true);
     }
 
-    private void BossMotion() {
-
-        switch (myBoss) {
-
-            case BossState.idle:
-
-                TimeCalculationForAttack();
-                break;
-            case BossState.attack:
-                break;
-            case BossState.knockBack:
-                EnemyKnockBackMotion();
-                break;
-
-            default:
-                break;
-        }
-    }
-
-
-    private void TimeCalculationForAttack() {
-
-        flt_CurrentTime += Time.deltaTime;
-        if (flt_CurrentTime > flt_FireRate) {
-            ChangeState(BossState.attack);
-        }
-    }
-
-    public void ChangeState(BossState CurrentState) {
-
-        Debug.Log("Change State");
-        myBoss = CurrentState;
-
-        if (myBoss == BossState.idle) {
-
-           
-             IdleCallBack?.Invoke();
-
-        }
-        else if (myBoss == BossState.attack) {
-
-          
-            AttackCallBack?.Invoke();
-
-        }
-    }
-    public void ChangeAnimation(string MyAnimation) {
-
-      
-        boss_Animator.SetTrigger(MyAnimation);
-    }
+    
 
 
     private void EnemyKnockBackMotion() {
-        boss_Animator.SetFloat(bossAnimationName.IdleBattel,0, 0.01f, Time.deltaTime);
 
+       
 
         if (!isGrounded) {
-            knockBackDirection.y = MathF.Abs(transform.position.y) * currentAffectedGravityForce;
+            knockBackDirection.y = MathF.Abs(transform.position.y) * gravityForce;
         }
 
 
         transform.Translate(knockBackDirection * flt_KnockBackSpeed * Time.deltaTime, Space.World);
-        transform.rotation = KnockBackRotation;
+       // transform.rotation = KnockBackRotation;
     }
 
     public void KnockBack(Vector3 dirction, float knockBackSpeed) {
 
-      
-        isKnockBackStart = true;
-        myBoss = BossState.knockBack;
+        if(!isBossRotate) {
+            return;
+        }
+
         flt_KnockBackSpeed = knockBackSpeed - (knockBackSpeed * perasantageOfBlock / 100);
         knockBackDirection = dirction;
         KnockBackRotation = transform.rotation;
@@ -199,26 +220,19 @@ public  class BossMovement : MonoBehaviour {
             yield return null;
         }
 
-        isKnockBackStart = false;
-       
-
     }
 
     public void SetInVisible() {
-       
+
+        isVisible = false;
     }
 
     public void SetVisible() {
-        
+
+        isVisible = true;
     }
-
-
-
 }
 
-public enum BossState {
-    idle,attack ,knockBack, Not_Ground
-}
 
 [System.Serializable]
 public struct BossAnimationName {

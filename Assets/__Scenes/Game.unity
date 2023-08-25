@@ -17748,6 +17748,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367942200}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1376943419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1376943420}
+  m_Layer: 0
+  m_Name: 'Set All Animation Transition Duration 0.25f '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1376943420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376943419}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1921813029}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1409019997
 GameObject:
   m_ObjectHideFlags: 3
@@ -20760,6 +20791,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 479732064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1842133996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1842133997}
+  m_Layer: 0
+  m_Name: Set blackhole and wave for all bosses
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1842133997
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1842133996}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1921813029}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1845615307
 GameObject:
   m_ObjectHideFlags: 0
@@ -20892,6 +20954,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1876623410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1876623411}
+  m_Layer: 0
+  m_Name: ADD Boundary Colliders for every Enemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1876623411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876623410}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1921813029}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1921813028
 GameObject:
   m_ObjectHideFlags: 0
@@ -20921,10 +21014,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1842133997}
   - {fileID: 351177067}
   - {fileID: 250973937}
   - {fileID: 415749192}
   - {fileID: 765797736}
+  - {fileID: 1876623411}
+  - {fileID: 1376943420}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1932345592
@@ -59329,7 +59425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   all_Enemy:
-  - {fileID: 1987347211026465408, guid: 2ed75e75523198b4ebbbb7c4a255c07b, type: 3}
+  - {fileID: 2946944775743624779, guid: 16418d001a017824bbfbea402ffee58d, type: 3}
   all_Persantage: 64000000
   ChageLevelValue: 4
   waitBetweenEnemySpawn: 2
@@ -63152,10 +63248,9 @@ MonoBehaviour:
   numberOfEnemiesInCurrentWave: 0
   newwaveStartSpawn: 1
   noOfEnemyKilled: 0
-  spikePooler: {fileID: 6590379838542422566, guid: 622662b152147f5439c370e6a4b44cb0, type: 3}
   bossCamera: {fileID: 1615185870}
   boss: {fileID: 2946944775743624779, guid: 16418d001a017824bbfbea402ffee58d, type: 3}
-  isbossLevel: 0
+  isbossLevel: 1
   enemySpanwble: {fileID: 944301477}
   Obj_Player: {fileID: 1105361272662411596, guid: 839b13a9ccd255d46a1e16c1c67b0ce0, type: 3}
   Player: {fileID: 0}

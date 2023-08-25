@@ -37753,7 +37753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 538a9b9d96d298d4da63d53a016601dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyState: 0
+  enemyState: 2
   animator: {fileID: 287581465401188313}
   enemyData: {fileID: 784356899160778131}
   targetedPostion: {x: 0, y: 0, z: 0}
@@ -37763,7 +37763,7 @@ MonoBehaviour:
   transform_SpawnPostion: {fileID: 1765382869429403271}
   ps_Bullet_Muzzle: {fileID: 4244177210329849201}
   flt_Damage: 0
-  flt_Force: 0
+  flt_Force: 10
   isAttacking: 0
   isAttackInMotion: 0
   flt_FireRate: 3

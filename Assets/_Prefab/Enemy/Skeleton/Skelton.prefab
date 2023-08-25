@@ -5807,6 +5807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy_Animator: {fileID: 201468226468927153}
   skeletonCollisionHandler: {fileID: 492323939}
+  enemyState: 2
   flt_MovementSpeed: 3
   perasantageOfBlock: 0
   flt_KnockBackSpeed: 0

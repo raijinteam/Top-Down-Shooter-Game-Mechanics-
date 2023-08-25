@@ -32,15 +32,14 @@ public class DragonHandler : MonoBehaviour
     private const string Id_Attack = "Attack";
 
     // KnockBackData
-
-    [SerializeField] private float flt_KnockBackTime = 2;
+    [SerializeField]private float persantageofBlock = 0;
+    private float flt_KnockBackTime = 0.5f;
     [SerializeField] private float flt_KnockBackSpeed;
     [SerializeField] private Vector3 knockBackDirection;
 
     // Courotine
     private Coroutine coro_KnockBack;
-
-
+   
 
     private void OnEnable() {
 
@@ -180,7 +179,7 @@ public class DragonHandler : MonoBehaviour
 
         //ScaleAnimation();
         enemyState = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (_KnockBackSpeed * persantageofBlock*0.01f);
         Debug.Log("Perameter" + _KnockBackSpeed);
         Debug.Log("Varible" + flt_KnockBackSpeed);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
@@ -194,14 +193,13 @@ public class DragonHandler : MonoBehaviour
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
-
+     
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
 

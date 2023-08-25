@@ -24,9 +24,9 @@ public class CobraMotion : MonoBehaviour
     private float flt_CurrentAngle;
     private float flt_TargetAngle;
     [SerializeField] private bool isGrounded;
+    [SerializeField]private float perasantageOfBlock = 0;
     private float flt_KnockBackTime = 0.5f;
-    [SerializeField]private bool isVisible;
-    private float currentAffectedGravityForce = 1;
+    [SerializeField] private bool isVisible;
     private float gravityForce = -0.75f;
     [SerializeField] private float flt_RunningOffset;
     private float groundCheckBufferTime = 0.2f;
@@ -54,6 +54,7 @@ public class CobraMotion : MonoBehaviour
     private Coroutine coro_KnockBack;
     private float flt_MaxTime = 2;
     private float flt_TidalDamage;
+  
 
     private void OnEnable() {
 
@@ -228,7 +229,7 @@ public class CobraMotion : MonoBehaviour
                 orcKnockBackMotion();
                 break;
             case EnemyState.Not_Ground:
-                currentAffectedGravityForce = gravityForce;
+               
                 orcKnockBackMotion();
                 break;
             case EnemyState.BlackHole:
@@ -434,7 +435,7 @@ public class CobraMotion : MonoBehaviour
 
 
         if (!isGrounded) {
-            knockBackDirection.y = MathF.Abs(transform.position.y) * currentAffectedGravityForce;
+            knockBackDirection.y = MathF.Abs(transform.position.y) * gravityForce;
         }
 
         line.SetPosition(0, transform.position);
@@ -452,7 +453,7 @@ public class CobraMotion : MonoBehaviour
 
       
         enemyState = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (_KnockBackSpeed * perasantageOfBlock / 100);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
 
         if (coro_KnockBack != null) {

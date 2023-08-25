@@ -33,6 +33,7 @@ public class CyclopsMotion : MonoBehaviour
     [SerializeField] private Vector3 knockBackDirection;
     [SerializeField] private bool isGrounded;
     private float flt_KnockBackTime = 0.5f;
+    [SerializeField]private float perasantageOfBlock = 0;
     [SerializeField]private bool isVisible = true;
    
     private float gravityForce = -0.75f;
@@ -48,6 +49,7 @@ public class CyclopsMotion : MonoBehaviour
     private float flt_CurrentTimePassedForFireRate = 0f;
     private bool isAttacking = false;
     private float flt_TidalDamage;
+    
 
     private void OnCollisionEnter(Collision collision) {
 
@@ -378,7 +380,7 @@ public class CyclopsMotion : MonoBehaviour
         //ScaleAnimation();
         Debug.Log("CyclopsKNoackBack");
         enemyState  = EnemyState.knockBack;
-        flt_KnockBackSpeed = _KnockBackSpeed;
+        flt_KnockBackSpeed = _KnockBackSpeed - (_KnockBackSpeed * perasantageOfBlock / 100);
         knockBackDirection = new Vector3(_KnockBackDirection.x, 0, _KnockBackDirection.z).normalized;
         if (coro_KnockBack != null) {
             StopCoroutine(coro_KnockBack);

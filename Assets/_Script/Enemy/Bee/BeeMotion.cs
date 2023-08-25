@@ -23,20 +23,12 @@ public class BeeMotion : MonoBehaviour
 
 
 
-    public bool isGrounded = true;
 
-
-    // BlackHoleData
-
-    private Transform blackHoleTarget;
-    private float flt_BlackHoleSpeed = 10;
 
 
     // KnockBack Data
-    private float currentAffectedGravityForce = 1;
-    private float gravityForce = -0.75f;
     private float flt_KnockBackTime = 0.5f;
-    private bool isKnockBackStart;
+
     private Vector3 knockBackDirection;
     private float targetAngle;
     private Vector3 dirction;
@@ -238,10 +230,6 @@ public class BeeMotion : MonoBehaviour
     private void EnemyKnockBackMotion() {
        
 
-        if (!isGrounded) {
-            knockBackDirection.y = MathF.Abs(transform.position.y) * currentAffectedGravityForce;
-        }
-
 
         transform.Translate(knockBackDirection * flt_KnockBackSpeed * Time.deltaTime, Space.World);
         transform.rotation = KnockBackRotation;
@@ -249,7 +237,6 @@ public class BeeMotion : MonoBehaviour
     public void KnockBack(Vector3 dirction, float knockBackSpeed) {
 
         //ScaleAnimation();
-        isKnockBackStart = true;
         enemyState = EnemyState.knockBack;
         flt_KnockBackSpeed = knockBackSpeed - (knockBackSpeed * perasantageOfBlock / 100);
         knockBackDirection = dirction;
@@ -264,20 +251,17 @@ public class BeeMotion : MonoBehaviour
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
 
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
             yield return null;
         }
-
-        isKnockBackStart = false;
         enemyState = EnemyState.Run;
 
     }

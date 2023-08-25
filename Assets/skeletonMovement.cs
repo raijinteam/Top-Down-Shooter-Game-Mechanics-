@@ -9,7 +9,7 @@ public class skeletonMovement : MonoBehaviour {
 
     [SerializeField] private Animator enemy_Animator;
     [SerializeField] private SkeletonCollisionHandler skeletonCollisionHandler;
-    private EnemyState enemyState;
+    [SerializeField] private EnemyState enemyState;
     private bool IsVisible;
 
     [Header("Enemy Data")]
@@ -18,6 +18,9 @@ public class skeletonMovement : MonoBehaviour {
     [SerializeField] private float flt_KnockBackSpeed;
     [SerializeField] private float flt_Range;
     public bool isGrounded = true;
+
+    private float groundCheckBufferTime = 0.2f;
+    private float currentGroundCheckTime = 0f;
 
 
     [Header("Shooting")]
@@ -28,14 +31,9 @@ public class skeletonMovement : MonoBehaviour {
     public bool isAttckinInRange;
 
 
-
-   
-
     // KnockBack Data
-    private float currentAffectedGravityForce = 1;
     private float gravityForce = -0.75f;
     private float flt_KnockBackTime = 0.5f;
-    private bool isKnockBackStart;
     private Vector3 knockBackDirection;
 
     private Vector3 dirction;
@@ -70,10 +68,13 @@ public class skeletonMovement : MonoBehaviour {
             enemyState = EnemyState.Idle;
             return;
         }
-        if (GameManager.instance.IsInVisblePowerUpActive) {
-            return;
-        }
 
+        if (!isGrounded) {
+            currentGroundCheckTime += Time.deltaTime;
+            if (currentGroundCheckTime >= groundCheckBufferTime) {
+                enemyState = EnemyState.Not_Ground;
+            }
+        }
 
         EnemyAsperStateMotion();
         Shooting();
@@ -85,7 +86,10 @@ public class skeletonMovement : MonoBehaviour {
         if (enemyState == EnemyState.BlackHole) {
             return;
         }
-        if (enemyState == EnemyState.Wave) {
+        else if (enemyState == EnemyState.Wave) {
+            return;
+        }
+        else if (!IsVisible) {
             return;
         }
 
@@ -94,33 +98,29 @@ public class skeletonMovement : MonoBehaviour {
 
     private void HandlingAttack() {
 
-        if (isAttckinInRange) {
-
-            if (isAttacking) {
-                return;
-            }
-            flt_CurrentTime += Time.deltaTime;
-
-            if (flt_CurrentTime > flt_DealyBetweenTwoAttack) {
-
-                if (cour_Attack != null) {
-                    StopCoroutine(cour_Attack);
-                }
-                  cour_Attack =  StartCoroutine(AttckBySword());
-            }
-
-
+        if (isAttacking) {
+            return;
         }
 
+        flt_CurrentTime += Time.deltaTime;
 
+        if (isAttckinInRange) {
 
+            enemy_Animator.SetBool(id_Idle, true);
+            enemy_Animator.SetBool(iD_Running, false);
+        
+            if (flt_CurrentTime > flt_DealyBetweenTwoAttack) {
+                isAttacking = true;       
+                 cour_Attack =  StartCoroutine(AttckBySword());
+            }
+        }
     }
 
     private IEnumerator AttckBySword() {
 
 
+        enemy_Animator.SetBool(id_Idle, false);
         enemy_Animator.SetBool(id_Attack, true);
-        isAttacking = true;
         wepon.Sword.enabled = true;
 
         yield return new WaitForSeconds(0.75f);
@@ -128,13 +128,23 @@ public class skeletonMovement : MonoBehaviour {
         flt_CurrentTime = 0;
         wepon.Sword.enabled = false;
 
-        if (isAttckinInRange) {
+        if (IsVisible) {
+            if (isAttckinInRange) {
 
-            enemy_Animator.SetBool(id_Idle, true);
+                enemy_Animator.SetBool(id_Idle, true);
+                enemy_Animator.SetBool(id_Attack, false);
+
+            }
+            else {
+
+                enemy_Animator.SetBool(iD_Running, true);
+                enemy_Animator.SetBool(id_Attack, false);
+            }
         }
         else {
 
-            enemy_Animator.SetBool(iD_Running, true);
+            enemy_Animator.SetBool(id_Idle, true);
+            enemy_Animator.SetBool(id_Attack, false);
         }
     }
 
@@ -142,38 +152,62 @@ public class skeletonMovement : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         isGrounded = true;
-        enemyState = EnemyState.Run;
+
+    }
+
+    private void OnCollisionStay(Collision collision) {
+
+        isGrounded = true;
     }
 
     private void OnCollisionExit(Collision collision) {
-
-
 
         if (enemyState == EnemyState.BlackHole) {
             return;
         }
         if (enemyState == EnemyState.Wave) {
-            skeletonCollisionHandler.StopHitTidalWave(tidalDamage);
+           // skeletonCollisionHandler.StopHitTidalWave(tidalDamage);
+            StartCoroutine(WaitHitByTidalWave());
 
         }
         isGrounded = false;
-        enemyState = EnemyState.Not_Ground;
+        currentGroundCheckTime = 0f;
+        //enemyState = EnemyState.Not_Ground;
+    }
+
+    private IEnumerator WaitHitByTidalWave() {
+        yield return new WaitForSeconds(0.3f);
+        if (!isGrounded) {
+            skeletonCollisionHandler.StopHitTidalWave(tidalDamage);
+        }
+    }
+
+    public void CheckIfGrounded() {
+        if (isGrounded) {
+
+            enemy_Animator.SetBool(iD_Running, true);
+            enemy_Animator.SetBool(id_Idle, false);
+            enemyState = EnemyState.Run;
+        }
     }
 
 
     public void SetInVisible() {
         IsVisible = false;
-        enemy_Animator.SetBool(id_Idle, true);
 
-        StopAllCoroutines();
-        enemy_Animator.SetBool(id_Idle, true);
-        isAttacking = false;
-        wepon.Sword.enabled = false;
-        flt_CurrentTime = 0;
+        if (!isAttacking) {
+            enemy_Animator.SetBool(id_Idle, true);
+            enemy_Animator.SetBool(id_Attack, false);
+            enemy_Animator.SetBool(iD_Running, false);
+        }
+
     }
 
     public void SetVisible() {
         IsVisible = true;
+
+        enemy_Animator.SetBool(id_Idle, false);
+        enemy_Animator.SetBool(id_Attack, false);
         enemy_Animator.SetBool(iD_Running, true);
     }
 
@@ -183,10 +217,12 @@ public class skeletonMovement : MonoBehaviour {
 
             return;
         }
+        else if(enemyState == EnemyState.Wave) {
 
-
+            return;
+        }
         else if (enemyState == EnemyState.Not_Ground) {
-            EnemyNot_GroundMotion();
+            EnemyKnockBackMotion();
         }
         else if (enemyState == EnemyState.knockBack) {
             EnemyKnockBackMotion();
@@ -198,58 +234,44 @@ public class skeletonMovement : MonoBehaviour {
             }
 
         }
-        else if (enemyState == EnemyState.Idle) {
-            EnemyIdleMotion();
-        }
-    }
-
-
-
-
-
-    private void EnemyNot_GroundMotion() {
-        currentAffectedGravityForce = gravityForce;
-        EnemyKnockBackMotion();
-    }
-
-    private void EnemyIdleMotion() {
-        enemy_Animator.SetTrigger(id_Idle);
+       
     }
 
     private void EnemyNormalMotion() {
 
-        if (isAttckinInRange) {
-            return;
-        }
-
-   
-        // NORMAL MOTION
         Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
+     
+        dirction = new Vector3(direction.x, transform.position.y, direction.z);
         float currentAngle = MathF.Atan2(dirction.x, dirction.z) * Mathf.Rad2Deg;
         transform.eulerAngles = new Vector3(0, currentAngle, 0);
 
-        dirction = new Vector3(direction.x, transform.position.y, direction.z);
+        if (isAttacking) {
+            return;
+        }
+        else if (isAttckinInRange) {                  
+            return;
+        }
+
+        enemy_Animator.SetBool(id_Idle, false);
+        enemy_Animator.SetBool(iD_Running, true);
+
+        // NORMAL MOTION
+        //transform.eulerAngles = new Vector3(0, currentAngle, 0);
+
+      
 
         transform.Translate(direction * flt_MovementSpeed * Time.deltaTime, Space.World);
-
-
-
 
         //NAVMESH AGENT MoTION
 
         // navMeshAgent.SetDestination(PlayerManager.instance.Player.transform.position);
-
-
     }
 
     private void EnemyKnockBackMotion() {
-        enemy_Animator.SetBool(id_Idle, true);
-
-
+        
         if (!isGrounded) {
-            knockBackDirection.y = MathF.Abs(transform.position.y) * currentAffectedGravityForce;
+            knockBackDirection.y = MathF.Abs(transform.position.y) * gravityForce;
         }
-
 
         transform.Translate(knockBackDirection * flt_KnockBackSpeed * Time.deltaTime, Space.World);
         transform.rotation = KnockBackRotation;
@@ -264,6 +286,8 @@ public class skeletonMovement : MonoBehaviour {
 
         StopAllCoroutines();
         enemy_Animator.SetBool(id_Idle, true);
+        enemy_Animator.SetBool(id_Attack, false);
+        enemy_Animator.SetBool(iD_Running, false);
         isAttacking = false;
         wepon.Sword.enabled = false;
         flt_CurrentTime = 0;
@@ -275,6 +299,8 @@ public class skeletonMovement : MonoBehaviour {
 
         StopAllCoroutines();
         enemy_Animator.SetBool(id_Idle, true);
+        enemy_Animator.SetBool(id_Attack, false);
+        enemy_Animator.SetBool(iD_Running, false);
         isAttacking = false;
         wepon.Sword.enabled = false;
         flt_CurrentTime = 0;
@@ -284,8 +310,7 @@ public class skeletonMovement : MonoBehaviour {
 
     public void KnockBack(Vector3 dirction, float knockBackSpeed) {
 
-        enemy_Animator.SetBool(id_Idle, true);
-        isKnockBackStart = true;
+       
         enemyState = EnemyState.knockBack;
         flt_KnockBackSpeed = knockBackSpeed - (knockBackSpeed * perasantageOfBlock / 100);
         knockBackDirection = dirction;
@@ -300,22 +325,19 @@ public class skeletonMovement : MonoBehaviour {
     private IEnumerator StopKnockbackOverTime() {
 
         float currentKnockbackTime = 0f;
-        float maxTime = flt_KnockBackTime;
-
+       
         float startForce = flt_KnockBackSpeed;
         float endForce = 0f;
 
         while (currentKnockbackTime < 1) {
 
-            currentKnockbackTime += Time.deltaTime / maxTime;
+            currentKnockbackTime += Time.deltaTime / flt_KnockBackTime;
 
             flt_KnockBackSpeed = Mathf.Lerp(startForce, endForce, currentKnockbackTime);
             yield return null;
         }
 
-        isKnockBackStart = false;
-        enemyState = EnemyState.Run;
-     
+        enemyState = EnemyState.Run;     
 
     }
 }

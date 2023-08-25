@@ -87,7 +87,7 @@ public class StingStrigger : EnemyTrigger
         collider_Body.enabled = true;
         enemyHealth.transform.parent = null;
       
-        batMovement.BatKnockBack(direction, flt_Force);
+        batMovement.BatKnockBack(direction, knockBackForce);
     }
     public override void SethitByAura(float flt_Damage, float flt_Force, Vector3 direction) {
 

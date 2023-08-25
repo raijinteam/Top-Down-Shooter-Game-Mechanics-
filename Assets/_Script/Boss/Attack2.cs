@@ -49,17 +49,22 @@ public class Attack2 : MonoBehaviour
 
         
         if (isCharge) {
-            float distance = Mathf.Abs(Vector3.Distance(transform.position, GameManager.instance.Player.transform.position));
-            Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
-            Vector3 postion = direction * distance + boss.transform.position;
-            line.SetPosition(0, new Vector3(boss.transform.position.x,0,boss.transform.position.z));
-            line.SetPosition(1, new Vector3(postion.x,0,postion.z));
-            targetPostion = direction * (distance - flt_Offset) + boss.transform.position;
+
+            if (boss.isVisible) {
+                float distance = Mathf.Abs(Vector3.Distance(transform.position, GameManager.instance.Player.transform.position));
+                Vector3 direction = (GameManager.instance.Player.transform.position - transform.position).normalized;
+                Vector3 postion = direction * distance + boss.transform.position;
+                line.SetPosition(0, new Vector3(boss.transform.position.x, 0, boss.transform.position.z));
+                line.SetPosition(1, new Vector3(postion.x, 0, postion.z));
+                targetPostion = direction * (distance - flt_Offset) + boss.transform.position;
+            }
+            
            
             chargeBoss();
         }
         else if (isRun) {
 
+           
             transform.position = Vector3.MoveTowards(transform.position, targetPostion, flt_Speed * Time.deltaTime);
 
             float flt_Distance = Mathf.Abs(Vector3.Distance(transform.position, targetPostion));
@@ -83,18 +88,18 @@ public class Attack2 : MonoBehaviour
     private IEnumerator AttackAnimation() {
         yield return new WaitForSeconds(0.2f);
 
-        boss.SetRotate?.Invoke(false);
+       
         boss.ChangeAnimation(boss.bossAnimationName.Attack2);
         yield return new WaitForSeconds(0.3f);
         bossWepon.EnableCollider(true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         bossWepon.EnableCollider(false);
 
         boss.SetRotate?.Invoke(true);
         cour_Attack2 = null;
         boss.isAttack2Work = false;
-        boss.ChangeState(BossState.idle);
+        boss.AttackEnded();
     }
 
     private void chargeBoss() {
